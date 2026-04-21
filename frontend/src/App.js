@@ -6,6 +6,8 @@ import About from "./pages/About";
 import Projects from "./pages/Projects";
 import Blog from "./pages/Blog";
 import Contact from "./pages/Contact";
+import Login from "./pages/Login";
+import Admin from "./pages/Admin";
 import Confidentialite from "./pages/Confidentialite";
 import Conditions from "./pages/Conditions";
 import Cookies from "./pages/Cookies";
@@ -23,6 +25,8 @@ function App() {
                 <Route path="/projects" element={<Projects />} />
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/admin" element={<Admin />} />
                 <Route path="/confidentialite" element={<Confidentialite />} />
                 <Route path="/conditions" element={<Conditions />} />
                 <Route path="/cookies" element={<Cookies />} />

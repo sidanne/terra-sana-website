@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 
 function Navbar() {
+    const token = localStorage.getItem("token");
+
     return (
         <nav style={styles.nav}>
             <div style={styles.logo}>Terra<span style={styles.logoSpan}>Sana</span></div>
@@ -11,6 +13,9 @@ function Navbar() {
                 <Link to="/blog" style={styles.link}>Blog</Link>
                 <Link to="/contact" style={styles.link}>Contact</Link>
             </div>
+            <Link to={token ? "/admin" : "/login"} style={styles.adminBtn}>
+                {token ? "Admin" : "Connexion"}
+            </Link>
         </nav>
     );
 }
@@ -20,7 +25,8 @@ const styles = {
     logo: { color: "#fff", fontSize: "18px", fontWeight: "bold" },
     logoSpan: { color: "#4caf50" },
     links: { display: "flex", gap: "24px" },
-    link: { color: "#ccc", textDecoration: "none", fontSize: "14px" }
+    link: { color: "#ccc", textDecoration: "none", fontSize: "14px" },
+    adminBtn: { background: "#4caf50", color: "#fff", fontSize: "12px", padding: "7px 18px", borderRadius: "6px", textDecoration: "none" }
 };
 
 export default Navbar;
