@@ -5,7 +5,10 @@ function Footer() {
         <footer style={styles.footer}>
             <div>
                 <div style={styles.logo}>Terra<span style={styles.logoSpan}>Sana</span> ASBL</div>
-                <div style={styles.version}>v1.0.0 - Bruxelles, Belgique</div>
+                <div style={styles.info}>53/3, 1200 Woluwe-Saint-Lambert, Bruxelles</div>
+                <div style={styles.info}>Terrasana@outlook.be</div>
+                <div style={styles.info}>Lundi - Vendredi : 8h00 - 16h00</div>
+                <div style={styles.version}>v1.0.0</div>
             </div>
             <div style={styles.links}>
                 <Link to="/confidentialite" style={styles.link}>Confidentialite</Link>
@@ -20,11 +23,12 @@ function Footer() {
 }
 
 const styles = {
-    footer: { background: "#111", padding: "24px 32px", display: "flex", justifyContent: "space-between", alignItems: "center" },
-    logo: { color: "#fff", fontSize: "15px", fontWeight: "bold" },
+    footer: { background: "#111", padding: "28px 32px", display: "flex", justifyContent: "space-between", alignItems: "flex-start" },
+    logo: { color: "#fff", fontSize: "15px", fontWeight: "bold", marginBottom: "8px" },
     logoSpan: { color: "#4caf50" },
-    version: { color: "#444", fontSize: "11px", marginTop: "4px" },
-    links: { display: "flex", gap: "16px", flexWrap: "wrap" },
+    info: { color: "#666", fontSize: "12px", marginTop: "4px" },
+    version: { color: "#333", fontSize: "10px", marginTop: "8px" },
+    links: { display: "flex", flexDirection: "column", gap: "8px", alignItems: "flex-end" },
     link: { color: "#666", fontSize: "11px", textDecoration: "none" }
 };
 
