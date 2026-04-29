@@ -8,6 +8,7 @@ import Blog from "./pages/Blog";
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
+import NotFound from "./pages/NotFound";
 import Confidentialite from "./pages/Confidentialite";
 import Conditions from "./pages/Conditions";
 import Cookies from "./pages/Cookies";
@@ -33,6 +34,7 @@ function App() {
                 <Route path="/aide" element={<Aide />} />
                 <Route path="/sponsors" element={<Sponsors />} />
                 <Route path="/benevolat" element={<Benevolat />} />
+                <Route path="*" element={<NotFound />} />
             </Routes>
             <Footer />
         </Router>

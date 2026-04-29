@@ -3,10 +3,20 @@ import { getPosts } from "../services/api";
 
 function Blog() {
     const [posts, setPosts] = useState([]);
+    const [page, setPage] = useState(0);
+    const perPage = 5;
 
     useEffect(() => {
         getPosts().then(data => setPosts(data));
     }, []);
+
+    const paginated = posts.slice(page * perPage, (page + 1) * perPage);
+    const totalPages = Math.ceil(posts.length / perPage);
+
+    const formatDate = (date) => {
+        if (!date) return "Date non disponible";
+        return new Date(date).toLocaleDateString("fr-BE", { day: "numeric", month: "long", year: "numeric" });
+    };
 
     return (
         <div style={styles.container}>
@@ -15,14 +25,24 @@ function Blog() {
             {posts.length === 0 ? (
                 <div style={styles.empty}>Aucun article publie pour le moment.</div>
             ) : (
-                <div style={styles.list}>
-                    {posts.map(p => (
-                        <div key={p.id} style={styles.card}>
-                            <div style={styles.postTitle}>{p.title}</div>
-                            <div style={styles.postContent}>{p.content}</div>
+                <>
+                    <div style={styles.list}>
+                        {paginated.map(p => (
+                            <div key={p.id} style={styles.card}>
+                                <div style={styles.postDate}>{formatDate(p.createdAt)}</div>
+                                <div style={styles.postTitle}>{p.title}</div>
+                                <div style={styles.postContent}>{p.content}</div>
+                            </div>
+                        ))}
+                    </div>
+                    {totalPages > 1 && (
+                        <div style={styles.pagination}>
+                            <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0} style={styles.pageBtn}>Precedent</button>
+                            <span style={styles.pageInfo}>{page + 1} / {totalPages}</span>
+                            <button onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} disabled={page === totalPages - 1} style={styles.pageBtn}>Suivant</button>
                         </div>
-                    ))}
-                </div>
+                    )}
+                </>
             )}
         </div>
     );
@@ -34,9 +54,13 @@ const styles = {
     sub: { fontSize: "14px", color: "#888", marginBottom: "28px" },
     empty: { textAlign: "center", color: "#aaa", fontSize: "14px", padding: "60px" },
     list: { display: "flex", flexDirection: "column", gap: "20px" },
-    card: { background: "#fff", border: "1px solid #e0e0e0", borderRadius: "10px", padding: "24px" },
+    card: { background: "#fff", border: "1px solid #e0e0e0", borderRadius: "12px", padding: "24px", boxShadow: "0 2px 8px rgba(0,0,0,0.05)" },
+    postDate: { fontSize: "12px", color: "#4caf50", marginBottom: "8px" },
     postTitle: { fontSize: "18px", fontWeight: "bold", color: "#222", marginBottom: "12px" },
-    postContent: { fontSize: "14px", color: "#555", lineHeight: "1.8" }
+    postContent: { fontSize: "14px", color: "#555", lineHeight: "1.8" },
+    pagination: { display: "flex", justifyContent: "center", alignItems: "center", gap: "16px", marginTop: "32px" },
+    pageBtn: { background: "#4caf50", color: "#fff", border: "none", padding: "8px 20px", borderRadius: "8px", cursor: "pointer", fontSize: "13px" },
+    pageInfo: { fontSize: "14px", color: "#555" }
 };
 
 export default Blog;
