@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { isTokenValid, logout } from "../services/auth";
 
 function Admin() {
     const [projects, setProjects] = useState([]);
@@ -8,13 +9,23 @@ function Admin() {
     const [newProject, setNewProject] = useState({ name: "", description: "", link: "", category: "", isActive: true });
     const [newPost, setNewPost] = useState({ title: "", content: "", isPublished: true });
     const [editProject, setEditProject] = useState(null);
-    const [editPost, setEditPost] = useState(null);
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
 
     useEffect(() => {
-        if (!token) { navigate("/login"); return; }
+        if (!isTokenValid()) {
+            alert("Votre session a expire. Veuillez vous reconnecter.");
+            navigate("/login");
+            return;
+        }
         fetchData();
+        const interval = setInterval(() => {
+            if (!isTokenValid()) {
+                alert("Votre session a expire. Veuillez vous reconnecter.");
+                navigate("/login");
+            }
+        }, 60000);
+        return () => clearInterval(interval);
     }, []);
 
     const fetchData = async () => {
@@ -69,8 +80,8 @@ function Admin() {
         fetchData();
     };
 
-    const logout = () => {
-        localStorage.removeItem("token");
+    const handleLogout = () => {
+        logout();
         navigate("/login");
     };
 
@@ -78,7 +89,7 @@ function Admin() {
         <div style={styles.container}>
             <div style={styles.header}>
                 <h1 style={styles.title}>Espace Administrateur</h1>
-                <button onClick={logout} style={styles.logoutBtn}>Deconnexion</button>
+                <button onClick={handleLogout} style={styles.logoutBtn}>Deconnexion</button>
             </div>
 
             <div style={styles.section}>
@@ -98,8 +109,8 @@ function Admin() {
                     <form onSubmit={updateProject} style={styles.form}>
                         <input placeholder="Nom" value={editProject.name} onChange={e => setEditProject({...editProject, name: e.target.value})} style={styles.input} required />
                         <input placeholder="Description" value={editProject.description} onChange={e => setEditProject({...editProject, description: e.target.value})} style={styles.input} required />
-                        <input placeholder="Lien application" value={editProject.link} onChange={e => setEditProject({...editProject, link: e.target.value})} style={styles.input} />
-                        <input placeholder="Categorie" value={editProject.category} onChange={e => setEditProject({...editProject, category: e.target.value})} style={styles.input} />
+                        <input placeholder="Lien application" value={editProject.link || ""} onChange={e => setEditProject({...editProject, link: e.target.value})} style={styles.input} />
+                        <input placeholder="Categorie" value={editProject.category || ""} onChange={e => setEditProject({...editProject, category: e.target.value})} style={styles.input} />
                         <div style={styles.formBtns}>
                             <button type="submit" style={styles.btn}>Sauvegarder</button>
                             <button type="button" onClick={() => setEditProject(null)} style={styles.cancelBtn}>Annuler</button>
