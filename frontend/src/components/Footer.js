@@ -3,46 +3,11 @@ import { Link } from "react-router-dom";
 function Footer({ lang }) {
     const version = "v1.0.0";
 
-    const labels = {
-        fr: {
-            about: "A propos de Terra Sana",
-            desc: "Organisation a but non lucratif fondee en 2019 a Bruxelles. Soutien aux producteurs locaux et promotion du circuit court.",
-            links: "Liens utiles",
-            legal: "Legal",
-            contact: "Contact",
-            address: "53/3, 1200 Woluwe-Saint-Lambert",
-            city: "Bruxelles, Belgique",
-            hours: "Lun - Ven : 8h00 - 16h00",
-            version: "Version du site",
-            rights: "Tous droits reserves"
-        },
-        en: {
-            about: "About Terra Sana",
-            desc: "Non-profit organization founded in 2019 in Brussels. Supporting local producers and promoting short supply chains.",
-            links: "Useful links",
-            legal: "Legal",
-            contact: "Contact",
-            address: "53/3, 1200 Woluwe-Saint-Lambert",
-            city: "Brussels, Belgium",
-            hours: "Mon - Fri : 8:00 - 16:00",
-            version: "Site version",
-            rights: "All rights reserved"
-        },
-        nl: {
-            about: "Over Terra Sana",
-            desc: "Non-profitorganisatie opgericht in 2019 in Brussel. Ondersteuning van lokale producenten en promotie van korte ketens.",
-            links: "Nuttige links",
-            legal: "Juridisch",
-            contact: "Contact",
-            address: "53/3, 1200 Woluwe-Sint-Lambert",
-            city: "Brussel, Belgie",
-            hours: "Ma - Vr : 8:00 - 16:00",
-            version: "Siteversie",
-            rights: "Alle rechten voorbehouden"
-        }
-    };
-
-    const t = labels[lang] || labels.fr;
+    const t = {
+        fr: { desc: "Organisation a but non lucratif fondee en 2019 a Bruxelles. Soutien aux producteurs locaux et promotion du circuit court.", links: "Liens utiles", legal: "Legal", address: "Adresse", email: "Email", hours: "Horaires", hoursVal: "Lun - Ven : 8h00 - 16h00", version: "Version", rights: "Tous droits reserves", city: "Bruxelles, Belgique" },
+        en: { desc: "Non-profit organization founded in 2019 in Brussels. Supporting local producers and promoting short supply chains.", links: "Useful links", legal: "Legal", address: "Address", email: "Email", hours: "Hours", hoursVal: "Mon - Fri : 8:00 - 16:00", version: "Version", rights: "All rights reserved", city: "Brussels, Belgium" },
+        nl: { desc: "Non-profitorganisatie opgericht in 2019 in Brussel. Ondersteuning van lokale producenten en bevordering van korte ketens.", links: "Nuttige links", legal: "Juridisch", address: "Adres", email: "E-mail", hours: "Openingstijden", hoursVal: "Ma - Vr : 8:00 - 16:00", version: "Versie", rights: "Alle rechten voorbehouden", city: "Brussel, Belgie" }
+    }[lang] || { desc: "Organisation a but non lucratif fondee en 2019.", links: "Liens utiles", legal: "Legal", address: "Adresse", email: "Email", hours: "Horaires", hoursVal: "Lun - Ven : 8h00 - 16h00", version: "Version", rights: "Tous droits reserves", city: "Bruxelles, Belgique" };
 
     const usefulLinks = [
         { label: lang === "fr" ? "Accueil" : lang === "en" ? "Home" : "Home", path: "/" },
@@ -55,7 +20,7 @@ function Footer({ lang }) {
 
     const legalLinks = [
         { label: lang === "fr" ? "Confidentialite" : lang === "en" ? "Privacy" : "Privacy", path: "/confidentialite" },
-        { label: lang === "fr" ? "Politique de cookies" : lang === "en" ? "Cookie policy" : "Cookiebeleid", path: "/cookies" },
+        { label: lang === "fr" ? "Politique cookies" : lang === "en" ? "Cookie policy" : "Cookiebeleid", path: "/cookies" },
         { label: lang === "fr" ? "Conditions" : lang === "en" ? "Terms" : "Voorwaarden", path: "/conditions" },
         { label: lang === "fr" ? "Aide" : lang === "en" ? "Help" : "Hulp", path: "/aide" },
         { label: "Sponsors", path: "/sponsors" }
@@ -68,31 +33,59 @@ function Footer({ lang }) {
                     <img src="/logo-terrasana.png" alt="Terra Sana" style={styles.footerLogo} />
                     <p style={styles.desc}>{t.desc}</p>
                     <div style={styles.contactInfo}>
-                        <div style={styles.infoItem}>?? {t.address}</div>
-                        <div style={styles.infoItem}>{t.city}</div>
-                        <div style={styles.infoItem}>?? Terrasana@outlook.be</div>
-                        <div style={styles.infoItem}>?? {t.hours}</div>
+                        <div style={styles.infoItem}>
+                            <div style={styles.infoIcon}>ADR</div>
+                            <div>
+                                <div style={styles.infoLabel}>{t.address}</div>
+                                <div style={styles.infoValue}>53/3, 1200 Woluwe-Saint-Lambert</div>
+                                <div style={styles.infoValue}>{t.city}</div>
+                            </div>
+                        </div>
+                        <div style={styles.infoItem}>
+                            <div style={styles.infoIcon}>EML</div>
+                            <div>
+                                <div style={styles.infoLabel}>{t.email}</div>
+                                <a href="mailto:Terrasana@outlook.be" style={styles.infoLink}>Terrasana@outlook.be</a>
+                            </div>
+                        </div>
+                        <div style={styles.infoItem}>
+                            <div style={styles.infoIcon}>HOR</div>
+                            <div>
+                                <div style={styles.infoLabel}>{t.hours}</div>
+                                <div style={styles.infoValue}>{t.hoursVal}</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div style={styles.col}>
                     <div style={styles.colTitle}>{t.links}</div>
-                    {usefulLinks.map((l, i) => (
-                        <Link key={i} to={l.path} style={styles.footerLink}>{l.label}</Link>
-                    ))}
+                    <div style={styles.linksList}>
+                        {usefulLinks.map((l, i) => (
+                            <Link key={i} to={l.path} style={styles.footerLink}>
+                                <span style={styles.linkDot}></span>
+                                {l.label}
+                            </Link>
+                        ))}
+                    </div>
                 </div>
 
                 <div style={styles.col}>
                     <div style={styles.colTitle}>{t.legal}</div>
-                    {legalLinks.map((l, i) => (
-                        <Link key={i} to={l.path} style={styles.footerLink}>{l.label}</Link>
-                    ))}
+                    <div style={styles.linksList}>
+                        {legalLinks.map((l, i) => (
+                            <Link key={i} to={l.path} style={styles.footerLink}>
+                                <span style={styles.linkDot}></span>
+                                {l.label}
+                            </Link>
+                        ))}
+                    </div>
                 </div>
             </div>
 
             <div style={styles.bottom}>
                 <div style={styles.bottomLeft}>
-                    © 2025 Terra Sana ASBL — {t.rights}
+                    &copy; 2025 Terra Sana ASBL &mdash; {t.rights}
                 </div>
                 <div style={styles.versionBadge}>
                     {t.version} : {version}
@@ -103,18 +96,24 @@ function Footer({ lang }) {
 }
 
 const styles = {
-    footer: { background: "#111", padding: "48px 32px 24px" },
-    top: { display: "grid", gridTemplateColumns: "2fr 1fr 1fr", gap: "40px", marginBottom: "40px", paddingBottom: "40px", borderBottom: "1px solid #222" },
-    col: { display: "flex", flexDirection: "column", gap: "8px" },
-    footerLogo: { height: "48px", width: "auto", objectFit: "contain", marginBottom: "12px", filter: "brightness(1.1)" },
-    desc: { fontSize: "13px", color: "#666", lineHeight: "1.7", marginBottom: "16px" },
-    contactInfo: { display: "flex", flexDirection: "column", gap: "6px" },
-    infoItem: { fontSize: "12px", color: "#555" },
-    colTitle: { fontSize: "13px", fontWeight: "700", color: "#fff", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "1px" },
-    footerLink: { fontSize: "13px", color: "#666", textDecoration: "none", transition: "color 0.2s", padding: "2px 0" },
-    bottom: { display: "flex", justifyContent: "space-between", alignItems: "center" },
-    bottomLeft: { fontSize: "12px", color: "#444" },
-    versionBadge: { fontSize: "11px", color: "#444", background: "#1a1a1a", padding: "4px 12px", borderRadius: "20px", border: "1px solid #2a2a2a" }
+    footer: { background: "#111", padding: "48px 40px 24px" },
+    top: { display: "grid", gridTemplateColumns: "2fr 1fr 1fr", gap: "48px", marginBottom: "40px", paddingBottom: "40px", borderBottom: "1px solid #222" },
+    col: { display: "flex", flexDirection: "column" },
+    footerLogo: { height: "50px", width: "auto", objectFit: "contain", marginBottom: "16px", alignSelf: "flex-start" },
+    desc: { fontSize: "13px", color: "#555", lineHeight: "1.8", marginBottom: "24px" },
+    contactInfo: { display: "flex", flexDirection: "column", gap: "14px" },
+    infoItem: { display: "flex", gap: "12px", alignItems: "flex-start" },
+    infoIcon: { background: "#1e1e1e", color: "#4caf50", fontWeight: "bold", fontSize: "9px", padding: "5px 7px", borderRadius: "5px", flexShrink: 0, letterSpacing: "0.5px", border: "1px solid #2a2a2a" },
+    infoLabel: { fontSize: "11px", color: "#4caf50", fontWeight: "600", marginBottom: "3px", letterSpacing: "0.5px", textTransform: "uppercase" },
+    infoValue: { fontSize: "13px", color: "#555" },
+    infoLink: { fontSize: "13px", color: "#4caf50", textDecoration: "none" },
+    colTitle: { fontSize: "12px", fontWeight: "700", color: "#fff", marginBottom: "16px", textTransform: "uppercase", letterSpacing: "1.5px", paddingBottom: "10px", borderBottom: "1px solid #222" },
+    linksList: { display: "flex", flexDirection: "column", gap: "10px" },
+    footerLink: { display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#555", textDecoration: "none", transition: "color 0.2s" },
+    linkDot: { width: "4px", height: "4px", borderRadius: "50%", background: "#333", flexShrink: 0 },
+    bottom: { display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "8px" },
+    bottomLeft: { fontSize: "12px", color: "#333" },
+    versionBadge: { fontSize: "11px", color: "#444", background: "#1a1a1a", padding: "5px 14px", borderRadius: "20px", border: "1px solid #2a2a2a" }
 };
 
 export default Footer;
