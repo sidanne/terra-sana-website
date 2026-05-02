@@ -1,41 +1,47 @@
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getProjects } from "../services/api";
-import { Link } from "react-router-dom";
 
-function Home() {
+function Home({ lang }) {
     const [projects, setProjects] = useState([]);
 
     useEffect(() => {
         getProjects().then(data => setProjects(data.slice(0, 6)));
     }, []);
 
+    const t = {
+        fr: { badge: "Association a but non lucratif - Bruxelles", title1: "Bienvenue sur", title2: "Terra Sana", desc: "Plateforme centrale de association. Acces a tous nos projets et decouvrez notre mission.", btn1: "Voir les projets", btn2: "En savoir plus", stat1: "Projets actifs", stat2: "Fondee a Bruxelles", stat3: "Non lucratif", sec1: "Nos projets et applications", sec1sub: "Acces direct aux outils developpes par equipe", open: "Ouvrir", doc: "Doc", who: "Qui sommes-nous ?", whoDesc: "Organisation a but non lucratif fondee en 2019 a Bruxelles.", more: "En savoir plus" },
+        en: { badge: "Non-profit organization - Brussels", title1: "Welcome to", title2: "Terra Sana", desc: "Central platform of the association. Access all our projects and discover our mission.", btn1: "See projects", btn2: "Learn more", stat1: "Active projects", stat2: "Founded in Brussels", stat3: "Non-profit", sec1: "Our projects and applications", sec1sub: "Direct access to tools developed by the team", open: "Open", doc: "Doc", who: "Who are we?", whoDesc: "Non-profit organization founded in 2019 in Brussels.", more: "Learn more" },
+        nl: { badge: "Non-profitorganisatie - Brussel", title1: "Welkom bij", title2: "Terra Sana", desc: "Centraal platform van de vereniging. Toegang tot al onze projecten en ontdek onze missie.", btn1: "Zie projecten", btn2: "Meer info", stat1: "Actieve projecten", stat2: "Opgericht in Brussel", stat3: "Non-profit", sec1: "Onze projecten en applicaties", sec1sub: "Directe toegang tot tools ontwikkeld door het team", open: "Openen", doc: "Doc", who: "Wie zijn wij?", whoDesc: "Non-profitorganisatie opgericht in 2019 in Brussel.", more: "Meer info" }
+    }[lang] || { badge: "Association a but non lucratif - Bruxelles", title1: "Bienvenue sur", title2: "Terra Sana", desc: "Plateforme centrale de association.", btn1: "Voir les projets", btn2: "En savoir plus", stat1: "Projets actifs", stat2: "Fondee a Bruxelles", stat3: "Non lucratif", sec1: "Nos projets et applications", sec1sub: "Acces direct aux outils", open: "Ouvrir", doc: "Doc", who: "Qui sommes-nous ?", whoDesc: "Organisation a but non lucratif fondee en 2019.", more: "En savoir plus" };
+
     return (
         <div>
             <div style={styles.hero}>
-                <div style={styles.badge}>Association a but non lucratif - Bruxelles</div>
-                <h1 style={styles.heroTitle}>Bienvenue sur <span style={styles.green}>Terra Sana</span></h1>
-                <p style={styles.heroText}>Plateforme centrale de association. Acces a tous nos projets et decouvrez notre mission.</p>
+                <div style={styles.badge}>{t.badge}</div>
+                <h1 style={styles.heroTitle}>{t.title1} <span style={styles.green}>{t.title2}</span></h1>
+                <p style={styles.heroText}>{t.desc}</p>
                 <div style={styles.heroBtns}>
-                    <Link to="/projects" style={styles.btnGreen}>Voir les projets</Link>
-                    <Link to="/about" style={styles.btnOutline}>En savoir plus</Link>
+                    <Link to="/projects" style={styles.btnGreen}>{t.btn1}</Link>
+                    <Link to="/about" style={styles.btnOutline}>{t.btn2}</Link>
                 </div>
             </div>
             <div style={styles.statsSection}>
                 <div style={styles.stats}>
-                    <div style={styles.stat}><div style={styles.statNum}>12+</div><div style={styles.statLbl}>Projets actifs</div></div>
-                    <div style={styles.stat}><div style={styles.statNum}>2019</div><div style={styles.statLbl}>Fondee a Bruxelles</div></div>
-                    <div style={styles.stat}><div style={styles.statNum}>100%</div><div style={styles.statLbl}>Non lucratif</div></div>
+                    <div style={styles.stat}><div style={styles.statNum}>12+</div><div style={styles.statLbl}>{t.stat1}</div></div>
+                    <div style={styles.stat}><div style={styles.statNum}>2019</div><div style={styles.statLbl}>{t.stat2}</div></div>
+                    <div style={styles.stat}><div style={styles.statNum}>100%</div><div style={styles.statLbl}>{t.stat3}</div></div>
                 </div>
-                <h2 style={styles.sectionTitle}>Nos projets et applications</h2>
-                <p style={styles.sectionSub}>Acces direct aux outils developpes par equipe</p>
+                <h2 style={styles.sectionTitle}>{t.sec1}</h2>
+                <p style={styles.sectionSub}>{t.sec1sub}</p>
                 <div style={styles.grid}>
                     {projects.map(p => (
                         <div key={p.id} style={styles.card}>
                             <div style={styles.cardName}>{p.name}</div>
                             <div style={styles.cardDesc}>{p.description}</div>
                             <div style={styles.cardLinks}>
-                                <a href={p.link} style={styles.cardLink} target="_blank" rel="noreferrer">Ouvrir</a>
-                                {p.documentationLink && <a href={p.documentationLink} style={styles.cardLink} target="_blank" rel="noreferrer">Doc</a>}
+                                {p.link && <a href={p.link} style={styles.cardLink} target="_blank" rel="noreferrer">{t.open}</a>}
+                                {p.documentationLink && <a href={p.documentationLink} style={styles.cardLink} target="_blank" rel="noreferrer">{t.doc}</a>}
                             </div>
                         </div>
                     ))}
@@ -43,10 +49,10 @@ function Home() {
             </div>
             <div style={styles.aboutStrip}>
                 <div>
-                    <h2 style={styles.aboutTitle}>Qui sommes-nous ?</h2>
-                    <p style={styles.aboutText}>Organisation a but non lucratif fondee en 2019 a Bruxelles.</p>
+                    <h2 style={styles.aboutTitle}>{t.who}</h2>
+                    <p style={styles.aboutText}>{t.whoDesc}</p>
                 </div>
-                <Link to="/about" style={styles.btnOutlineGreen}>En savoir plus</Link>
+                <Link to="/about" style={styles.btnOutlineGreen}>{t.more}</Link>
             </div>
         </div>
     );

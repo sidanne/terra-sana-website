@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useState } from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -17,15 +18,17 @@ import Sponsors from "./pages/Sponsors";
 import Benevolat from "./pages/Benevolat";
 
 function App() {
+    const [lang, setLang] = useState("fr");
+
     return (
         <Router>
-            <Navbar />
+            <Navbar lang={lang} setLang={setLang} />
             <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/projects" element={<Projects />} />
-                <Route path="/blog" element={<Blog />} />
-                <Route path="/contact" element={<Contact />} />
+                <Route path="/" element={<Home lang={lang} />} />
+                <Route path="/about" element={<About lang={lang} />} />
+                <Route path="/projects" element={<Projects lang={lang} />} />
+                <Route path="/blog" element={<Blog lang={lang} />} />
+                <Route path="/contact" element={<Contact lang={lang} />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/confidentialite" element={<Confidentialite />} />
@@ -36,7 +39,7 @@ function App() {
                 <Route path="/benevolat" element={<Benevolat />} />
                 <Route path="*" element={<NotFound />} />
             </Routes>
-            <Footer />
+            <Footer lang={lang} />
         </Router>
     );
 }

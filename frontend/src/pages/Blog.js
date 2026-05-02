@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getPosts } from "../services/api";
 
-function Blog() {
+function Blog({ lang }) {
     const [posts, setPosts] = useState([]);
     const [page, setPage] = useState(0);
     const perPage = 5;
@@ -10,20 +10,26 @@ function Blog() {
         getPosts().then(data => setPosts(data));
     }, []);
 
+    const t = {
+        fr: { title: "Blog", sub: "Actualites et publications de association", empty: "Aucun article publie pour le moment.", prev: "Precedent", next: "Suivant" },
+        en: { title: "Blog", sub: "News and publications from the association", empty: "No articles published yet.", prev: "Previous", next: "Next" },
+        nl: { title: "Blog", sub: "Nieuws en publicaties van de vereniging", empty: "Nog geen artikelen gepubliceerd.", prev: "Vorige", next: "Volgende" }
+    }[lang] || { title: "Blog", sub: "Actualites", empty: "Aucun article.", prev: "Precedent", next: "Suivant" };
+
     const paginated = posts.slice(page * perPage, (page + 1) * perPage);
     const totalPages = Math.ceil(posts.length / perPage);
 
     const formatDate = (date) => {
-        if (!date) return "Date non disponible";
-        return new Date(date).toLocaleDateString("fr-BE", { day: "numeric", month: "long", year: "numeric" });
+        if (!date) return "";
+        return new Date(date).toLocaleDateString(lang === "fr" ? "fr-BE" : lang === "en" ? "en-GB" : "nl-BE", { day: "numeric", month: "long", year: "numeric" });
     };
 
     return (
         <div style={styles.container}>
-            <h1 style={styles.title}>Blog</h1>
-            <p style={styles.sub}>Actualites et publications de association</p>
+            <h1 style={styles.title}>{t.title}</h1>
+            <p style={styles.sub}>{t.sub}</p>
             {posts.length === 0 ? (
-                <div style={styles.empty}>Aucun article publie pour le moment.</div>
+                <div style={styles.empty}>{t.empty}</div>
             ) : (
                 <>
                     <div style={styles.list}>
@@ -37,9 +43,9 @@ function Blog() {
                     </div>
                     {totalPages > 1 && (
                         <div style={styles.pagination}>
-                            <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0} style={styles.pageBtn}>Precedent</button>
+                            <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0} style={styles.pageBtn}>{t.prev}</button>
                             <span style={styles.pageInfo}>{page + 1} / {totalPages}</span>
-                            <button onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} disabled={page === totalPages - 1} style={styles.pageBtn}>Suivant</button>
+                            <button onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} disabled={page === totalPages - 1} style={styles.pageBtn}>{t.next}</button>
                         </div>
                     )}
                 </>

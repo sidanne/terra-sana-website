@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getProjects } from "../services/api";
 
-function Projects() {
+function Projects({ lang }) {
     const [projects, setProjects] = useState([]);
     const [page, setPage] = useState(0);
     const perPage = 6;
@@ -10,38 +10,40 @@ function Projects() {
         getProjects().then(data => setProjects(data));
     }, []);
 
+    const t = {
+        fr: { title: "Nos projets et applications", sub: "Cliquez sur un projet pour y acceder directement", open: "Ouvrir", doc: "Documentation", prev: "Precedent", next: "Suivant", active: "Actif", inactive: "Inactif" },
+        en: { title: "Our projects and applications", sub: "Click on a project to access it directly", open: "Open", doc: "Documentation", prev: "Previous", next: "Next", active: "Active", inactive: "Inactive" },
+        nl: { title: "Onze projecten en applicaties", sub: "Klik op een project om er direct toegang toe te krijgen", open: "Openen", doc: "Documentatie", prev: "Vorige", next: "Volgende", active: "Actief", inactive: "Inactief" }
+    }[lang] || { title: "Nos projets et applications", sub: "Cliquez sur un projet", open: "Ouvrir", doc: "Documentation", prev: "Precedent", next: "Suivant", active: "Actif", inactive: "Inactif" };
+
     const paginated = projects.slice(page * perPage, (page + 1) * perPage);
     const totalPages = Math.ceil(projects.length / perPage);
 
     return (
         <div style={styles.container}>
-            <div style={styles.header}>
-                <h1 style={styles.title}>Nos projets & applications</h1>
-                <p style={styles.sub}>Cliquez sur un projet pour y acceder directement</p>
-            </div>
+            <h1 style={styles.title}>{t.title}</h1>
+            <p style={styles.sub}>{t.sub}</p>
             <div style={styles.grid}>
                 {paginated.map(p => (
                     <div key={p.id} style={styles.card}>
                         <div style={styles.cardTop}>
                             <div style={styles.category}>{p.category}</div>
-                            <div style={p.isActive ? styles.active : styles.inactive}>
-                                {p.isActive ? "Actif" : "Inactif"}
-                            </div>
+                            <div style={p.isActive ? styles.active : styles.inactive}>{p.isActive ? t.active : t.inactive}</div>
                         </div>
                         <div style={styles.name}>{p.name}</div>
                         <div style={styles.desc}>{p.description}</div>
                         <div style={styles.links}>
-                            {p.link && <a href={p.link} style={styles.btnGreen} target="_blank" rel="noreferrer">Ouvrir</a>}
-                            {p.documentationLink && <a href={p.documentationLink} style={styles.btnOutline} target="_blank" rel="noreferrer">Documentation</a>}
+                            {p.link && <a href={p.link} style={styles.btnGreen} target="_blank" rel="noreferrer">{t.open}</a>}
+                            {p.documentationLink && <a href={p.documentationLink} style={styles.btnOutline} target="_blank" rel="noreferrer">{t.doc}</a>}
                         </div>
                     </div>
                 ))}
             </div>
             {totalPages > 1 && (
                 <div style={styles.pagination}>
-                    <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0} style={styles.pageBtn}>Precedent</button>
+                    <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0} style={styles.pageBtn}>{t.prev}</button>
                     <span style={styles.pageInfo}>{page + 1} / {totalPages}</span>
-                    <button onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} disabled={page === totalPages - 1} style={styles.pageBtn}>Suivant</button>
+                    <button onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} disabled={page === totalPages - 1} style={styles.pageBtn}>{t.next}</button>
                 </div>
             )}
         </div>
@@ -50,9 +52,8 @@ function Projects() {
 
 const styles = {
     container: { padding: "40px 32px", background: "#f9f9f9", minHeight: "100vh" },
-    header: { marginBottom: "28px" },
     title: { fontSize: "28px", fontWeight: "bold", color: "#1a1a1a", marginBottom: "8px" },
-    sub: { fontSize: "14px", color: "#888" },
+    sub: { fontSize: "14px", color: "#888", marginBottom: "28px" },
     grid: { display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "20px" },
     card: { background: "#fff", border: "1px solid #e0e0e0", borderRadius: "12px", padding: "20px", boxShadow: "0 2px 8px rgba(0,0,0,0.05)" },
     cardTop: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" },
