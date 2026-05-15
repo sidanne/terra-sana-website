@@ -44,4 +44,18 @@ public class AuthController {
         adminRepo.save(admin);
         return Map.of("message", "Admin cree avec succes");
     }
+    @PutMapping("/changePassword")
+public Map<String, String> changePassword(@RequestBody Map<String, String> body) {
+    String username = body.get("username");
+    String oldPassword = body.get("oldPassword");
+    String newPassword = body.get("newPassword");
+    Admin admin = adminRepo.findByUsername(username)
+            .orElseThrow(() -> new RuntimeException("Admin non trouve"));
+    if (!passwordEncoder.matches(oldPassword, admin.getPassword())) {
+        throw new RuntimeException("Ancien mot de passe incorrect");
+    }
+    admin.setPassword(passwordEncoder.encode(newPassword));
+    adminRepo.save(admin);
+    return Map.of("message", "Mot de passe change avec succes");
+}
 }
