@@ -5,6 +5,7 @@ import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Projects from "./pages/Projects";
+import ProjectDetail from "./pages/ProjectDetail";
 import Blog from "./pages/Blog";
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
@@ -27,6 +28,7 @@ function App() {
                 <Route path="/" element={<Home lang={lang} />} />
                 <Route path="/about" element={<About lang={lang} />} />
                 <Route path="/projects" element={<Projects lang={lang} />} />
+                <Route path="/projects/:id" element={<ProjectDetail lang={lang} />} />
                 <Route path="/blog" element={<Blog lang={lang} />} />
                 <Route path="/contact" element={<Contact lang={lang} />} />
                 <Route path="/login" element={<Login />} />
@@ -36,7 +38,7 @@ function App() {
                 <Route path="/cookies" element={<Cookies />} />
                 <Route path="/aide" element={<Aide />} />
                 <Route path="/sponsors" element={<Sponsors />} />
-                <Route path="/benevolat" element={<Benevolat />} />
+                <Route path="/benevolat" element={<Benevolat lang={lang} />} />
                 <Route path="*" element={<NotFound />} />
             </Routes>
             <Footer lang={lang} />

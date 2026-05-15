@@ -3,7 +3,6 @@ package com.terresana.backend.controller;
 import com.terresana.backend.model.Project;
 import com.terresana.backend.repository.ProjectRepository;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -16,10 +15,7 @@ public class ProjectController {
         this.repo = repo;
     }
 
-    @GetMapping
-    public List<Project> getAll() {
-        return repo.findAll();
-    }
+    
 
     @PostMapping
     public Project create(@RequestBody Project project) {
