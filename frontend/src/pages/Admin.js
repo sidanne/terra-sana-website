@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { isTokenValid, logout } from "../services/auth";
-import MessageCard from "../components/MessageCard";
 
 function Admin() {
     const [projects, setProjects] = useState([]);
@@ -19,6 +18,7 @@ function Admin() {
     const [passwordForm, setPasswordForm] = useState({ oldPassword: "", newPassword: "", confirmPassword: "" });
     const [passwordError, setPasswordError] = useState("");
     const [activeTab, setActiveTab] = useState("projets");
+    const [filterMessages, setFilterMessages] = useState("tous");
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
 
@@ -48,6 +48,17 @@ function Admin() {
 
     const unreadCount = messages.filter(m => !m.read).length;
 
+    const toggleActive = async (project) => {
+        const updated = { ...project, isActive: !project.isActive };
+        await fetch(`http://localhost:8080/api/projects/${project.id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+            body: JSON.stringify(updated)
+        });
+        fetchData();
+        showSuccess(updated.isActive ? "Projet active !" : "Projet desactive !");
+    };
+
     const addProject = async (e) => {
         e.preventDefault();
         await fetch("http://localhost:8080/api/projects", {
@@ -72,9 +83,7 @@ function Admin() {
         showSuccess("Projet modifie avec succes !");
     };
 
-    const confirmAndDelete = (type, id, nom) => {
-        setConfirmDelete({ type, id, nom });
-    };
+    const confirmAndDelete = (type, id, nom) => setConfirmDelete({ type, id, nom });
 
     const executeDelete = async () => {
         const { type, id } = confirmDelete;
@@ -164,15 +173,20 @@ function Admin() {
         return new Date(date).toLocaleDateString("fr-BE", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
     };
 
+    const filteredMessages = messages.filter(m => {
+        if (filterMessages === "lus") return m.read;
+        if (filterMessages === "nonlus") return !m.read;
+        return true;
+    });
+
     const tabs = [
         { id: "projets", label: `Projets (${projects.length})` },
         { id: "blog", label: `Blog (${posts.length})` },
-        { id: "messages", label: `Messages`, badge: unreadCount }
+        { id: "messages", label: "Messages", badge: unreadCount }
     ];
 
     return (
         <div style={styles.container}>
-
             {successMsg && <div style={styles.successBanner}>{successMsg}</div>}
 
             <div style={styles.header}>
@@ -181,25 +195,26 @@ function Admin() {
                     <p style={styles.subtitle}>Gestion du contenu Terra Sana</p>
                 </div>
                 <div style={styles.headerBtns}>
-                    <button onClick={() => setShowPasswordModal(true)} style={styles.pwdBtn}>
-                        Changer mot de passe
-                    </button>
+                    <button onClick={() => setShowPasswordModal(true)} style={styles.pwdBtn}>Changer mot de passe</button>
                     <button onClick={handleLogout} style={styles.logoutBtn}>Deconnexion</button>
                 </div>
             </div>
 
             <div style={styles.statsRow}>
-                <div style={styles.statCard}>
+                <div style={{...styles.statCard, borderTop: "3px solid #4caf50"}}>
                     <div style={styles.statNum}>{projects.length}</div>
                     <div style={styles.statLbl}>Projets</div>
+                    <div style={styles.statSub}>{projects.filter(p=>p.isActive).length} actifs</div>
                 </div>
-                <div style={styles.statCard}>
+                <div style={{...styles.statCard, borderTop: "3px solid #2196f3"}}>
                     <div style={styles.statNum}>{posts.length}</div>
                     <div style={styles.statLbl}>Articles</div>
+                    <div style={styles.statSub}>publies</div>
                 </div>
-                <div style={{...styles.statCard, borderTop: unreadCount > 0 ? "3px solid #4caf50" : "3px solid #e0e0e0"}}>
-                    <div style={{...styles.statNum, color: unreadCount > 0 ? "#2e7d32" : "#1a1a1a"}}>{messages.length}</div>
-                    <div style={styles.statLbl}>Messages {unreadCount > 0 && <span style={styles.unreadBadge}>{unreadCount} nouveau(x)</span>}</div>
+                <div style={{...styles.statCard, borderTop: unreadCount > 0 ? "3px solid #f44336" : "3px solid #e0e0e0"}}>
+                    <div style={{...styles.statNum, color: unreadCount > 0 ? "#c62828" : "#1a1a1a"}}>{messages.length}</div>
+                    <div style={styles.statLbl}>Messages</div>
+                    <div style={styles.statSub}>{unreadCount > 0 ? `${unreadCount} non lu(s)` : "tous lus"}</div>
                 </div>
             </div>
 
@@ -224,6 +239,10 @@ function Admin() {
                             </div>
                             <input placeholder="Description" value={newProject.description} onChange={e => setNewProject({...newProject, description: e.target.value})} style={styles.input} required />
                             <input placeholder="Lien application (http://...)" value={newProject.link} onChange={e => setNewProject({...newProject, link: e.target.value})} style={styles.input} />
+                            <div style={styles.checkRow}>
+                                <input type="checkbox" id="isActive" checked={newProject.isActive} onChange={e => setNewProject({...newProject, isActive: e.target.checked})} />
+                                <label htmlFor="isActive" style={styles.checkLabel}>Projet actif</label>
+                            </div>
                             <button type="submit" style={styles.btn}>Ajouter le projet</button>
                         </form>
                     </div>
@@ -238,6 +257,10 @@ function Admin() {
                                 </div>
                                 <input placeholder="Description" value={editProject.description} onChange={e => setEditProject({...editProject, description: e.target.value})} style={styles.input} />
                                 <input placeholder="Lien" value={editProject.link || ""} onChange={e => setEditProject({...editProject, link: e.target.value})} style={styles.input} />
+                                <div style={styles.checkRow}>
+                                    <input type="checkbox" id="editIsActive" checked={editProject.isActive} onChange={e => setEditProject({...editProject, isActive: e.target.checked})} />
+                                    <label htmlFor="editIsActive" style={styles.checkLabel}>Projet actif</label>
+                                </div>
                                 <div style={styles.formBtns}>
                                     <button type="submit" style={styles.btn}>Sauvegarder</button>
                                     <button type="button" onClick={() => setEditProject(null)} style={styles.cancelBtn}>Annuler</button>
@@ -250,10 +273,18 @@ function Admin() {
                         <h2 style={styles.sectionTitle}>Projets ({projects.length})</h2>
                         <div style={styles.grid}>
                             {projects.map(p => (
-                                <div key={p.id} style={styles.projectCard}>
-                                    <div style={styles.projectCat}>{p.category || "Sans categorie"}</div>
+                                <div key={p.id} style={{...styles.projectCard, opacity: p.isActive ? 1 : 0.7}}>
+                                    <div style={styles.projectCardTop}>
+                                        <div style={styles.projectCat}>{p.category || "Sans categorie"}</div>
+                                        <button
+                                            onClick={() => toggleActive(p)}
+                                            style={{...styles.toggleBtn, background: p.isActive ? "#e8f5e9" : "#ffebee", color: p.isActive ? "#2e7d32" : "#c62828"}}>
+                                            {p.isActive ? "Actif" : "Inactif"}
+                                        </button>
+                                    </div>
                                     <div style={styles.cardName}>{p.name}</div>
                                     <div style={styles.cardDesc}>{p.description}</div>
+                                    {p.createdAt && <div style={styles.cardDate}>{formatDate(p.createdAt)}</div>}
                                     <div style={styles.cardBtns}>
                                         <button onClick={() => setEditProject(p)} style={styles.editBtn}>Modifier</button>
                                         <button onClick={() => confirmAndDelete("project", p.id, p.name)} style={styles.deleteBtn}>Supprimer</button>
@@ -304,7 +335,7 @@ function Admin() {
                                         <button onClick={() => confirmAndDelete("post", p.id, p.title)} style={styles.deleteBtn}>Supprimer</button>
                                     </div>
                                 </div>
-                                <div style={styles.articleContent}>{p.content}</div>
+                                <div style={styles.articleContent}>{p.content.substring(0, 120)}{p.content.length > 120 ? "..." : ""}</div>
                             </div>
                         ))}
                     </div>
@@ -313,13 +344,24 @@ function Admin() {
 
             {activeTab === "messages" && (
                 <div style={styles.section}>
-                    <h2 style={styles.sectionTitle}>
-                        Messages recus ({messages.length})
-                        {unreadCount > 0 && <span style={styles.unreadBadge2}>{unreadCount} non lu(s)</span>}
-                    </h2>
-                    {messages.length === 0 ? (
-                        <div style={styles.empty}>Aucun message recu pour le moment.</div>
-                    ) : messages.map(m => (
+                    <div style={styles.messagesHeader}>
+                        <h2 style={styles.sectionTitle}>
+                            Messages ({messages.length})
+                            {unreadCount > 0 && <span style={styles.unreadBadge2}>{unreadCount} non lu(s)</span>}
+                        </h2>
+                        <div style={styles.filterRow}>
+                            {["tous","nonlus","lus"].map(f => (
+                                <button key={f} onClick={() => setFilterMessages(f)}
+                                    style={{...styles.filterBtn, ...(filterMessages === f ? styles.filterBtnActive : {})}}>
+                                    {f === "tous" ? "Tous" : f === "nonlus" ? "Non lus" : "Lus"}
+                                    {f === "nonlus" && unreadCount > 0 && <span style={styles.filterCount}>{unreadCount}</span>}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                    {filteredMessages.length === 0 ? (
+                        <div style={styles.empty}>Aucun message dans cette categorie.</div>
+                    ) : filteredMessages.map(m => (
                         <div key={m.id} style={{...styles.messageCard, borderLeft: m.read ? "3px solid #e0e0e0" : "3px solid #4caf50"}}>
                             <div style={styles.messageHeader}>
                                 <div style={styles.messageLeft}>
@@ -338,9 +380,7 @@ function Admin() {
                             </div>
                             <div style={styles.messageText}>{m.message}</div>
                             <div style={styles.msgBtns}>
-                                {!m.read && (
-                                    <button onClick={() => markAsRead(m.id)} style={styles.readBtn}>Marquer lu</button>
-                                )}
+                                {!m.read && <button onClick={() => markAsRead(m.id)} style={styles.readBtn}>Marquer lu</button>}
                                 <button onClick={() => { setReplyMsg(m); setReplyText(""); markAsRead(m.id); }} style={styles.replyBtn}>Repondre</button>
                                 <button onClick={() => confirmAndDelete("message", m.id, m.name)} style={styles.deleteBtn}>Supprimer</button>
                                 <button onClick={() => { markAsRead(m.id); showSuccess("Message ignore."); }} style={styles.ignoreBtn}>Ignorer</button>
@@ -355,10 +395,7 @@ function Admin() {
                     <div style={styles.modalBox}>
                         <div style={styles.modalIcon}>!</div>
                         <h3 style={styles.modalTitle}>Confirmer la suppression</h3>
-                        <p style={styles.modalSub}>
-                            Voulez-vous vraiment supprimer <strong>{confirmDelete.nom}</strong> ?
-                            Cette action est irreversible.
-                        </p>
+                        <p style={styles.modalSub}>Voulez-vous vraiment supprimer <strong>{confirmDelete.nom}</strong> ? Cette action est irreversible.</p>
                         <div style={styles.modalBtns}>
                             <button onClick={executeDelete} style={styles.modalDeleteBtn}>Supprimer definitivement</button>
                             <button onClick={() => setConfirmDelete(null)} style={styles.cancelBtn}>Annuler</button>
@@ -384,13 +421,7 @@ function Admin() {
                             <div style={styles.originalText}>{replyMsg.message}</div>
                         </div>
                         <form onSubmit={replyMessage}>
-                            <textarea
-                                placeholder="Votre reponse..."
-                                value={replyText}
-                                onChange={e => setReplyText(e.target.value)}
-                                style={{...styles.textarea, width: "100%", marginBottom: "16px", height: "120px"}}
-                                required
-                            />
+                            <textarea placeholder="Votre reponse..." value={replyText} onChange={e => setReplyText(e.target.value)} style={{...styles.textarea, width: "100%", marginBottom: "16px", height: "120px"}} required />
                             <div style={styles.formBtns}>
                                 <button type="submit" style={styles.btn}>Envoyer la reponse</button>
                                 <button type="button" onClick={() => setReplyMsg(null)} style={styles.cancelBtn}>Annuler</button>
@@ -406,18 +437,9 @@ function Admin() {
                         <h3 style={styles.modalTitle}>Changer le mot de passe</h3>
                         {passwordError && <div style={styles.errorMsg}>{passwordError}</div>}
                         <form onSubmit={changePassword} style={{display:"flex",flexDirection:"column",gap:"12px",marginTop:"16px"}}>
-                            <div>
-                                <label style={styles.label}>Ancien mot de passe</label>
-                                <input type="password" value={passwordForm.oldPassword} onChange={e => setPasswordForm({...passwordForm, oldPassword: e.target.value})} style={styles.input} required />
-                            </div>
-                            <div>
-                                <label style={styles.label}>Nouveau mot de passe</label>
-                                <input type="password" value={passwordForm.newPassword} onChange={e => setPasswordForm({...passwordForm, newPassword: e.target.value})} style={styles.input} required />
-                            </div>
-                            <div>
-                                <label style={styles.label}>Confirmer le nouveau mot de passe</label>
-                                <input type="password" value={passwordForm.confirmPassword} onChange={e => setPasswordForm({...passwordForm, confirmPassword: e.target.value})} style={styles.input} required />
-                            </div>
+                            <div><label style={styles.label}>Ancien mot de passe</label><input type="password" value={passwordForm.oldPassword} onChange={e => setPasswordForm({...passwordForm, oldPassword: e.target.value})} style={styles.input} required /></div>
+                            <div><label style={styles.label}>Nouveau mot de passe</label><input type="password" value={passwordForm.newPassword} onChange={e => setPasswordForm({...passwordForm, newPassword: e.target.value})} style={styles.input} required /></div>
+                            <div><label style={styles.label}>Confirmer le nouveau mot de passe</label><input type="password" value={passwordForm.confirmPassword} onChange={e => setPasswordForm({...passwordForm, confirmPassword: e.target.value})} style={styles.input} required /></div>
                             <div style={styles.formBtns}>
                                 <button type="submit" style={styles.btn}>Changer</button>
                                 <button type="button" onClick={() => { setShowPasswordModal(false); setPasswordError(""); }} style={styles.cancelBtn}>Annuler</button>
@@ -440,19 +462,26 @@ const styles = {
     pwdBtn: { background: "#f5f5f5", color: "#555", border: "1px solid #ddd", padding: "8px 16px", borderRadius: "8px", cursor: "pointer", fontSize: "13px", fontWeight: "600" },
     logoutBtn: { background: "#f44336", color: "#fff", border: "none", padding: "8px 20px", borderRadius: "8px", cursor: "pointer", fontSize: "13px", fontWeight: "600" },
     statsRow: { display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "16px", marginBottom: "24px" },
-    statCard: { background: "#fff", border: "1px solid #e0e0e0", borderRadius: "10px", padding: "20px", textAlign: "center", borderTop: "3px solid #e0e0e0" },
+    statCard: { background: "#fff", border: "1px solid #e0e0e0", borderRadius: "10px", padding: "20px", textAlign: "center" },
     statNum: { fontSize: "32px", fontWeight: "bold", color: "#1a1a1a", lineHeight: 1 },
-    statLbl: { fontSize: "12px", color: "#888", marginTop: "6px", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" },
-    unreadBadge: { background: "#4caf50", color: "#fff", fontSize: "10px", padding: "2px 8px", borderRadius: "20px", fontWeight: "bold" },
-    unreadBadge2: { background: "#4caf50", color: "#fff", fontSize: "12px", padding: "3px 12px", borderRadius: "20px", fontWeight: "bold", marginLeft: "12px" },
+    statLbl: { fontSize: "12px", color: "#888", marginTop: "6px" },
+    statSub: { fontSize: "11px", color: "#aaa", marginTop: "4px" },
     tabs: { display: "flex", gap: "4px", marginBottom: "20px", background: "#fff", border: "1px solid #e0e0e0", borderRadius: "10px", padding: "4px" },
     tab: { flex: 1, padding: "10px 16px", border: "none", borderRadius: "8px", cursor: "pointer", fontSize: "14px", fontWeight: "500", color: "#888", background: "transparent", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" },
     tabActive: { background: "#4caf50", color: "#fff", fontWeight: "700" },
     tabBadge: { background: "#f44336", color: "#fff", fontSize: "11px", padding: "1px 7px", borderRadius: "20px", fontWeight: "bold" },
     section: { background: "#fff", border: "1px solid #e0e0e0", borderRadius: "12px", padding: "24px", marginBottom: "20px" },
     sectionTitle: { fontSize: "17px", fontWeight: "bold", color: "#1a1a1a", marginBottom: "18px", paddingBottom: "12px", borderBottom: "2px solid #e8f5e9", display: "flex", alignItems: "center", gap: "10px" },
+    messagesHeader: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "18px", paddingBottom: "12px", borderBottom: "2px solid #e8f5e9" },
+    filterRow: { display: "flex", gap: "6px" },
+    filterBtn: { background: "#f5f5f5", color: "#888", border: "1px solid #e0e0e0", padding: "6px 14px", borderRadius: "6px", cursor: "pointer", fontSize: "12px", fontWeight: "600", display: "flex", alignItems: "center", gap: "6px" },
+    filterBtnActive: { background: "#4caf50", color: "#fff", border: "1px solid #4caf50" },
+    filterCount: { background: "#fff", color: "#4caf50", fontSize: "10px", padding: "1px 6px", borderRadius: "20px", fontWeight: "bold" },
+    unreadBadge2: { background: "#4caf50", color: "#fff", fontSize: "12px", padding: "3px 12px", borderRadius: "20px", fontWeight: "bold" },
     form: { display: "flex", flexDirection: "column", gap: "12px", maxWidth: "600px" },
     formGrid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" },
+    checkRow: { display: "flex", alignItems: "center", gap: "8px" },
+    checkLabel: { fontSize: "14px", color: "#555", fontWeight: "500", cursor: "pointer" },
     input: { padding: "10px 14px", border: "1px solid #ddd", borderRadius: "8px", fontSize: "14px", fontFamily: "Arial", outline: "none" },
     textarea: { padding: "10px 14px", border: "1px solid #ddd", borderRadius: "8px", fontSize: "14px", height: "100px", resize: "none", fontFamily: "Arial", outline: "none" },
     label: { fontSize: "13px", color: "#555", fontWeight: "500", marginBottom: "6px", display: "block" },
@@ -460,16 +489,16 @@ const styles = {
     cancelBtn: { background: "#f5f5f5", color: "#555", fontSize: "13px", padding: "10px 24px", borderRadius: "8px", border: "1px solid #ddd", cursor: "pointer", width: "fit-content" },
     formBtns: { display: "flex", gap: "12px" },
     grid: { display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "14px" },
-    projectCard: { background: "#f9f9f9", border: "1px solid #e8e8e8", borderRadius: "10px", padding: "16px" },
-    projectCat: { display: "inline-block", background: "#e8f5e9", color: "#2e7d32", fontSize: "10px", fontWeight: "600", padding: "3px 10px", borderRadius: "20px", marginBottom: "8px", textTransform: "uppercase" },
+    projectCard: { background: "#f9f9f9", border: "1px solid #e8e8e8", borderRadius: "10px", padding: "16px", transition: "opacity 0.2s" },
+    projectCardTop: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" },
+    projectCat: { display: "inline-block", background: "#e8f5e9", color: "#2e7d32", fontSize: "10px", fontWeight: "600", padding: "3px 10px", borderRadius: "20px", textTransform: "uppercase" },
+    toggleBtn: { border: "none", padding: "3px 10px", borderRadius: "20px", cursor: "pointer", fontSize: "11px", fontWeight: "700" },
     cardName: { fontSize: "13px", fontWeight: "bold", color: "#222", marginBottom: "6px" },
-    cardDesc: { fontSize: "12px", color: "#888", marginBottom: "12px", lineHeight: 1.5 },
+    cardDesc: { fontSize: "12px", color: "#888", marginBottom: "8px", lineHeight: 1.5 },
+    cardDate: { fontSize: "10px", color: "#bbb", marginBottom: "10px" },
     cardBtns: { display: "flex", gap: "8px" },
     editBtn: { background: "#e3f2fd", color: "#1565c0", border: "none", padding: "5px 14px", borderRadius: "6px", cursor: "pointer", fontSize: "11px", fontWeight: "600" },
     deleteBtn: { background: "#ffebee", color: "#c62828", border: "none", padding: "5px 14px", borderRadius: "6px", cursor: "pointer", fontSize: "11px", fontWeight: "600" },
-    replyBtn: { background: "#e8f5e9", color: "#2e7d32", border: "none", padding: "5px 14px", borderRadius: "6px", cursor: "pointer", fontSize: "11px", fontWeight: "600" },
-    readBtn: { background: "#f3e5f5", color: "#7b1fa2", border: "none", padding: "5px 14px", borderRadius: "6px", cursor: "pointer", fontSize: "11px", fontWeight: "600" },
-    ignoreBtn: { background: "#f5f5f5", color: "#888", border: "none", padding: "5px 14px", borderRadius: "6px", cursor: "pointer", fontSize: "11px" },
     articleCard: { background: "#f9f9f9", border: "1px solid #e8e8e8", borderRadius: "10px", padding: "16px", marginBottom: "12px" },
     articleHeader: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "10px" },
     articleTitle: { fontSize: "14px", fontWeight: "bold", color: "#222", marginBottom: "4px" },
@@ -485,6 +514,9 @@ const styles = {
     messageDate: { fontSize: "11px", color: "#bbb", whiteSpace: "nowrap" },
     messageText: { fontSize: "14px", color: "#555", lineHeight: "1.7", padding: "12px 16px", background: "#f9f9f9", borderRadius: "8px", marginBottom: "14px" },
     msgBtns: { display: "flex", gap: "8px", flexWrap: "wrap" },
+    replyBtn: { background: "#e8f5e9", color: "#2e7d32", border: "none", padding: "5px 14px", borderRadius: "6px", cursor: "pointer", fontSize: "11px", fontWeight: "600" },
+    readBtn: { background: "#f3e5f5", color: "#7b1fa2", border: "none", padding: "5px 14px", borderRadius: "6px", cursor: "pointer", fontSize: "11px", fontWeight: "600" },
+    ignoreBtn: { background: "#f5f5f5", color: "#888", border: "none", padding: "5px 14px", borderRadius: "6px", cursor: "pointer", fontSize: "11px" },
     empty: { textAlign: "center", color: "#bbb", fontSize: "14px", padding: "32px" },
     modal: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 },
     modalBox: { background: "#fff", borderRadius: "14px", padding: "32px", width: "520px", maxWidth: "90vw" },
