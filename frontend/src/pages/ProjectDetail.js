@@ -101,12 +101,12 @@ function ProjectDetail({ lang }) {
 }
 
 const styles = {
-    container: { padding: "40px 32px", minHeight: "100vh", background: "#f9f9f9", color: "#222" },
+    container: { padding: "40px 32px", minHeight: "100vh", background: "#F8F4E3", color: "#222" },
     title: { fontSize: "28px", fontWeight: "700", marginBottom: "12px" },
     sub: { fontSize: "15px", marginBottom: "24px", color: "#555", maxWidth: "760px" },
     detailRow: { display: "flex", gap: "8px", marginBottom: "10px", fontSize: "14px" },
     label: { fontWeight: "700" },
-    button: { marginTop: "24px", padding: "10px 18px", fontSize: "14px", background: "#4caf50", color: "#fff", border: "none", borderRadius: "8px", cursor: "pointer" },
+    button: { marginTop: "24px", padding: "10px 18px", fontSize: "14px", background: "#2D6A4F", color: "#fff", border: "none", borderRadius: "8px", cursor: "pointer" },
     link: { display: "inline-block", marginTop: "12px", color: "#fff", background: "#2e7d32", padding: "10px 18px", borderRadius: "8px", textDecoration: "none" },
     message: { margin: "16px 0", color: "#a00" }
 };

@@ -2,6 +2,8 @@ package com.terresana.backend.controller;
 
 import com.terresana.backend.model.BlogPost;
 import com.terresana.backend.repository.BlogPostRepository;
+
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -22,12 +24,12 @@ public class BlogPostController {
     }
 
     @PostMapping
-    public BlogPost create(@RequestBody BlogPost post) {
+    public BlogPost create(@RequestBody @NonNull BlogPost post) {
         return repo.save(post);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable @NonNull Long id) {
         repo.deleteById(id);
     }
 

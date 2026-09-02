@@ -14,8 +14,11 @@ function About({ lang }) {
     ];
 
     return (
-        <div style={styles.container}>
-            <h1 style={styles.title}>{t.title}</h1>
+        <div>
+            <div style={styles.hero}>
+                <h1 style={styles.heroTitle}>{t.title}</h1>
+            </div>
+            <div style={styles.container}>
             <div style={styles.card}>
                 <h2 style={styles.subtitle}>{t.mission}</h2>
                 <p style={styles.text}>{t.missionText}</p>
@@ -29,7 +32,7 @@ function About({ lang }) {
             <div style={styles.card}>
                 <h2 style={styles.subtitle}>{t.team}</h2>
                 <p style={styles.text}>{t.teamText}</p>
-                <div style={styles.equipeGrid}>
+                <div className="grid-responsive" style={styles.equipeGrid}>
                     {equipe.map((m, i) => (
                         <div key={i} style={{...styles.membreCard, ...(m.nom === "Alain Tchouapi" ? styles.membreCardSpecial : {})}}>
                             <div style={{...styles.avatar, ...(m.nom === "Alain Tchouapi" ? styles.avatarSpecial : {})}}>{m.initiales}</div>
@@ -49,34 +52,41 @@ function About({ lang }) {
                     <div style={styles.infoItem}><div style={styles.infoIconBox}>HOR</div><div><div style={styles.infoLabel}>{lang === "fr" ? "Horaires" : lang === "en" ? "Hours" : "Openingstijden"}</div><div style={styles.infoValue}>{lang === "fr" ? "Lundi - Vendredi : 8h00 - 16h00" : lang === "en" ? "Monday - Friday : 8:00 - 16:00" : "Maandag - Vrijdag : 8:00 - 16:00"}</div></div></div>
                 </div>
             </div>
+            </div>
         </div>
     );
 }
 
 const styles = {
-    container: { padding: "40px 32px", maxWidth: "900px", margin: "0 auto" },
-    title: { fontSize: "28px", fontWeight: "bold", color: "#1a1a1a", marginBottom: "24px" },
+    hero: {
+        background: "linear-gradient(160deg, #173C29, #2D6A4F)",
+        padding: "64px 32px",
+        textAlign: "center"
+    },
+    heroTitle: { fontSize: "32px", fontWeight: "bold", color: "#fff", textShadow: "0 2px 10px rgba(0,0,0,0.4)" },
+    container: { padding: "40px 32px", maxWidth: "900px", margin: "0 auto", background: "#F8F4E3" },
+    title: { fontSize: "28px", fontWeight: "bold", color: "#1B1B1B", marginBottom: "24px" },
     card: { background: "#fff", border: "1px solid #e0e0e0", borderRadius: "12px", padding: "28px", marginBottom: "20px" },
     subtitle: { fontSize: "18px", fontWeight: "bold", color: "#2e7d32", marginBottom: "12px" },
     text: { fontSize: "14px", color: "#555", lineHeight: "1.8", marginBottom: "16px" },
     list: { fontSize: "14px", color: "#555", lineHeight: "2", paddingLeft: "20px" },
     equipeGrid: { display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "16px", marginTop: "16px" },
-    membreCard: { textAlign: "center", padding: "16px", background: "#f9f9f9", borderRadius: "10px", border: "1px solid #e0e0e0" },
-    membreCardSpecial: { border: "2px solid #4caf50", background: "#f1f8e9" },
-    avatar: { width: "56px", height: "56px", borderRadius: "50%", background: "#4caf50", color: "#fff", fontSize: "16px", fontWeight: "bold", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px" },
+    membreCard: { textAlign: "center", padding: "16px", background: "#F8F4E3", borderRadius: "10px", border: "1px solid #e0e0e0" },
+    membreCardSpecial: { border: "2px solid #2D6A4F", background: "#f1f8e9" },
+    avatar: { width: "56px", height: "56px", borderRadius: "50%", background: "#2D6A4F", color: "#fff", fontSize: "16px", fontWeight: "bold", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px" },
     avatarSpecial: { background: "#2e7d32", width: "64px", height: "64px", fontSize: "18px" },
     membreNom: { fontSize: "13px", fontWeight: "bold", color: "#222", marginBottom: "4px" },
     membreRole: { fontSize: "12px", color: "#888" },
-    stagiaireBadge: { marginTop: "8px", background: "#4caf50", color: "#fff", fontSize: "10px", padding: "2px 10px", borderRadius: "20px", display: "inline-block" },
-    devise: { background: "#e8f5e9", borderLeft: "4px solid #4caf50", padding: "20px 24px", borderRadius: "0 10px 10px 0", marginBottom: "20px" },
+    stagiaireBadge: { marginTop: "8px", background: "#2D6A4F", color: "#fff", fontSize: "10px", padding: "2px 10px", borderRadius: "20px", display: "inline-block" },
+    devise: { background: "#e8f5e9", borderLeft: "4px solid #2D6A4F", padding: "20px 24px", borderRadius: "0 10px 10px 0", marginBottom: "20px" },
     deviseText: { fontSize: "14px", color: "#2e7d32", fontStyle: "italic", lineHeight: "1.8" },
     infoCard: { background: "#fff", border: "1px solid #e0e0e0", borderRadius: "12px", padding: "28px", marginBottom: "20px" },
     infoGrid: { display: "flex", flexDirection: "column", gap: "16px" },
     infoItem: { display: "flex", gap: "14px", alignItems: "flex-start" },
     infoIconBox: { background: "#e8f5e9", color: "#2e7d32", fontWeight: "bold", fontSize: "10px", padding: "6px 8px", borderRadius: "6px", flexShrink: 0 },
-    infoLabel: { fontSize: "12px", color: "#4caf50", fontWeight: "bold", marginBottom: "4px" },
+    infoLabel: { fontSize: "12px", color: "#2D6A4F", fontWeight: "bold", marginBottom: "4px" },
     infoValue: { fontSize: "14px", color: "#555" },
-    infoLink: { fontSize: "14px", color: "#4caf50", textDecoration: "none" }
+    infoLink: { fontSize: "14px", color: "#2D6A4F", textDecoration: "none" }
 };
 
 export default About;

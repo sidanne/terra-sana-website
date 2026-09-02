@@ -6,6 +6,7 @@ function Contact({ lang }) {
     const [errors, setErrors] = useState({});
     const [sent, setSent] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [submitError, setSubmitError] = useState("");
     const MAX_MSG = 1000;
 
     const t = {
@@ -33,26 +34,37 @@ function Contact({ lang }) {
         e.preventDefault();
         if (!validate()) return;
         setLoading(true);
+        setSubmitError("");
         try {
             await sendContact(form);
             setSent(true);
             setForm({ name: "", email: "", message: "" });
             setTimeout(() => setSent(false), 5000);
-        } catch (err) { console.error(err); }
+        } catch {
+            setSubmitError("Impossible d'envoyer le message. Vérifiez votre connexion et réessayez.");
+        }
         setLoading(false);
     };
 
     const msgLen = form.message.length;
-    const msgColor = msgLen < 20 ? "#f44336" : msgLen > MAX_MSG * 0.9 ? "#ff9800" : "#4caf50";
+    const msgColor = msgLen < 20 ? "#f44336" : msgLen > MAX_MSG * 0.9 ? "#ff9800" : "#2D6A4F";
 
     return (
-        <div style={styles.container}>
-            <h1 style={styles.title}>{t.title}</h1>
-            <p style={styles.sub}>{t.sub}</p>
+        <div style={styles.page}>
+            <div style={styles.hero}>
+                <h1 style={styles.title}>{t.title}</h1>
+                <p style={styles.sub}>{t.sub}</p>
+            </div>
+            <div style={styles.container}>
             {sent && (
                 <div style={styles.success}>
                     <span style={styles.successIcon}>OK</span>
                     {t.success}
+                </div>
+            )}
+            {submitError && (
+                <div style={{ ...styles.success, background: "#ffebee", color: "#c62828" }}>
+                    {submitError}
                 </div>
             )}
             <form onSubmit={handleSubmit} style={styles.form}>
@@ -95,14 +107,21 @@ function Contact({ lang }) {
                     {loading ? t.sending : t.btn}
                 </button>
             </form>
+            </div>
         </div>
     );
 }
 
 const styles = {
+    page: { background: "#F8F4E3", minHeight: "100vh" },
+    hero: {
+        background: "linear-gradient(160deg, #173C29, #2D6A4F)",
+        padding: "56px 32px",
+        textAlign: "center"
+    },
     container: { padding: "40px 32px", maxWidth: "600px", margin: "0 auto" },
-    title: { fontSize: "28px", fontWeight: "bold", color: "#1a1a1a", marginBottom: "8px" },
-    sub: { fontSize: "14px", color: "#888", marginBottom: "28px" },
+    title: { fontSize: "28px", fontWeight: "bold", color: "#fff", marginBottom: "8px", textShadow: "0 2px 10px rgba(0,0,0,0.4)" },
+    sub: { fontSize: "14px", color: "#e8e8e0" },
     success: { background: "#e8f5e9", color: "#2e7d32", padding: "14px 18px", borderRadius: "8px", marginBottom: "20px", fontSize: "14px", display: "flex", alignItems: "center", gap: "10px", border: "1px solid #a5d6a7" },
     successIcon: { background: "#2e7d32", color: "#fff", fontSize: "11px", fontWeight: "bold", padding: "3px 8px", borderRadius: "4px" },
     form: { display: "flex", flexDirection: "column", gap: "18px" },
@@ -113,7 +132,7 @@ const styles = {
     input: { padding: "10px 14px", border: "1.5px solid #ddd", borderRadius: "8px", fontSize: "14px", outline: "none", fontFamily: "Arial", transition: "border-color 0.2s" },
     textarea: { padding: "10px 14px", border: "1.5px solid #ddd", borderRadius: "8px", fontSize: "14px", height: "140px", resize: "none", outline: "none", fontFamily: "Arial", transition: "border-color 0.2s" },
     error: { fontSize: "12px", color: "#f44336", marginTop: "2px" },
-    btn: { background: "#4caf50", color: "#fff", fontSize: "14px", padding: "13px 28px", borderRadius: "8px", border: "none", cursor: "pointer", fontWeight: "600" }
+    btn: { background: "#2D6A4F", color: "#fff", fontSize: "14px", padding: "13px 28px", borderRadius: "8px", border: "none", cursor: "pointer", fontWeight: "600" }
 };
 
 export default Contact;

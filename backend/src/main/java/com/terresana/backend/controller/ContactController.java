@@ -2,6 +2,8 @@ package com.terresana.backend.controller;
 
 import com.terresana.backend.model.ContactMessage;
 import com.terresana.backend.repository.ContactMessageRepository;
+
+import org.springframework.lang.NonNull;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
@@ -46,19 +48,19 @@ public class ContactController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable @NonNull Long id) {
         repo.deleteById(id);
     }
 
     @PutMapping("/{id}/read")
-    public ContactMessage markAsRead(@PathVariable Long id) {
+    public ContactMessage markAsRead(@PathVariable @NonNull Long id) {
         ContactMessage msg = repo.findById(id).orElseThrow();
         msg.setRead(true);
         return repo.save(msg);
     }
 
     @PostMapping("/{id}/reply")
-    public void reply(@PathVariable Long id, @RequestBody Map<String, String> body) {
+    public void reply(@PathVariable @NonNull Long id, @RequestBody Map<String, String> body) {
         ContactMessage msg = repo.findById(id).orElseThrow();
         msg.setRead(true);
         repo.save(msg);

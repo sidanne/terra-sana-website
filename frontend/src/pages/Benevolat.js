@@ -4,6 +4,7 @@ function Benevolat({ lang }) {
     const [form, setForm] = useState({ nom: "", email: "", telephone: "", type: "benevole", motivation: "", disponibilite: "" });
     const [sent, setSent] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
     const t = {
         fr: { title: "Benevol et Stage", sub: "Rejoignez notre equipe et contribuez a notre mission", typeLabel: "Type de candidature", benevole: "Benevole", stagiaire: "Stagiaire", nom: "Nom complet", email: "Email", tel: "Telephone", motivation: "Lettre de motivation", motivationPh: "Expliquez votre motivation a rejoindre Terra Sana...", dispo: "Disponibilites", dispoPh: "Quand etes-vous disponible ? (jours, heures...)", send: "Envoyer ma candidature", sending: "Envoi en cours...", success: "Votre candidature a ete envoyee avec succes ! Nous vous contacterons bientot.", why: "Pourquoi nous rejoindre ?", r1: "Contribuer a une mission solidaire et durable", r2: "Developper vos competences professionnelles", r3: "Integrer une equipe dynamique et bienveillante", r4: "Participer a des projets concrets et innovants" },
@@ -14,27 +15,37 @@ function Benevolat({ lang }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        await fetch("http://localhost:8080/api/contact", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                name: form.nom,
-                email: form.email,
-                message: `[${form.type.toUpperCase()}] Tel: ${form.telephone}\nMotivation: ${form.motivation}\nDisponibilites: ${form.disponibilite}`
-            })
-        });
-        setSent(true);
+        setError("");
+        try {
+            const res = await fetch("http://localhost:8080/api/contact", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name: form.nom,
+                    email: form.email,
+                    message: `[${form.type.toUpperCase()}] Tel: ${form.telephone}\nMotivation: ${form.motivation}\nDisponibilites: ${form.disponibilite}`
+                })
+            });
+            if (!res.ok) throw new Error();
+            setSent(true);
+            setForm({ nom: "", email: "", telephone: "", type: "benevole", motivation: "", disponibilite: "" });
+            setTimeout(() => setSent(false), 5000);
+        } catch {
+            setError("Impossible d'envoyer la candidature. VÃ©rifiez votre connexion et rÃ©essayez.");
+        }
         setLoading(false);
-        setForm({ nom: "", email: "", telephone: "", type: "benevole", motivation: "", disponibilite: "" });
-        setTimeout(() => setSent(false), 5000);
     };
 
     return (
         <div style={styles.page}>
-            <div style={styles.container}>
+            <div className="grid-responsive" style={styles.container}>
                 <div style={styles.left}>
-                    <h1 style={styles.title}>{t.title}</h1>
-                    <p style={styles.sub}>{t.sub}</p>
+                    <div style={styles.heroImg}>
+                        <div style={styles.heroImgOverlay}>
+                            <h1 style={styles.title}>{t.title}</h1>
+                            <p style={styles.sub}>{t.sub}</p>
+                        </div>
+                    </div>
                     <div style={styles.whyBox}>
                         <h2 style={styles.whyTitle}>{t.why}</h2>
                         {[t.r1, t.r2, t.r3, t.r4].map((r, i) => (
@@ -45,14 +56,15 @@ function Benevolat({ lang }) {
                         ))}
                     </div>
                     <div style={styles.contactBox}>
-                        <div style={styles.contactItem}>ADR — 53/3, 1200 Woluwe-Saint-Lambert</div>
-                        <div style={styles.contactItem}>EML — Terrasana@outlook.be</div>
-                        <div style={styles.contactItem}>HOR — Lun - Ven : 8h00 - 16h00</div>
+                        <div style={styles.contactItem}>ADR ï¿½ 53/3, 1200 Woluwe-Saint-Lambert</div>
+                        <div style={styles.contactItem}>EML ï¿½ Terrasana@outlook.be</div>
+                        <div style={styles.contactItem}>HOR ï¿½ Lun - Ven : 8h00 - 16h00</div>
                     </div>
                 </div>
 
                 <div style={styles.right}>
                     {sent && <div style={styles.success}>{t.success}</div>}
+                    {error && <div style={{ ...styles.success, background: "#ffebee", color: "#c62828" }}>{error}</div>}
                     <form onSubmit={handleSubmit} style={styles.form}>
                         <div style={styles.typeRow}>
                             <label style={{...styles.typeBtn, ...(form.type === "benevole" ? styles.typeBtnActive : {})}}>
@@ -68,7 +80,7 @@ function Benevolat({ lang }) {
                             <label style={styles.label}>{t.nom}</label>
                             <input value={form.nom} onChange={e => setForm({...form, nom: e.target.value})} style={styles.input} placeholder={t.nom} required />
                         </div>
-                        <div style={styles.formGrid}>
+                        <div className="grid-responsive" style={styles.formGrid}>
                             <div style={styles.row}>
                                 <label style={styles.label}>{t.email}</label>
                                 <input type="email" value={form.email} onChange={e => setForm({...form, email: e.target.value})} style={styles.input} placeholder="votre@email.com" required />
@@ -97,30 +109,40 @@ function Benevolat({ lang }) {
 }
 
 const styles = {
-    page: { background: "#f9f9f9", minHeight: "100vh", padding: "40px 32px" },
+    page: { background: "#F8F4E3", minHeight: "100vh", padding: "40px 32px" },
     container: { display: "grid", gridTemplateColumns: "1fr 1.5fr", gap: "40px", maxWidth: "1000px", margin: "0 auto" },
     left: {},
-    title: { fontSize: "28px", fontWeight: "bold", color: "#1a1a1a", marginBottom: "8px" },
-    sub: { fontSize: "14px", color: "#888", marginBottom: "28px", lineHeight: "1.7" },
+    heroImg: {
+        background: "linear-gradient(160deg, #173C29, #2D6A4F)",
+        borderRadius: "12px",
+        padding: "32px 24px",
+        marginBottom: "20px",
+        minHeight: "180px",
+        display: "flex",
+        alignItems: "flex-end"
+    },
+    heroImgOverlay: {},
+    title: { fontSize: "26px", fontWeight: "bold", color: "#fff", marginBottom: "8px", textShadow: "0 2px 8px rgba(0,0,0,0.3)" },
+    sub: { fontSize: "14px", color: "#e8e8e0", lineHeight: "1.7" },
     whyBox: { background: "#fff", border: "1px solid #e0e0e0", borderRadius: "12px", padding: "24px", marginBottom: "20px" },
     whyTitle: { fontSize: "15px", fontWeight: "bold", color: "#2e7d32", marginBottom: "16px" },
     reason: { display: "flex", gap: "12px", alignItems: "flex-start", marginBottom: "14px" },
-    reasonNum: { width: "28px", height: "28px", borderRadius: "50%", background: "#4caf50", color: "#fff", fontSize: "13px", fontWeight: "bold", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 },
+    reasonNum: { width: "28px", height: "28px", borderRadius: "50%", background: "#2D6A4F", color: "#fff", fontSize: "13px", fontWeight: "bold", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 },
     reasonText: { fontSize: "13px", color: "#555", lineHeight: "1.6", paddingTop: "4px" },
-    contactBox: { background: "#1a1a1a", borderRadius: "12px", padding: "20px" },
+    contactBox: { background: "#1B1B1B", borderRadius: "12px", padding: "20px" },
     contactItem: { fontSize: "12px", color: "#888", marginBottom: "8px", fontFamily: "monospace" },
     right: {},
     success: { background: "#e8f5e9", color: "#2e7d32", padding: "14px 18px", borderRadius: "8px", marginBottom: "20px", fontSize: "14px", border: "1px solid #a5d6a7" },
     form: { background: "#fff", border: "1px solid #e0e0e0", borderRadius: "12px", padding: "28px", display: "flex", flexDirection: "column", gap: "16px" },
     typeRow: { display: "flex", gap: "8px" },
     typeBtn: { flex: 1, padding: "10px", border: "1.5px solid #ddd", borderRadius: "8px", textAlign: "center", cursor: "pointer", fontSize: "14px", fontWeight: "500", color: "#888", background: "#fff" },
-    typeBtnActive: { border: "1.5px solid #4caf50", color: "#4caf50", background: "#f0fdf4", fontWeight: "600" },
+    typeBtnActive: { border: "1.5px solid #2D6A4F", color: "#2D6A4F", background: "#f0fdf4", fontWeight: "600" },
     formGrid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" },
     row: { display: "flex", flexDirection: "column", gap: "6px" },
     label: { fontSize: "13px", color: "#555", fontWeight: "500" },
     input: { padding: "10px 14px", border: "1px solid #ddd", borderRadius: "8px", fontSize: "14px", outline: "none", fontFamily: "Arial" },
     textarea: { padding: "10px 14px", border: "1px solid #ddd", borderRadius: "8px", fontSize: "14px", height: "120px", resize: "none", outline: "none", fontFamily: "Arial" },
-    btn: { background: "#4caf50", color: "#fff", fontSize: "14px", padding: "12px 28px", borderRadius: "8px", border: "none", cursor: "pointer", fontWeight: "600" }
+    btn: { background: "#2D6A4F", color: "#fff", fontSize: "14px", padding: "12px 28px", borderRadius: "8px", border: "none", cursor: "pointer", fontWeight: "600" }
 };
 
 export default Benevolat;

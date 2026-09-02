@@ -13,10 +13,10 @@ function NotFound() {
 
 const styles = {
     container: { minHeight: "80vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "40px" },
-    code: { fontSize: "100px", fontWeight: "bold", color: "#4caf50", lineHeight: "1" },
-    title: { fontSize: "28px", fontWeight: "bold", color: "#1a1a1a", marginBottom: "12px" },
+    code: { fontSize: "100px", fontWeight: "bold", color: "#2D6A4F", lineHeight: "1" },
+    title: { fontSize: "28px", fontWeight: "bold", color: "#1B1B1B", marginBottom: "12px" },
     text: { fontSize: "14px", color: "#888", marginBottom: "28px" },
-    btn: { background: "#4caf50", color: "#fff", fontSize: "14px", padding: "12px 28px", borderRadius: "8px", textDecoration: "none" }
+    btn: { background: "#2D6A4F", color: "#fff", fontSize: "14px", padding: "12px 28px", borderRadius: "8px", textDecoration: "none" }
 };
 
 export default NotFound;

@@ -16,5 +16,6 @@ export const sendContact = async (data) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
     });
+    if (!res.ok) throw new Error("Erreur lors de l'envoi du message.");
     return res.json();
 };

@@ -12,14 +12,17 @@ function Sponsors({ lang }) {
     ];
 
     return (
-        <div style={styles.container}>
-            <h1 style={styles.title}>{t.title}</h1>
-            <p style={styles.sub}>{t.sub}</p>
+        <div style={styles.page}>
+            <div style={styles.hero}>
+                <h1 style={styles.title}>{t.title}</h1>
+                <p style={styles.sub}>{t.sub}</p>
+            </div>
+            <div style={styles.container}>
 
             {sponsors.length === 0 ? (
                 <div style={styles.empty}>{t.noSponsors}</div>
             ) : (
-                <div style={styles.grid}>
+                <div className="grid-responsive" style={styles.grid}>
                     {sponsors.map((s, i) => (
                         <div key={i} style={{...styles.card, background: s.color}}>
                             <div style={styles.cardLogo}>
@@ -38,25 +41,32 @@ function Sponsors({ lang }) {
                 <p style={styles.becomeDesc}>{t.contactDesc}</p>
                 <a href="/contact" style={styles.becomeBtn}>{t.contactBtn}</a>
             </div>
+            </div>
         </div>
     );
 }
 
 const styles = {
-    container: { padding: "40px 32px", maxWidth: "900px", margin: "0 auto", minHeight: "100vh" },
-    title: { fontSize: "28px", fontWeight: "bold", color: "#1a1a1a", marginBottom: "8px" },
-    sub: { fontSize: "14px", color: "#888", marginBottom: "36px" },
+    page: { background: "#F8F4E3", minHeight: "100vh" },
+    hero: {
+        background: "linear-gradient(160deg, #173C29, #2D6A4F)",
+        padding: "56px 32px",
+        textAlign: "center"
+    },
+    container: { padding: "40px 32px", maxWidth: "900px", margin: "0 auto" },
+    title: { fontSize: "28px", fontWeight: "bold", color: "#fff", marginBottom: "8px", textShadow: "0 2px 10px rgba(0,0,0,0.4)" },
+    sub: { fontSize: "14px", color: "#e8e8e0", marginBottom: "36px" },
     grid: { display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "20px", marginBottom: "40px" },
     card: { borderRadius: "12px", padding: "28px", border: "1px solid #e0e0e0" },
-    cardLogo: { width: "56px", height: "56px", borderRadius: "50%", background: "#4caf50", color: "#fff", fontSize: "22px", fontWeight: "bold", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "16px" },
-    cardType: { fontSize: "11px", color: "#4caf50", fontWeight: "700", letterSpacing: "1px", textTransform: "uppercase", marginBottom: "8px" },
+    cardLogo: { width: "56px", height: "56px", borderRadius: "50%", background: "#2D6A4F", color: "#fff", fontSize: "22px", fontWeight: "bold", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "16px" },
+    cardType: { fontSize: "11px", color: "#2D6A4F", fontWeight: "700", letterSpacing: "1px", textTransform: "uppercase", marginBottom: "8px" },
     cardNom: { fontSize: "16px", fontWeight: "bold", color: "#222", marginBottom: "8px" },
     cardDesc: { fontSize: "13px", color: "#666", lineHeight: "1.6" },
     empty: { textAlign: "center", color: "#aaa", fontSize: "14px", padding: "60px" },
-    becomeBox: { background: "#1a1a1a", borderRadius: "16px", padding: "40px", textAlign: "center" },
+    becomeBox: { background: "#1B1B1B", borderRadius: "16px", padding: "40px", textAlign: "center" },
     becomeTitle: { fontSize: "22px", fontWeight: "bold", color: "#fff", marginBottom: "12px" },
     becomeDesc: { fontSize: "14px", color: "#888", marginBottom: "24px" },
-    becomeBtn: { background: "#4caf50", color: "#fff", fontSize: "14px", padding: "12px 28px", borderRadius: "8px", textDecoration: "none", fontWeight: "600" }
+    becomeBtn: { background: "#2D6A4F", color: "#fff", fontSize: "14px", padding: "12px 28px", borderRadius: "8px", textDecoration: "none", fontWeight: "600" }
 };
 
 export default Sponsors;

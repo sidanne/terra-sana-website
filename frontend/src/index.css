@@ -11,3 +11,70 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Cartes evenements : leger effet au survol pour un rendu plus pro */
+.event-card {
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+.event-card:hover {
+  box-shadow: 0 10px 28px rgba(0,0,0,0.12);
+  transform: translateY(-3px);
+}
+.event-card-img {
+  transition: transform 0.35s ease;
+}
+.event-card:hover .event-card-img {
+  transform: scale(1.06);
+}
+
+/* ── Interface responsive (engagement pris dans l'analyse, section "Contraintes et risques") ── */
+@media (max-width: 768px) {
+  /* Toute grille multi-colonnes (projets, sponsors, equipe, stats...) repasse a 1 colonne */
+  .grid-responsive {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Pages connexion/inscription bénévole : image + formulaire cote a cote -> empiles */
+  .split-panel {
+    flex-direction: column !important;
+    min-height: auto !important;
+  }
+  .split-panel-image {
+    position: static !important;
+    height: 200px !important;
+    min-height: 200px !important;
+    flex: none !important;
+  }
+  .split-panel-form {
+    padding: 32px 20px !important;
+  }
+
+  /* Dashboard admin : la sidebar (240px fixe) passe en bandeau horizontal scrollable au-dessus du contenu */
+  .admin-shell {
+    flex-direction: column !important;
+  }
+  .admin-sidebar {
+    width: 100% !important;
+    height: auto !important;
+    position: static !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    overflow-x: auto !important;
+    padding: 12px !important;
+    gap: 12px;
+  }
+  .admin-sidebar nav {
+    display: flex !important;
+    gap: 4px;
+  }
+  .admin-sidebar-hide-mobile {
+    display: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-padding {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+}
