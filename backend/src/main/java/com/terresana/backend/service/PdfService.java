@@ -51,7 +51,7 @@ public class PdfService {
             doc.add(new Paragraph("TERRA SANA ASBL")
                     .setFontColor(GREEN).setBold().setFontSize(22)
                     .setTextAlignment(TextAlignment.CENTER));
-            doc.add(new Paragraph("19 avenue des Volontaires, 1160 Auderghem — Belgique")
+            doc.add(new Paragraph("53/3, 1200 Woluwe-Saint-Lambert — Belgique")
                     .setFontSize(10).setFontColor(GREY)
                     .setTextAlignment(TextAlignment.CENTER).setMarginBottom(50));
 
