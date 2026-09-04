@@ -33,9 +33,19 @@ public class EventImageService {
                 "https://images.unsplash.com/photo-1522071820081-009f0129c71c");
         KEYWORDS_TO_IMAGE.put("orphelinat|visite|enfant|maison de repos|accompagnement",
                 "https://images.unsplash.com/photo-1521791136064-7986c2920216");
-        // Termes génériques en dernier : capturent tout sujet de "vente"/"marché" qui n'a pas déjà
-        // été reconnu comme quelque chose de plus précis ci-dessus (ex. "vente des poissons")
-        KEYWORDS_TO_IMAGE.put("marche|marché|brocante|vente",
+        KEYWORDS_TO_IMAGE.put("poisson|poissonnerie|peche|pêche|fruits de mer|crevette",
+                "https://images.unsplash.com/photo-1759487610611-4e302bf60e43");
+        KEYWORDS_TO_IMAGE.put("pharmacie|pharmaceutique|medicament|médicament|sante|santé",
+                "https://images.unsplash.com/photo-1580281657527-47f249e8f4df");
+        KEYWORDS_TO_IMAGE.put("cosmetique|cosmétique|beaute|beauté|maquillage|parfum",
+                "https://images.unsplash.com/photo-1631730486572-226d1f595b68");
+        // Termes génériques en dernier : capturent les brocantes/marchés qui n'ont pas déjà été
+        // reconnus comme quelque chose de plus précis ci-dessus. "vente" seul est volontairement
+        // exclu d'ici : un simple mot signifiant "à vendre" ne dit rien sur le type de produit
+        // (c'est justement ce qui causait des images fausses pour "vente des poissons"/"vente de
+        // produit pharmaceutique" — désormais captés par leurs catégories dédiées ci-dessus, et tout
+        // le reste retombe sagement sur DEFAULT_IMAGE plutôt qu'une photo de vêtements au hasard).
+        KEYWORDS_TO_IMAGE.put("marche|marché|brocante",
                 "https://images.unsplash.com/photo-1760625345932-448b852afdf9");
     }
 
