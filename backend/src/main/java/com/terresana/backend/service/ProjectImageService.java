@@ -40,7 +40,7 @@ public class ProjectImageService {
                 "https://images.unsplash.com/photo-1699817359842-904bdd28c6f6");
         KEYWORDS_TO_IMAGE.put("materiel|matériel|equipement|équipement|outil|location",
                 "https://images.unsplash.com/photo-1685320198649-781e83a61de4");
-        KEYWORDS_TO_IMAGE.put("brocante|seconde main|occasion",
+        KEYWORDS_TO_IMAGE.put("brocante|seconde main|occasion|marche|marché",
                 "https://images.unsplash.com/photo-1760625345932-448b852afdf9");
     }
 
