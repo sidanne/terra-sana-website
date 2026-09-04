@@ -26,7 +26,10 @@ public class ProjectImageService {
                 "https://images.unsplash.com/photo-1435527173128-983b87201f4d");
         KEYWORDS_TO_IMAGE.put("ecommerce|e-commerce|boutique en ligne|vente en ligne",
                 "https://images.unsplash.com/photo-1514792368985-f80e9d482a02");
-        KEYWORDS_TO_IMAGE.put("bibliotheque|bibliothèque|livre|catalogue",
+        // "livre(?!ur)" et pas juste "livre" : "livre" est un sous-mot de "livreur"/"livreurs"
+        // (transport), qui a sa propre categorie plus bas — sans ce garde-fou "Trajet commun
+        // livreurs" tombait sur la photo bibliotheque au lieu de la photo livraison.
+        KEYWORDS_TO_IMAGE.put("bibliotheque|bibliothèque|livre(?!ur)|catalogue",
                 "https://images.unsplash.com/photo-1642980553701-c6b8bb0956ee");
         KEYWORDS_TO_IMAGE.put("recette|cuisine|culinaire",
                 "https://images.unsplash.com/photo-1769987935906-0dce6d6a635a");
@@ -42,6 +45,20 @@ public class ProjectImageService {
                 "https://images.unsplash.com/photo-1565043666747-69f6646db940");
         KEYWORDS_TO_IMAGE.put("materiel|matériel|equipement|équipement|outil|location",
                 "https://images.unsplash.com/photo-1685320198649-781e83a61de4");
+        // "dons"/"donation" (pas "don" seul, sous-mot de "donc") pour eviter un faux positif sur
+        // n'importe quelle description contenant ce connecteur tres courant.
+        KEYWORDS_TO_IMAGE.put("dons|donation|collecte de fonds|financement|levee de fonds|levée de fonds",
+                "https://images.unsplash.com/photo-1783227610898-d53b8125c4b0");
+        KEYWORDS_TO_IMAGE.put("benevole|bénévole|benevolat|bénévolat",
+                "https://images.unsplash.com/photo-1681949103006-70066fb25dfe");
+        KEYWORDS_TO_IMAGE.put("communication|newsletter|reseaux sociaux|réseaux sociaux",
+                "https://images.unsplash.com/photo-1611926653458-09294b3142bf");
+        KEYWORDS_TO_IMAGE.put("stock|inventaire|entrepot|entrepôt",
+                "https://images.unsplash.com/photo-1672552226380-486fe900b322");
+        KEYWORDS_TO_IMAGE.put("sante|santé|medical|médical|pharmacie",
+                "https://images.unsplash.com/photo-1580281657527-47f249e8f4df");
+        KEYWORDS_TO_IMAGE.put("adhesion|adhésion|cotisation|membre",
+                "https://images.unsplash.com/photo-1597463330912-eb868206b68e");
         KEYWORDS_TO_IMAGE.put("brocante|seconde main|occasion|marche|marché",
                 "https://images.unsplash.com/photo-1760625345932-448b852afdf9");
     }
