@@ -50,6 +50,12 @@ public class EventImageService {
                 "https://images.unsplash.com/photo-1565803974275-dccd2f933cbb");
         KEYWORDS_TO_IMAGE.put("gala|collecte de fonds|financement|levee de fonds|levée de fonds",
                 "https://images.unsplash.com/photo-1783227610898-d53b8125c4b0");
+        KEYWORDS_TO_IMAGE.put("chaise|mobilier|mariage|reception|réception",
+                "https://images.unsplash.com/photo-1559982240-f760db87b822");
+        KEYWORDS_TO_IMAGE.put("hotel|hôtel|hebergement|hébergement",
+                "https://images.unsplash.com/photo-1742844551970-ce693b4f05ed");
+        KEYWORDS_TO_IMAGE.put("voiture|automobile|covoiturage",
+                "https://images.unsplash.com/photo-1565043666747-69f6646db940");
         // Termes génériques en dernier : capturent les brocantes/marchés qui n'ont pas déjà été
         // reconnus comme quelque chose de plus précis ci-dessus. "vente" seul est volontairement
         // exclu d'ici : un simple mot signifiant "à vendre" ne dit rien sur le type de produit
