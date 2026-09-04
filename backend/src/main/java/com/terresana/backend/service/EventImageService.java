@@ -65,6 +65,8 @@ public class EventImageService {
                 "https://images.unsplash.com/photo-1742844551970-ce693b4f05ed"));
         KEYWORDS_TO_IMAGES.put("voiture|automobile|covoiturage", List.of(
                 "https://images.unsplash.com/photo-1565043666747-69f6646db940"));
+        KEYWORDS_TO_IMAGES.put("magazine|presse|journal|revue|actualite|actualité", List.of(
+                "https://images.unsplash.com/photo-1750684333876-07303b57fb13"));
         // Termes génériques en dernier : capturent les brocantes/marchés qui n'ont pas déjà été
         // reconnus comme quelque chose de plus précis ci-dessus. "vente" seul est volontairement
         // exclu d'ici : un simple mot signifiant "à vendre" ne dit rien sur le type de produit
