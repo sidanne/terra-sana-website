@@ -38,6 +38,8 @@ public class ProjectImageService {
                 "https://images.unsplash.com/photo-1694903006266-cd0d42d8ae0b");
         KEYWORDS_TO_IMAGE.put("trajet|livreur|livraison",
                 "https://images.unsplash.com/photo-1699817359842-904bdd28c6f6");
+        KEYWORDS_TO_IMAGE.put("voiture|automobile|covoiturage",
+                "https://images.unsplash.com/photo-1565043666747-69f6646db940");
         KEYWORDS_TO_IMAGE.put("materiel|matériel|equipement|équipement|outil|location",
                 "https://images.unsplash.com/photo-1685320198649-781e83a61de4");
         KEYWORDS_TO_IMAGE.put("brocante|seconde main|occasion|marche|marché",
