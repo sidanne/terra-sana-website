@@ -64,6 +64,28 @@ public class ProjectImageService {
                 "https://images.unsplash.com/photo-1580281657527-47f249e8f4df"));
         KEYWORDS_TO_IMAGES.put("adhesion|adhésion|cotisation|membre", List.of(
                 "https://images.unsplash.com/photo-1597463330912-eb868206b68e"));
+        KEYWORDS_TO_IMAGES.put("ecole|école|eleve|élève|etudiant|étudiant|bulletin|scolaire|examen|diplome|diplôme", List.of(
+                "https://images.unsplash.com/photo-1565665681743-6ff01c5181e3"));
+        KEYWORDS_TO_IMAGES.put("velo|vélo|bicyclette|cyclisme", List.of(
+                "https://images.unsplash.com/photo-1675798227643-da319f8ee8f7"));
+        KEYWORDS_TO_IMAGES.put("demenagement|déménagement|demenager|déménager", List.of(
+                "https://images.unsplash.com/photo-1714647211902-bb711d643a17"));
+        KEYWORDS_TO_IMAGES.put("bricolage|reparation|réparation|reparer|réparer", List.of(
+                "https://images.unsplash.com/photo-1606676539940-12768ce0e762"));
+        // "coiffure/coiffeur/esthetique" et pas "soins" seul : "soins" est ambigu (soins de sante
+        // vs soins esthetiques) et aurait pu detourner une description medicale vers cette categorie.
+        KEYWORDS_TO_IMAGES.put("coiffure|coiffeur|salon de coiffure|esthetique|esthétique|manucure", List.of(
+                "https://images.unsplash.com/photo-1635273051937-a0ddef9573b6"));
+        KEYWORDS_TO_IMAGES.put("anniversaire|fete|fête|celebration|célébration", List.of(
+                "https://images.unsplash.com/photo-1545696563-af8f6ec2295a"));
+        KEYWORDS_TO_IMAGES.put("voyage|tourisme|excursion|sejour|séjour", List.of(
+                "https://images.unsplash.com/photo-1502301197179-65228ab57f78"));
+        KEYWORDS_TO_IMAGES.put("immobilier|logement|appartement|habitation", List.of(
+                "https://images.unsplash.com/photo-1744782351841-9cc6b86a5add"));
+        KEYWORDS_TO_IMAGES.put("assurance", List.of(
+                "https://images.unsplash.com/photo-1707999558198-d5f93aafa75b"));
+        KEYWORDS_TO_IMAGES.put("administratif|demarche|démarche|paperasse", List.of(
+                "https://images.unsplash.com/photo-1635859890085-ec8cb5466806"));
         // Catégorie la plus générique, donc la plus susceptible de recevoir plusieurs projets
         // différents : c'est ici que la variation entre plusieurs photos compte le plus.
         KEYWORDS_TO_IMAGES.put("brocante|seconde main|occasion|marche|marché", List.of(
