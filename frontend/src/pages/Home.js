@@ -8,15 +8,25 @@ const GREEN_DARK = "#173C29";
 const GOLD = "#D4A017";
 const CREAM = "#F8F4E3";
 
-const STATUS_LABEL = {
-    OPEN: { label: "Ouvert", color: "#2e7d32", bg: "#e8f5e9" },
-    FULL: { label: "Complet", color: "#e65100", bg: "#fff3e0" },
-    CANCELLED: { label: "Annulé", color: "#c62828", bg: "#ffebee" },
-    FINISHED: { label: "Terminé", color: "#616161", bg: "#eeeeee" }
+// Couleurs/fond par statut (indépendant de la langue) ; le libellé traduit vient de STATUS_TEXT
+const STATUS_STYLE = {
+    OPEN: { color: "#2e7d32", bg: "#e8f5e9" },
+    FULL: { color: "#e65100", bg: "#fff3e0" },
+    CANCELLED: { color: "#c62828", bg: "#ffebee" },
+    FINISHED: { color: "#616161", bg: "#eeeeee" }
+};
+const STATUS_TEXT = {
+    fr: { OPEN: "Ouvert", FULL: "Complet", CANCELLED: "Annulé", FINISHED: "Terminé" },
+    en: { OPEN: "Open", FULL: "Full", CANCELLED: "Cancelled", FINISHED: "Finished" },
+    nl: { OPEN: "Open", FULL: "Volzet", CANCELLED: "Geannuleerd", FINISHED: "Afgelopen" }
 };
 
 // Statut d'une inscription déjà existante du bénévole connecté sur cet événement
-const MY_REG_LABEL = { WAITING: "En attente", CONFIRMED: "Déjà confirmé", REFUSED: "Refusé" };
+const MY_REG_TEXT = {
+    fr: { WAITING: "En attente", CONFIRMED: "Déjà confirmé", REFUSED: "Refusé" },
+    en: { WAITING: "Waiting", CONFIRMED: "Already confirmed", REFUSED: "Refused" },
+    nl: { WAITING: "In wachtrij", CONFIRMED: "Al bevestigd", REFUSED: "Geweigerd" }
+};
 
 // Icône affichée dans le hub des applications selon la catégorie du projet (esthétique uniquement)
 const CATEGORY_ICON = {
@@ -31,7 +41,158 @@ const CARD_GRADIENTS = [
     "linear-gradient(135deg, #3D6B99, #1E3F5C)"
 ];
 
+const T = {
+    fr: {
+        badge: "• Association active à Bruxelles depuis 2019",
+        heroTitle1: "Cultivons ensemble", heroTitle2: "un avenir ", heroAccent: "durable", heroTitle3: " et solidaire.",
+        heroText: "Terra Sana ASBL œuvre pour une alimentation saine et accessible à tous. Rejoignez notre réseau de bénévoles passionnés et participez à des événements qui ont du sens.",
+        becomeVolunteer: "Devenir bénévole", seeEvents: "Voir les événements →",
+        activeVolunteers: "bénévoles actifs", joinedUs: "nous ont rejoints",
+        nextEvent: "Prochain événement", full: "Complet", placesAvailable: "Places disponibles",
+        placesRemaining: (n, max) => `${n} place${n === 1 ? "" : "s"} restante${n === 1 ? "" : "s"} sur ${max}`,
+        waitlist: "Liste d'attente", register: "S'inscrire", registerEvent: "S'inscrire à cet événement",
+        noEventFeatured: "Aucun événement ouvert pour le moment — revenez bientôt !",
+        noEvent: "Aucun événement ouvert pour le moment.",
+        statActiveVolunteers: "Bénévoles actifs", statEventsOrganized: "Événements organisés",
+        statInternalApps: "Applications internes", statFounded: "Fondée à Bruxelles",
+        aboutEyebrow: "• QUI SOMMES-NOUS",
+        aboutTitle1: "Une mission locale,", aboutTitle2: "saine et solidaire",
+        aboutText: "Terra Sana ASBL est une organisation à but non lucratif fondée en 2019 à Bruxelles. Nous soutenons les producteurs locaux, promouvons le circuit court et accompagnons les personnes en réinsertion — tout en centralisant l'accès à nos 12 applications internes.",
+        recognized: "Association reconnue", asblSince: "ASBL depuis 2019",
+        features: [
+            ["🌱", "Agriculture naturelle", "Sans pesticides ni intrants chimiques"],
+            ["🤝", "Communauté inclusive", "Ouvert à tous, sans condition"],
+            ["🔄", "Circuit court", "Producteurs locaux privilégiés"],
+            ["🏅", "Impact reconnu", "Soutenue par la Région bruxelloise"]
+        ],
+        howEyebrow: "COMMENT ÇA MARCHE", howTitle: "Rejoignez-nous en 3 étapes",
+        howSub1: "Devenir bénévole Terra Sana est simple et gratuit. Créez votre profil,", howSub2: "choisissez vos événements et venez participer !",
+        steps: [
+            ["1", "👤", "Créez votre profil", "Inscrivez-vous gratuitement en 2 minutes et renseignez vos coordonnées."],
+            ["2", "📅", "Choisissez un événement", "Parcourez le calendrier des événements à venir et inscrivez-vous en un clic."],
+            ["3", "✓", "Venez participer !", "Votre participation est enregistrée. Recevez votre attestation PDF automatiquement."]
+        ],
+        upcomingEyebrow: "PROCHAINS ÉVÉNEMENTS", upcomingTitle: "Rejoignez une action près de chez vous",
+        seeAllEvents: "Voir tous les événements",
+        hubEyebrow: "HUB DES APPLICATIONS",
+        hubTitle: (n) => `Nos ${n} applications internes, réunies en un seul endroit`,
+        hubSub1: "Accès centralisé à tous les outils de gestion de Terra Sana ASBL,", hubSub2: "développés au fil des différents projets et stages.",
+        testimonialsTitle: "Ce que disent nos bénévoles",
+        testimonialsSub: "Des dizaines de personnes ont déjà rejoint l'aventure Terra Sana.",
+        testimonials: [
+            ["SB", "#7B4B94", "Sofia B.", "Bénévole depuis 2023", "Une expérience humaine incroyable. J'ai rencontré des gens fantastiques et eu le sentiment concret d'agir pour ma communauté."],
+            ["MK", "#2D6A4F", "Marc K.", "Bénévole depuis 2022", "L'organisation est top. L'inscription est super simple, on reçoit un rappel avant chaque événement et l'attestation arrive automatiquement."],
+            ["JP", "#1565C0", "Julie P.", "Bénévole depuis 2024", "Ce que j'aime chez Terra Sana c'est la diversité des actions. Il y en a pour tous les goûts et tous les emplois du temps."]
+        ],
+        ctaTitle1: "Prêt·e à faire la différence", ctaTitle2: "avec nous ?",
+        ctaText: "Rejoignez la communauté Terra Sana. Inscription gratuite, flexible, sans engagement.",
+        ctaCreateProfile: "Créer mon profil bénévole", ctaSeeCalendar: "Consulter le calendrier",
+        msgWaitlist: "Sur liste d'attente.", msgRegistered: "Inscription envoyée !", msgError: "Erreur lors de l'inscription.",
+        locale: "fr-BE"
+    },
+    en: {
+        badge: "• Active association in Brussels since 2019",
+        heroTitle1: "Let's grow together", heroTitle2: "a ", heroAccent: "sustainable", heroTitle3: " and caring future.",
+        heroText: "Terra Sana ASBL works for healthy, accessible food for everyone. Join our network of passionate volunteers and take part in events that matter.",
+        becomeVolunteer: "Become a volunteer", seeEvents: "See events →",
+        activeVolunteers: "active volunteers", joinedUs: "have joined us",
+        nextEvent: "Next event", full: "Full", placesAvailable: "Places available",
+        placesRemaining: (n, max) => `${n} place${n === 1 ? "" : "s"} left out of ${max}`,
+        waitlist: "Waitlist", register: "Register", registerEvent: "Register for this event",
+        noEventFeatured: "No open event right now — check back soon!",
+        noEvent: "No open event right now.",
+        statActiveVolunteers: "Active volunteers", statEventsOrganized: "Events organised",
+        statInternalApps: "Internal applications", statFounded: "Founded in Brussels",
+        aboutEyebrow: "• WHO WE ARE",
+        aboutTitle1: "A local mission,", aboutTitle2: "healthy and caring",
+        aboutText: "Terra Sana ASBL is a non-profit organisation founded in 2019 in Brussels. We support local producers, promote short supply chains and support people in social reintegration — while centralising access to our 12 internal applications.",
+        recognized: "Recognised association", asblSince: "Non-profit since 2019",
+        features: [
+            ["🌱", "Natural farming", "No pesticides or chemical inputs"],
+            ["🤝", "Inclusive community", "Open to everyone, no conditions"],
+            ["🔄", "Short supply chain", "Local producers favoured"],
+            ["🏅", "Recognised impact", "Supported by the Brussels Region"]
+        ],
+        howEyebrow: "HOW IT WORKS", howTitle: "Join us in 3 steps",
+        howSub1: "Becoming a Terra Sana volunteer is simple and free. Create your profile,", howSub2: "choose your events and come take part!",
+        steps: [
+            ["1", "👤", "Create your profile", "Sign up for free in 2 minutes and fill in your details."],
+            ["2", "📅", "Choose an event", "Browse the calendar of upcoming events and register in one click."],
+            ["3", "✓", "Come take part!", "Your participation is recorded. Receive your PDF certificate automatically."]
+        ],
+        upcomingEyebrow: "UPCOMING EVENTS", upcomingTitle: "Join an action near you",
+        seeAllEvents: "See all events",
+        hubEyebrow: "APPLICATION HUB",
+        hubTitle: (n) => `Our ${n} internal applications, gathered in one place`,
+        hubSub1: "Centralised access to all Terra Sana ASBL's management tools,", hubSub2: "developed throughout various projects and internships.",
+        testimonialsTitle: "What our volunteers say",
+        testimonialsSub: "Dozens of people have already joined the Terra Sana adventure.",
+        testimonials: [
+            ["SB", "#7B4B94", "Sofia B.", "Volunteer since 2023", "An incredible human experience. I met fantastic people and felt like I was really making a difference for my community."],
+            ["MK", "#2D6A4F", "Marc K.", "Volunteer since 2022", "The organisation is great. Signing up is super simple, we get a reminder before each event and the certificate arrives automatically."],
+            ["JP", "#1565C0", "Julie P.", "Volunteer since 2024", "What I love about Terra Sana is the variety of actions. There's something for every taste and every schedule."]
+        ],
+        ctaTitle1: "Ready to make a difference", ctaTitle2: "with us?",
+        ctaText: "Join the Terra Sana community. Free, flexible sign-up, no commitment.",
+        ctaCreateProfile: "Create my volunteer profile", ctaSeeCalendar: "View the calendar",
+        msgWaitlist: "Added to the waitlist.", msgRegistered: "Registration sent!", msgError: "Error while registering.",
+        locale: "en-GB"
+    },
+    nl: {
+        badge: "• Actieve vereniging in Brussel sinds 2019",
+        heroTitle1: "Laten we samen bouwen", heroTitle2: "aan een ", heroAccent: "duurzame", heroTitle3: " en solidaire toekomst.",
+        heroText: "Terra Sana ASBL zet zich in voor gezonde en toegankelijke voeding voor iedereen. Sluit je aan bij ons netwerk van gedreven vrijwilligers en neem deel aan zinvolle evenementen.",
+        becomeVolunteer: "Word vrijwilliger", seeEvents: "Bekijk de evenementen →",
+        activeVolunteers: "actieve vrijwilligers", joinedUs: "zijn ons al komen versterken",
+        nextEvent: "Volgend evenement", full: "Volzet", placesAvailable: "Plaatsen beschikbaar",
+        placesRemaining: (n, max) => `${n} plaats${n === 1 ? "" : "en"} over op ${max}`,
+        waitlist: "Wachtlijst", register: "Inschrijven", registerEvent: "Inschrijven voor dit evenement",
+        noEventFeatured: "Momenteel geen open evenement — kom binnenkort terug!",
+        noEvent: "Momenteel geen open evenement.",
+        statActiveVolunteers: "Actieve vrijwilligers", statEventsOrganized: "Georganiseerde evenementen",
+        statInternalApps: "Interne applicaties", statFounded: "Opgericht in Brussel",
+        aboutEyebrow: "• WIE ZIJN WIJ",
+        aboutTitle1: "Een lokale, gezonde", aboutTitle2: "en solidaire missie",
+        aboutText: "Terra Sana ASBL is een vzw opgericht in 2019 in Brussel. Wij steunen lokale producenten, bevorderen korteketenverkoop en begeleiden mensen in re-integratie — terwijl we de toegang tot onze 12 interne applicaties centraliseren.",
+        recognized: "Erkende vereniging", asblSince: "Vzw sinds 2019",
+        features: [
+            ["🌱", "Natuurlijke landbouw", "Zonder pesticiden of chemische middelen"],
+            ["🤝", "Inclusieve gemeenschap", "Open voor iedereen, zonder voorwaarden"],
+            ["🔄", "Korte keten", "Lokale producenten bevoorrecht"],
+            ["🏅", "Erkende impact", "Gesteund door het Brussels Gewest"]
+        ],
+        howEyebrow: "HOE HET WERKT", howTitle: "Doe mee in 3 stappen",
+        howSub1: "Vrijwilliger worden bij Terra Sana is eenvoudig en gratis. Maak je profiel aan,", howSub2: "kies je evenementen en kom meedoen!",
+        steps: [
+            ["1", "👤", "Maak je profiel aan", "Schrijf je gratis in in 2 minuten en vul je gegevens in."],
+            ["2", "📅", "Kies een evenement", "Bekijk de kalender met komende evenementen en schrijf je in met één klik."],
+            ["3", "✓", "Kom meedoen!", "Je deelname wordt geregistreerd. Ontvang automatisch je PDF-attest."]
+        ],
+        upcomingEyebrow: "KOMENDE EVENEMENTEN", upcomingTitle: "Doe mee aan een actie in jouw buurt",
+        seeAllEvents: "Bekijk alle evenementen",
+        hubEyebrow: "APPLICATIEHUB",
+        hubTitle: (n) => `Onze ${n} interne applicaties, samengebracht op één plek`,
+        hubSub1: "Gecentraliseerde toegang tot alle beheertools van Terra Sana ASBL,", hubSub2: "ontwikkeld doorheen verschillende projecten en stages.",
+        testimonialsTitle: "Wat onze vrijwilligers zeggen",
+        testimonialsSub: "Tientallen mensen hebben zich al bij het Terra Sana-avontuur aangesloten.",
+        testimonials: [
+            ["SB", "#7B4B94", "Sofia B.", "Vrijwilliger sinds 2023", "Een ongelooflijke menselijke ervaring. Ik heb fantastische mensen ontmoet en het gevoel gehad echt iets te betekenen voor mijn gemeenschap."],
+            ["MK", "#2D6A4F", "Marc K.", "Vrijwilliger sinds 2022", "De organisatie is top. Inschrijven is supereenvoudig, we krijgen een herinnering voor elk evenement en het attest komt automatisch binnen."],
+            ["JP", "#1565C0", "Julie P.", "Vrijwilliger sinds 2024", "Wat ik geweldig vind aan Terra Sana is de diversiteit aan acties. Er is voor elk wat wils en voor elk schema."]
+        ],
+        ctaTitle1: "Klaar om het verschil te maken", ctaTitle2: "met ons?",
+        ctaText: "Sluit je aan bij de Terra Sana-gemeenschap. Gratis, flexibele inschrijving, geen verplichtingen.",
+        ctaCreateProfile: "Maak mijn vrijwilligersprofiel aan", ctaSeeCalendar: "Bekijk de kalender",
+        msgWaitlist: "Op de wachtlijst geplaatst.", msgRegistered: "Inschrijving verzonden!", msgError: "Fout bij het inschrijven.",
+        locale: "nl-BE"
+    }
+};
+
 function Home({ lang }) {
+    const t = T[lang] || T.fr;
+    const statusText = STATUS_TEXT[lang] || STATUS_TEXT.fr;
+    const myRegText = MY_REG_TEXT[lang] || MY_REG_TEXT.fr;
+
     const [projects, setProjects] = useState([]);
     const [events, setEvents] = useState([]);
     const [volunteerCount, setVolunteerCount] = useState(null);
@@ -60,19 +221,19 @@ function Home({ lang }) {
     const featuredEvent = upcomingEvents[0];
     const previewEvents = upcomingEvents.slice(0, 3);
 
-    const formatDate = (d) => new Date(d).toLocaleDateString("fr-BE", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
-    const formatDateShort = (d) => new Date(d).toLocaleDateString("fr-BE", { day: "2-digit", month: "short", year: "numeric" });
-    const formatTime = (d) => new Date(d).toLocaleTimeString("fr-BE", { hour: "2-digit", minute: "2-digit" });
+    const formatDate = (d) => new Date(d).toLocaleDateString(t.locale, { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+    const formatDateShort = (d) => new Date(d).toLocaleDateString(t.locale, { day: "2-digit", month: "short", year: "numeric" });
+    const formatTime = (d) => new Date(d).toLocaleTimeString(t.locale, { hour: "2-digit", minute: "2-digit" });
 
     const handleRegister = async (eventId) => {
         if (!isLoggedIn) { navigate("/volunteer/login"); return; }
         try {
             const res = await registerToEvent(eventId);
-            const msg = res.position ? "Sur liste d'attente." : "Inscription envoyée !";
+            const msg = res.position ? t.msgWaitlist : t.msgRegistered;
             setFeedback(prev => ({ ...prev, [eventId]: msg }));
             setMyRegByEvent(prev => ({ ...prev, [eventId]: res }));
         } catch (err) {
-            setFeedback(prev => ({ ...prev, [eventId]: err.message || "Erreur lors de l'inscription." }));
+            setFeedback(prev => ({ ...prev, [eventId]: err.message || t.msgError }));
         }
     };
 
@@ -82,15 +243,12 @@ function Home({ lang }) {
             <div style={s.hero}>
                 <div style={s.heroGrid}>
                     <div>
-                        <span style={s.badge}>• Association active à Bruxelles depuis 2019</span>
-                        <h1 style={s.heroTitle}>Cultivons ensemble<br />un avenir <span style={s.heroAccent}>durable</span><br />et solidaire.</h1>
-                        <p style={s.heroText}>
-                            Terra Sana ASBL œuvre pour une alimentation saine et accessible à tous.
-                            Rejoignez notre réseau de bénévoles passionnés et participez à des événements qui ont du sens.
-                        </p>
+                        <span style={s.badge}>{t.badge}</span>
+                        <h1 style={s.heroTitle}>{t.heroTitle1}<br />{t.heroTitle2}<span style={s.heroAccent}>{t.heroAccent}</span><br />{t.heroTitle3}</h1>
+                        <p style={s.heroText}>{t.heroText}</p>
                         <div style={s.heroBtns}>
-                            <Link to="/volunteer/register" style={s.btnGreen}>Devenir bénévole</Link>
-                            <Link to="/evenements" style={s.btnGhost}>Voir les événements →</Link>
+                            <Link to="/volunteer/register" style={s.btnGreen}>{t.becomeVolunteer}</Link>
+                            <Link to="/evenements" style={s.btnGhost}>{t.seeEvents}</Link>
                         </div>
                         <div style={s.avatarRow}>
                             <div style={s.avatarStack}>
@@ -100,7 +258,7 @@ function Home({ lang }) {
                                 <div style={{ ...s.avatarChip, marginLeft: "-10px", background: "rgba(255,255,255,0.15)", color: "#fff" }}>+{Math.max((volunteerCount || 4) - 4, 0)}</div>
                             </div>
                             <span style={s.avatarText}>
-                                <strong>{volunteerCount ?? "…"} bénévoles actifs</strong> nous ont rejoints
+                                <strong>{volunteerCount ?? "…"} {t.activeVolunteers}</strong> {t.joinedUs}
                             </span>
                         </div>
                     </div>
@@ -113,12 +271,12 @@ function Home({ lang }) {
                                     <div style={s.featuredPill}>
                                         <span>⭐</span>
                                         <div>
-                                            <div style={s.featuredPillTitle}>Prochain événement</div>
+                                            <div style={s.featuredPillTitle}>{t.nextEvent}</div>
                                             <div style={s.featuredPillSub}>{formatDateShort(featuredEvent.eventDate)} · {featuredEvent.location.split(",")[0]}</div>
                                         </div>
                                     </div>
                                     <span style={{ ...s.availBadge, background: featuredEvent.status === "FULL" ? "#fff3e0" : "#e8f5e9", color: featuredEvent.status === "FULL" ? "#e65100" : "#2e7d32" }}>
-                                        {featuredEvent.status === "FULL" ? "Complet" : "Places disponibles"}
+                                        {featuredEvent.status === "FULL" ? t.full : t.placesAvailable}
                                     </span>
                                 </div>
                                 <div style={s.featuredBody}>
@@ -126,21 +284,21 @@ function Home({ lang }) {
                                     <div style={s.featuredMeta}>📅 {formatDate(featuredEvent.eventDate)} · {formatTime(featuredEvent.eventDate)}</div>
                                     <div style={s.featuredMeta}>📍 {featuredEvent.location}</div>
                                     <div style={s.featuredFooter}>
-                                        <span style={s.featuredCount}>{featuredEvent.availablePlaces} place{featuredEvent.availablePlaces === 1 ? "" : "s"} restante{featuredEvent.availablePlaces === 1 ? "" : "s"} sur {featuredEvent.maxPlaces}</span>
+                                        <span style={s.featuredCount}>{t.placesRemaining(featuredEvent.availablePlaces, featuredEvent.maxPlaces)}</span>
                                         {feedback[featuredEvent.id] ? (
                                             <span style={s.featuredFeedback}>{feedback[featuredEvent.id]}</span>
                                         ) : myRegByEvent[featuredEvent.id] ? (
-                                            <span style={s.featuredFeedback}>✓ {MY_REG_LABEL[myRegByEvent[featuredEvent.id].status]}</span>
+                                            <span style={s.featuredFeedback}>✓ {myRegText[myRegByEvent[featuredEvent.id].status]}</span>
                                         ) : (
                                             <button onClick={() => handleRegister(featuredEvent.id)} style={s.featuredBtn}>
-                                                {featuredEvent.status === "FULL" ? "Liste d'attente" : "S'inscrire"}
+                                                {featuredEvent.status === "FULL" ? t.waitlist : t.register}
                                             </button>
                                         )}
                                     </div>
                                 </div>
                             </>
                         ) : (
-                            <div style={s.featuredEmpty}>Aucun événement ouvert pour le moment — revenez bientôt !</div>
+                            <div style={s.featuredEmpty}>{t.noEventFeatured}</div>
                         )}
                     </div>
                 </div>
@@ -149,10 +307,10 @@ function Home({ lang }) {
             {/* ══ STATS ══ */}
             <div style={s.statsBar}>
                 <div className="grid-responsive" style={s.statsGrid}>
-                    <div style={s.stat}><div style={s.statNum}>{volunteerCount ?? "—"}</div><div style={s.statLbl}>Bénévoles actifs</div></div>
-                    <div style={s.stat}><div style={s.statNum}>{events.length}</div><div style={s.statLbl}>Événements organisés</div></div>
-                    <div style={s.stat}><div style={s.statNum}>12+</div><div style={s.statLbl}>Applications internes</div></div>
-                    <div style={s.stat}><div style={s.statNum}>2019</div><div style={s.statLbl}>Fondée à Bruxelles</div></div>
+                    <div style={s.stat}><div style={s.statNum}>{volunteerCount ?? "—"}</div><div style={s.statLbl}>{t.statActiveVolunteers}</div></div>
+                    <div style={s.stat}><div style={s.statNum}>{events.length}</div><div style={s.statLbl}>{t.statEventsOrganized}</div></div>
+                    <div style={s.stat}><div style={s.statNum}>12+</div><div style={s.statLbl}>{t.statInternalApps}</div></div>
+                    <div style={s.stat}><div style={s.statNum}>2019</div><div style={s.statLbl}>{t.statFounded}</div></div>
                 </div>
             </div>
 
@@ -164,26 +322,17 @@ function Home({ lang }) {
                         <div style={s.aboutBadge}>
                             <span style={{ color: GOLD }}>★</span>
                             <div>
-                                <div style={{ fontWeight: 700, fontSize: "12px" }}>Association reconnue</div>
-                                <div style={{ fontSize: "11px", color: "#888" }}>ASBL depuis 2019</div>
+                                <div style={{ fontWeight: 700, fontSize: "12px" }}>{t.recognized}</div>
+                                <div style={{ fontSize: "11px", color: "#888" }}>{t.asblSince}</div>
                             </div>
                         </div>
                     </div>
                     <div>
-                        <span style={s.eyebrow}>• QUI SOMMES-NOUS</span>
-                        <h2 style={s.aboutTitle}>Une mission locale,<br />saine et solidaire</h2>
-                        <p style={s.aboutText}>
-                            Terra Sana ASBL est une organisation à but non lucratif fondée en 2019 à Bruxelles.
-                            Nous soutenons les producteurs locaux, promouvons le circuit court et accompagnons
-                            les personnes en réinsertion — tout en centralisant l'accès à nos 12 applications internes.
-                        </p>
+                        <span style={s.eyebrow}>{t.aboutEyebrow}</span>
+                        <h2 style={s.aboutTitle}>{t.aboutTitle1}<br />{t.aboutTitle2}</h2>
+                        <p style={s.aboutText}>{t.aboutText}</p>
                         <div className="grid-responsive" style={s.featureGrid}>
-                            {[
-                                ["🌱", "Agriculture naturelle", "Sans pesticides ni intrants chimiques"],
-                                ["🤝", "Communauté inclusive", "Ouvert à tous, sans condition"],
-                                ["🔄", "Circuit court", "Producteurs locaux privilégiés"],
-                                ["🏅", "Impact reconnu", "Soutenue par la Région bruxelloise"]
-                            ].map(([icon, title, desc], i) => (
+                            {t.features.map(([icon, title, desc], i) => (
                                 <div key={i} style={s.featureItem}>
                                     <span style={s.featureIcon}>{icon}</span>
                                     <div>
@@ -200,16 +349,12 @@ function Home({ lang }) {
             {/* ══ COMMENT ÇA MARCHE ══ */}
             <div style={s.stepsSection}>
                 <div style={{ textAlign: "center", marginBottom: "40px" }}>
-                    <span style={s.eyebrow}>COMMENT ÇA MARCHE</span>
-                    <h2 style={s.stepsTitle}>Rejoignez-nous en 3 étapes</h2>
-                    <p style={s.stepsSub}>Devenir bénévole Terra Sana est simple et gratuit. Créez votre profil,<br />choisissez vos événements et venez participer !</p>
+                    <span style={s.eyebrow}>{t.howEyebrow}</span>
+                    <h2 style={s.stepsTitle}>{t.howTitle}</h2>
+                    <p style={s.stepsSub}>{t.howSub1}<br />{t.howSub2}</p>
                 </div>
                 <div className="grid-responsive" style={s.stepsGrid}>
-                    {[
-                        ["1", "👤", "Créez votre profil", "Inscrivez-vous gratuitement en 2 minutes et renseignez vos coordonnées."],
-                        ["2", "📅", "Choisissez un événement", "Parcourez le calendrier des événements à venir et inscrivez-vous en un clic."],
-                        ["3", "✓", "Venez participer !", "Votre participation est enregistrée. Recevez votre attestation PDF automatiquement."]
-                    ].map(([n, icon, title, desc], i) => (
+                    {t.steps.map(([n, icon, title, desc], i) => (
                         <div key={i} style={s.stepCardWrap}>
                             <div style={s.stepCard}>
                                 <div style={s.stepNum}>{n}</div>
@@ -227,17 +372,18 @@ function Home({ lang }) {
             <div style={s.eventsSection}>
                 <div style={s.eventsHeader}>
                     <div>
-                        <span style={s.eyebrow}>PROCHAINS ÉVÉNEMENTS</span>
-                        <h2 style={s.eventsTitle}>Rejoignez une action près de chez vous</h2>
+                        <span style={s.eyebrow}>{t.upcomingEyebrow}</span>
+                        <h2 style={s.eventsTitle}>{t.upcomingTitle}</h2>
                     </div>
-                    <Link to="/evenements" style={s.btnOutlineSm}>Voir tous les événements</Link>
+                    <Link to="/evenements" style={s.btnOutlineSm}>{t.seeAllEvents}</Link>
                 </div>
                 {previewEvents.length === 0 ? (
-                    <p style={{ textAlign: "center", color: "#888" }}>Aucun événement ouvert pour le moment.</p>
+                    <p style={{ textAlign: "center", color: "#888" }}>{t.noEvent}</p>
                 ) : (
                     <div className="grid-responsive" style={s.eventsGrid}>
                         {previewEvents.map((ev, i) => {
-                            const st = STATUS_LABEL[ev.status] || STATUS_LABEL.OPEN;
+                            const stStyle = STATUS_STYLE[ev.status] || STATUS_STYLE.OPEN;
+                            const stLabel = statusText[ev.status] || statusText.OPEN;
                             const confirmedRatio = ev.status === "FULL" ? 100 : 45;
                             return (
                                 <div key={ev.id} style={s.evCard}>
@@ -248,7 +394,7 @@ function Home({ lang }) {
                                                 <div style={s.evCardImgShade} />
                                             </>
                                         )}
-                                        <span style={{ ...s.evBadge, background: st.bg, color: st.color, position: "relative" }}>{st.label}</span>
+                                        <span style={{ ...s.evBadge, background: stStyle.bg, color: stStyle.color, position: "relative" }}>{stLabel}</span>
                                     </div>
                                     <div style={s.evCardBody}>
                                         <div style={s.evCardTitle}>{ev.title}</div>
@@ -259,10 +405,10 @@ function Home({ lang }) {
                                         {feedback[ev.id] ? (
                                             <div style={s.evFeedback}>{feedback[ev.id]}</div>
                                         ) : myRegByEvent[ev.id] ? (
-                                            <div style={s.evFeedback}>✓ {MY_REG_LABEL[myRegByEvent[ev.id].status]}</div>
+                                            <div style={s.evFeedback}>✓ {myRegText[myRegByEvent[ev.id].status]}</div>
                                         ) : (
                                             <button onClick={() => handleRegister(ev.id)} style={{ ...s.evBtn, ...(ev.status === "FULL" ? s.evBtnWaitlist : {}) }}>
-                                                {ev.status === "FULL" ? "Liste d'attente" : "S'inscrire à cet événement"}
+                                                {ev.status === "FULL" ? t.waitlist : t.registerEvent}
                                             </button>
                                         )}
                                     </div>
@@ -276,11 +422,11 @@ function Home({ lang }) {
             {/* ══ HUB DES APPLICATIONS ══ */}
             <div style={s.hubSection}>
                 <div style={{ textAlign: "center", marginBottom: "8px" }}>
-                    <span style={s.eyebrow}>HUB DES APPLICATIONS</span>
+                    <span style={s.eyebrow}>{t.hubEyebrow}</span>
                 </div>
-                <h2 style={{ ...s.eventsTitle, textAlign: "center" }}>Nos {projects.length || 12} applications internes, réunies en un seul endroit</h2>
+                <h2 style={{ ...s.eventsTitle, textAlign: "center" }}>{t.hubTitle(projects.length || 12)}</h2>
                 <p style={{ ...s.stepsSub, textAlign: "center", margin: "0 auto 32px" }}>
-                    Accès centralisé à tous les outils de gestion de Terra Sana ASBL,<br />développés au fil des différents projets et stages.
+                    {t.hubSub1}<br />{t.hubSub2}
                 </p>
                 <div className="grid-responsive" style={s.hubGrid}>
                     {projects.map(p => (
@@ -295,15 +441,11 @@ function Home({ lang }) {
             {/* ══ TÉMOIGNAGES ══ */}
             <div style={s.testimonialsSection}>
                 <div style={{ textAlign: "center", marginBottom: "36px" }}>
-                    <h2 style={s.testimonialsTitle}>Ce que disent nos bénévoles</h2>
-                    <p style={{ color: "#b8ceb9", fontSize: "14px" }}>Des dizaines de personnes ont déjà rejoint l'aventure Terra Sana.</p>
+                    <h2 style={s.testimonialsTitle}>{t.testimonialsTitle}</h2>
+                    <p style={{ color: "#b8ceb9", fontSize: "14px" }}>{t.testimonialsSub}</p>
                 </div>
                 <div className="grid-responsive" style={s.testimonialsGrid}>
-                    {[
-                        ["SB", "#7B4B94", "Sofia B.", "Bénévole depuis 2023", "Une expérience humaine incroyable. J'ai rencontré des gens fantastiques et eu le sentiment concret d'agir pour ma communauté."],
-                        ["MK", "#2D6A4F", "Marc K.", "Bénévole depuis 2022", "L'organisation est top. L'inscription est super simple, on reçoit un rappel avant chaque événement et l'attestation arrive automatiquement."],
-                        ["JP", "#1565C0", "Julie P.", "Bénévole depuis 2024", "Ce que j'aime chez Terra Sana c'est la diversité des actions. Il y en a pour tous les goûts et tous les emplois du temps."]
-                    ].map(([initials, color, name, since, quote], i) => (
+                    {t.testimonials.map(([initials, color, name, since, quote], i) => (
                         <div key={i} style={s.testimonialCard}>
                             <div style={{ color: GOLD, marginBottom: "12px" }}>★★★★★</div>
                             <p style={s.testimonialQuote}>« {quote} »</p>
@@ -321,11 +463,11 @@ function Home({ lang }) {
 
             {/* ══ CTA FINAL ══ */}
             <div style={s.ctaSection}>
-                <h2 style={s.ctaTitle}>Prêt·e à faire la différence<br />avec nous ?</h2>
-                <p style={s.ctaText}>Rejoignez la communauté Terra Sana. Inscription gratuite, flexible, sans engagement.</p>
+                <h2 style={s.ctaTitle}>{t.ctaTitle1}<br />{t.ctaTitle2}</h2>
+                <p style={s.ctaText}>{t.ctaText}</p>
                 <div style={s.ctaBtns}>
-                    <Link to="/volunteer/register" style={s.ctaBtnGreen}>Créer mon profil bénévole</Link>
-                    <Link to="/evenements" style={s.btnOutlineSm}>Consulter le calendrier</Link>
+                    <Link to="/volunteer/register" style={s.ctaBtnGreen}>{t.ctaCreateProfile}</Link>
+                    <Link to="/evenements" style={s.btnOutlineSm}>{t.ctaSeeCalendar}</Link>
                 </div>
             </div>
         </div>
