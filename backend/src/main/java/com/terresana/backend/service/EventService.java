@@ -15,12 +15,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
 public class EventService {
 
     private static final Logger log = LoggerFactory.getLogger(EventService.class);
+    private static final DateTimeFormatter DUPLICATE_MSG_FMT = DateTimeFormatter.ofPattern("dd/MM/yyyy 'à' HH:mm");
     private final EventRepository eventRepo;
     private final EventImageService eventImageService;
     private final RegistrationRepository registrationRepo;
@@ -94,7 +96,8 @@ public class EventService {
         boolean duplicate = eventRepo.findByEventDateBetweenAndLocationIgnoreCase(startOfDay, endOfDay, location).stream()
                 .anyMatch(e -> !e.getId().equals(excludeId));
         if (duplicate) {
-            throw new RuntimeException("Un événement existe déjà à cette date et à ce lieu.");
+            throw new RuntimeException("Un événement existe déjà le " + eventDate.format(DUPLICATE_MSG_FMT)
+                    + " à " + location + ".");
         }
     }
 
