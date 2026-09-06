@@ -17,6 +17,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     // RG-06 — Événements dont la date est passée mais qui ne sont pas encore FINISHED/CANCELLED
     List<Event> findByEventDateBeforeAndStatusIn(LocalDateTime date, List<EventStatus> statuses);
 
-    // Détection de doublon (titre + date strictement identiques) demandée par l'utilisateur
-    List<Event> findByTitleIgnoreCaseAndEventDate(String title, LocalDateTime eventDate);
+    // Détection de doublon (même jour + même lieu, titre ignoré) demandée par l'utilisateur
+    List<Event> findByEventDateBetweenAndLocationIgnoreCase(LocalDateTime start, LocalDateTime end, String location);
 }

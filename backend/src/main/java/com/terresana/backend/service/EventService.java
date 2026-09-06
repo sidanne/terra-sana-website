@@ -54,7 +54,8 @@ public class EventService {
 
     public Event create(Event event, Admin creator) {
         event.setTitle(event.getTitle().trim());
-        checkNoDuplicate(event.getTitle(), event.getEventDate(), null);
+        event.setLocation(event.getLocation().trim());
+        checkNoDuplicate(event.getLocation(), event.getEventDate(), null);
         event.setStatus(EventStatus.OPEN);
         event.setAdmin(creator);
         // Si l'admin n'a pas fourni d'image, on en choisit une automatiquement selon le sujet de l'événement
@@ -66,12 +67,12 @@ public class EventService {
 
     public Event update(Long id, Event updated) {
         Event event = findById(id);
-        String newTitle = updated.getTitle().trim();
-        checkNoDuplicate(newTitle, updated.getEventDate(), id);
-        event.setTitle(newTitle);
+        String newLocation = updated.getLocation().trim();
+        checkNoDuplicate(newLocation, updated.getEventDate(), id);
+        event.setTitle(updated.getTitle().trim());
         event.setDescription(updated.getDescription());
         event.setEventDate(updated.getEventDate());
-        event.setLocation(updated.getLocation());
+        event.setLocation(newLocation);
         event.setMaxPlaces(updated.getMaxPlaces());
         event.setImageUrl(updated.getImageUrl());
         if (event.getImageUrl() == null || event.getImageUrl().isBlank()) {
@@ -80,14 +81,20 @@ public class EventService {
         return attachAvailablePlaces(eventRepo.save(event));
     }
 
-    // Empêche de créer/renommer un événement vers un titre + une date strictement identiques à un
-    // événement déjà existant (quasi certainement une erreur de saisie plutôt qu'un choix voulu) ;
-    // excludeId ignore l'événement lui-même lors d'une mise à jour qui ne change ni titre ni date.
-    private void checkNoDuplicate(String title, LocalDateTime eventDate, Long excludeId) {
-        boolean duplicate = eventRepo.findByTitleIgnoreCaseAndEventDate(title, eventDate).stream()
+    // Empêche de créer/déplacer un événement vers le même jour + le même lieu qu'un événement déjà
+    // existant, indépendamment du titre : deux événements avec des titres légèrement différents
+    // ("location des voitures" / "locations des voitures") mais au même endroit le même jour sont
+    // quasi certainement le même événement créé deux fois par erreur plutôt que deux activités
+    // distinctes. Comparaison sur le jour entier (pas l'heure exacte) : une simple faute de saisie
+    // sur l'heure ne doit pas suffire à passer au travers. excludeId ignore l'événement lui-même
+    // lors d'une mise à jour qui ne change ni sa date ni son lieu.
+    private void checkNoDuplicate(String location, LocalDateTime eventDate, Long excludeId) {
+        LocalDateTime startOfDay = eventDate.toLocalDate().atStartOfDay();
+        LocalDateTime endOfDay = startOfDay.plusDays(1);
+        boolean duplicate = eventRepo.findByEventDateBetweenAndLocationIgnoreCase(startOfDay, endOfDay, location).stream()
                 .anyMatch(e -> !e.getId().equals(excludeId));
         if (duplicate) {
-            throw new RuntimeException("Un événement avec ce titre existe déjà à cette date.");
+            throw new RuntimeException("Un événement existe déjà à cette date et à ce lieu.");
         }
     }
 
