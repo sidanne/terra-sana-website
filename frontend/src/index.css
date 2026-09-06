@@ -65,10 +65,28 @@ code {
   }
   .admin-sidebar nav {
     display: flex !important;
+    flex-shrink: 0;
     gap: 4px;
+    padding-right: 12px;
+    margin-right: 4px;
+    border-right: 1px solid rgba(255,255,255,0.12);
+  }
+  .admin-sidebar nav button {
+    width: auto !important;
+    flex-shrink: 0;
+    white-space: nowrap;
+    margin-bottom: 0 !important;
   }
   .admin-sidebar-hide-mobile {
     display: none !important;
+  }
+  .admin-sidebar-footer {
+    margin-top: 0 !important;
+    padding: 0 !important;
+    border-top: none !important;
+    border-left: none !important;
+    flex-shrink: 0;
+    white-space: nowrap;
   }
 }
 

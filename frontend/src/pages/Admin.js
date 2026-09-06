@@ -715,10 +715,10 @@ function Admin({ lang }) {
                     ))}
                 </nav>
 
-                <div style={styles.sidebarFooter}>
+                <div className="admin-sidebar-footer" style={styles.sidebarFooter}>
                     <div style={styles.sidebarAvatar}>A</div>
                     <div>
-                        <div style={styles.sidebarFooterName}>{t.administrator}</div>
+                        <div className="admin-sidebar-hide-mobile" style={styles.sidebarFooterName}>{t.administrator}</div>
                         <button onClick={handleLogout} style={styles.sidebarLogout}>{t.logout}</button>
                     </div>
                 </div>
