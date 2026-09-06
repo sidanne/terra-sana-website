@@ -1,12 +1,42 @@
-function Cookies() {
+const T = {
+    fr: {
+        title: "Politique de cookies", date: "Dernière mise à jour : 2025",
+        sections: [
+            ["1. Qu'est-ce qu'un cookie ?", "Un cookie est un petit fichier texte stocké sur votre appareil lors de la visite d'un site web. Il permet au site de se souvenir de certaines informations sur votre visite."],
+            ["2. Cookies utilisés", "Ce site utilise uniquement des cookies techniques nécessaires au bon fonctionnement du site (authentification administrateur via JWT). Aucun cookie publicitaire ou de tracking n'est utilisé."],
+            ["3. Gestion des cookies", "Vous pouvez désactiver les cookies dans les paramètres de votre navigateur. Cela peut affecter le fonctionnement de certaines fonctionnalités du site."],
+            ["4. Contact", "Terra Sana ASBL — Terrasana@outlook.be"]
+        ]
+    },
+    en: {
+        title: "Cookie policy", date: "Last updated: 2025",
+        sections: [
+            ["1. What is a cookie?", "A cookie is a small text file stored on your device when you visit a website. It allows the site to remember certain information about your visit."],
+            ["2. Cookies used", "This site only uses technical cookies necessary for the site to function properly (admin authentication via JWT). No advertising or tracking cookies are used."],
+            ["3. Managing cookies", "You can disable cookies in your browser settings. This may affect how some features of the site work."],
+            ["4. Contact", "Terra Sana ASBL — Terrasana@outlook.be"]
+        ]
+    },
+    nl: {
+        title: "Cookiebeleid", date: "Laatst bijgewerkt: 2025",
+        sections: [
+            ["1. Wat is een cookie?", "Een cookie is een klein tekstbestand dat op uw toestel wordt opgeslagen bij het bezoeken van een website. Hierdoor kan de site zich bepaalde informatie over uw bezoek herinneren."],
+            ["2. Gebruikte cookies", "Deze site gebruikt enkel technische cookies die nodig zijn voor de goede werking van de site (admin-authenticatie via JWT). Er worden geen reclame- of trackingcookies gebruikt."],
+            ["3. Cookies beheren", "U kunt cookies uitschakelen in de instellingen van uw browser. Dit kan de werking van bepaalde functies van de site beïnvloeden."],
+            ["4. Contact", "Terra Sana ASBL — Terrasana@outlook.be"]
+        ]
+    }
+};
+
+function Cookies({ lang }) {
+    const t = T[lang] || T.fr;
     return (
         <div style={styles.container}>
-            <h1 style={styles.title}>Politique de cookies</h1>
-            <p style={styles.date}>Derniere mise a jour : 2025</p>
-            <div style={styles.section}><h2 style={styles.h2}>1. Qu est-ce qu un cookie ?</h2><p style={styles.p}>Un cookie est un petit fichier texte stocke sur votre appareil lors de la visite d un site web. Il permet au site de se souvenir de certaines informations sur votre visite.</p></div>
-            <div style={styles.section}><h2 style={styles.h2}>2. Cookies utilises</h2><p style={styles.p}>Ce site utilise uniquement des cookies techniques necessaires au bon fonctionnement du site (authentification administrateur via JWT). Aucun cookie publicitaire ou de tracking n est utilise.</p></div>
-            <div style={styles.section}><h2 style={styles.h2}>3. Gestion des cookies</h2><p style={styles.p}>Vous pouvez desactiver les cookies dans les parametres de votre navigateur. Cela peut affecter le fonctionnement de certaines fonctionnalites du site.</p></div>
-            <div style={styles.section}><h2 style={styles.h2}>4. Contact</h2><p style={styles.p}>Terra Sana ASBL � Terrasana@outlook.be</p></div>
+            <h1 style={styles.title}>{t.title}</h1>
+            <p style={styles.date}>{t.date}</p>
+            {t.sections.map(([h2, p], i) => (
+                <div key={i} style={styles.section}><h2 style={styles.h2}>{h2}</h2><p style={styles.p}>{p}</p></div>
+            ))}
         </div>
     );
 }

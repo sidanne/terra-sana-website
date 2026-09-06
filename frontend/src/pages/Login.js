@@ -1,7 +1,38 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
-function Login() {
+const T = {
+    fr: {
+        quote: "Piloter Terra Sana, un projet à la fois.", quoteAuthor: "— Espace administrateur",
+        title: "Connexion Administrateur", sub: "Espace réservé à l'administrateur Terra Sana",
+        username: "Nom utilisateur", usernamePh: "Entrez votre nom utilisateur",
+        password: "Mot de passe", passwordPh: "Entrez votre mot de passe",
+        loading: "Connexion en cours...", submit: "Se connecter", forgot: "Mot de passe oublié ?",
+        genericError: "Une erreur est survenue. Veuillez réessayer.",
+        serverError: "Impossible de se connecter au serveur. Vérifiez que le backend est lancé."
+    },
+    en: {
+        quote: "Steering Terra Sana, one project at a time.", quoteAuthor: "— Admin area",
+        title: "Administrator login", sub: "Area reserved for the Terra Sana administrator",
+        username: "Username", usernamePh: "Enter your username",
+        password: "Password", passwordPh: "Enter your password",
+        loading: "Logging in...", submit: "Log in", forgot: "Forgot your password?",
+        genericError: "An error occurred. Please try again.",
+        serverError: "Could not connect to the server. Check that the backend is running."
+    },
+    nl: {
+        quote: "Terra Sana sturen, één project tegelijk.", quoteAuthor: "— Adminomgeving",
+        title: "Beheerder inloggen", sub: "Omgeving voorbehouden voor de Terra Sana-beheerder",
+        username: "Gebruikersnaam", usernamePh: "Voer uw gebruikersnaam in",
+        password: "Wachtwoord", passwordPh: "Voer uw wachtwoord in",
+        loading: "Bezig met inloggen...", submit: "Inloggen", forgot: "Wachtwoord vergeten?",
+        genericError: "Er is een fout opgetreden. Probeer het opnieuw.",
+        serverError: "Kan geen verbinding maken met de server. Controleer of de backend actief is."
+    }
+};
+
+function Login({ lang }) {
+    const t = T[lang] || T.fr;
     const [form, setForm] = useState({ username: "", password: "" });
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
@@ -23,7 +54,7 @@ function Login() {
             });
             const data = await res.json();
             if (!res.ok) {
-                setError(data.message || "Une erreur est survenue. Veuillez reessayer.");
+                setError(data.message || t.genericError);
                 setLoading(false);
                 return;
             }
@@ -32,7 +63,7 @@ function Login() {
             localStorage.setItem("tokenExpiry", expiry);
             navigate("/admin");
         } catch (err) {
-            setError("Impossible de se connecter au serveur. Verifiez que le backend est lance.");
+            setError(t.serverError);
             setLoading(false);
         }
     };
@@ -42,8 +73,8 @@ function Login() {
             <div style={styles.imagePanel}>
                 <div style={styles.imageOverlay}>
                     <div style={styles.quoteMark}>"</div>
-                    <p style={styles.quote}>Piloter Terra Sana, un projet à la fois.</p>
-                    <div style={styles.quoteAuthor}>— Espace administrateur</div>
+                    <p style={styles.quote}>{t.quote}</p>
+                    <div style={styles.quoteAuthor}>{t.quoteAuthor}</div>
                 </div>
             </div>
 
@@ -53,29 +84,29 @@ function Login() {
                     <div style={styles.logoIcon}>TS</div>
                     <div style={styles.logoText}>Terra<span style={styles.green}>Sana</span></div>
                 </div>
-                <h1 style={styles.title}>Connexion Administrateur</h1>
-                <p style={styles.sub}>Espace reserve a administrateur Terra Sana</p>
+                <h1 style={styles.title}>{t.title}</h1>
+                <p style={styles.sub}>{t.sub}</p>
                 {error && (
                     <div style={styles.error}>
-                        <span>??</span> {error}
+                        <span>⚠</span> {error}
                     </div>
                 )}
                 <form onSubmit={handleSubmit} style={styles.form}>
                     <div style={styles.row}>
-                        <label style={styles.label}>Nom utilisateur</label>
-                        <input name="username" autoComplete="username" value={form.username} onChange={handleChange} style={styles.input} placeholder="Entrez votre nom utilisateur" required />
+                        <label style={styles.label}>{t.username}</label>
+                        <input name="username" autoComplete="username" value={form.username} onChange={handleChange} style={styles.input} placeholder={t.usernamePh} required />
                     </div>
                     <div style={styles.row}>
-                        <label style={styles.label}>Mot de passe</label>
-                        <input name="password" type="password" autoComplete="current-password" value={form.password} onChange={handleChange} style={styles.input} placeholder="Entrez votre mot de passe" required />
+                        <label style={styles.label}>{t.password}</label>
+                        <input name="password" type="password" autoComplete="current-password" value={form.password} onChange={handleChange} style={styles.input} placeholder={t.passwordPh} required />
                     </div>
                     <button type="submit" style={styles.btn} disabled={loading}>
-                        {loading ? "Connexion en cours..." : "Se connecter"}
+                        {loading ? t.loading : t.submit}
                     </button>
                 </form>
                 <p style={styles.link}>
                     <Link to="/admin/forgot-password" style={{ color: "#D4A017", fontWeight: "600" }}>
-                        Mot de passe oublié ?
+                        {t.forgot}
                     </Link>
                 </p>
             </div>

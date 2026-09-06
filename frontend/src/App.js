@@ -39,23 +39,23 @@ function App() {
                 <Route path="/projects/:id" element={<ProjectDetail lang={lang} />} />
                 <Route path="/blog" element={<Blog lang={lang} />} />
                 <Route path="/contact" element={<Contact lang={lang} />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/admin" element={<Admin />} />
-                <Route path="/admin/forgot-password" element={<AdminForgotPassword />} />
-                <Route path="/admin/reset-password" element={<AdminResetPassword />} />
-                <Route path="/confidentialite" element={<Confidentialite />} />
-                <Route path="/conditions" element={<Conditions />} />
-                <Route path="/cookies" element={<Cookies />} />
-                <Route path="/aide" element={<Aide />} />
-                <Route path="/sponsors" element={<Sponsors />} />
+                <Route path="/login" element={<Login lang={lang} />} />
+                <Route path="/admin" element={<Admin lang={lang} />} />
+                <Route path="/admin/forgot-password" element={<AdminForgotPassword lang={lang} />} />
+                <Route path="/admin/reset-password" element={<AdminResetPassword lang={lang} />} />
+                <Route path="/confidentialite" element={<Confidentialite lang={lang} />} />
+                <Route path="/conditions" element={<Conditions lang={lang} />} />
+                <Route path="/cookies" element={<Cookies lang={lang} />} />
+                <Route path="/aide" element={<Aide lang={lang} />} />
+                <Route path="/sponsors" element={<Sponsors lang={lang} />} />
                 <Route path="/benevolat" element={<Benevolat lang={lang} />} />
-                <Route path="/evenements" element={<Events />} />
-                <Route path="/volunteer/login" element={<VolunteerLogin />} />
-                <Route path="/volunteer/register" element={<VolunteerRegister />} />
-                <Route path="/volunteer/dashboard" element={<VolunteerDashboard />} />
-                <Route path="/volunteer/forgot-password" element={<ForgotPassword />} />
-                <Route path="/volunteer/reset-password" element={<ResetPassword />} />
-                <Route path="*" element={<NotFound />} />
+                <Route path="/evenements" element={<Events lang={lang} />} />
+                <Route path="/volunteer/login" element={<VolunteerLogin lang={lang} />} />
+                <Route path="/volunteer/register" element={<VolunteerRegister lang={lang} />} />
+                <Route path="/volunteer/dashboard" element={<VolunteerDashboard lang={lang} />} />
+                <Route path="/volunteer/forgot-password" element={<ForgotPassword lang={lang} />} />
+                <Route path="/volunteer/reset-password" element={<ResetPassword lang={lang} />} />
+                <Route path="*" element={<NotFound lang={lang} />} />
             </Routes>
             <Footer lang={lang} />
         </Router>

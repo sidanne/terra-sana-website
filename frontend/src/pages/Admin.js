@@ -7,7 +7,230 @@ import { Line, Doughnut } from "react-chartjs-2";
 // Enregistrement des modules Chart.js utilisés (requis par la librairie avant tout rendu de graphique)
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, ArcElement, Tooltip, Legend);
 
-function Admin() {
+const T = {
+    fr: {
+        moduleVolunteers: "MODULE BÉNÉVOLES", principal: "PRINCIPAL", reports: "RAPPORTS", siteShowcase: "SITE VITRINE",
+        administrator: "Administrateur", logout: "Se déconnecter",
+        tabDashboard: "Tableau de bord", tabEvents: "Événements", tabVolunteers: "Bénévoles", tabRegistrations: "Inscriptions",
+        tabReviews: "Retours post-événement", tabAttestations: "Attestations PDF", tabStats: "Statistiques",
+        tabProjects: "Projets", tabBlog: "Blog", tabMessages: "Messages",
+        unreadMessagesTitle: "Messages non lus", changePasswordTitle: "Changer mot de passe",
+        activeVolunteers: "BÉNÉVOLES ACTIFS", totalOf: (n) => `↑ ${n} au total`, totalOfPlain: (n) => `${n} au total`,
+        upcomingEvents: "ÉVÉNEMENTS À VENIR", pendingRegistrations: "INSCRIPTIONS EN ATTENTE", toProcess: "↑ à traiter",
+        participationRate: "TAUX DE PARTICIPATION", confirmedUp: (n) => `↑ ${n} confirmées`,
+        nextEvents: "Prochains événements", seeAll: "Voir tous →", noUpcomingEvent: "Aucun événement à venir.",
+        thEvent: "ÉVÉNEMENT", thDate: "DATE", thVolunteers: "BÉNÉVOLES", thStatus: "STATUT",
+        full: "Complet", open: "Ouvert", manage: "Gérer →",
+        thisWeek: "Cette semaine", nothingPlanned: "Rien de prévu cette semaine.", confirmedVolunteers: (n) => `${n} bénévole(s) confirmé(s)`,
+        quickActions: "Actions rapides", newEvent: "Nouvel événement", addVolunteer: "Ajouter bénévole", attestationPdf: "Attestation PDF", stats: "Statistiques",
+        registrationsFollowup: "Suivi des inscriptions", waitingConfirmedRefused: (w, c, r) => `${w} en attente · ${c} confirmées · ${r} refusées`,
+        allRegistrations: (n) => `Toutes les inscriptions (${n})`, noRegistrationYet: "Aucune inscription pour le moment.",
+        thVolunteer: "BÉNÉVOLE", confirm: "Confirmer", refuse: "Refuser",
+        postEventFeedback: (n) => `Retours post-événement (${n})`, noReviewYet: "Aucun avis pour le moment.",
+        eligibleVolunteers: "Bénévoles éligibles à une attestation",
+        eligibleSub: "Participation confirmée à un événement terminé (RG-20) — le bénévole télécharge lui-même son attestation depuis son espace personnel.",
+        noAttestationYet: "Aucune attestation disponible pour le moment.",
+        registrationsByMonth: "Inscriptions par mois", participationRateChart: (n) => `Taux de participation : ${n}%`,
+        confirmedLabel: "Confirmées", waitingLabel: "En attente", refusedLabel: "Refusées",
+        addProject: "Ajouter un projet", projectName: "Nom du projet", category: "Categorie", description: "Description",
+        appLink: "Lien application (http://...)", imageUrlOptional: "URL image (optionnel)", preview: "Aperçu", activeProject: "Projet actif", addProjectBtn: "Ajouter le projet",
+        editProject: "Modifier le projet", name: "Nom", save: "Sauvegarder", cancel: "Annuler",
+        projectsCount: (n) => `Projets (${n})`, noCategory: "Sans categorie", active: "Actif", inactive: "Inactif", edit: "Modifier", delete: "Supprimer",
+        publishArticle: "Publier un article", articleTitle: "Titre de l'article", articleContent: "Contenu de l'article...", publish: "Publier",
+        editArticle: "Modifier article", title: "Titre", content: "Contenu",
+        articlesCount: (n) => `Articles (${n})`,
+        messagesCount: (n) => `Messages (${n})`, unreadCount: (n) => `${n} non lu(s)`,
+        all: "Tous", unread: "Non lus", read: "Lus", noMessageInCategory: "Aucun message dans cette categorie.",
+        newBadge: "NOUVEAU", markRead: "Marquer lu", reply: "Repondre", ignore: "Ignorer",
+        createEvent: "Créer un événement", eventTitle: "Titre", location: "Lieu", eventDescription: "Description",
+        dateTime: "Date et heure", maxPlacesLabel: "Nombre de places max", maxPlacesPh: "Ex : 20", createEventBtn: "Créer l'événement",
+        editEvent: "Modifier l'événement",
+        eventsListCount: (a, b) => `Liste des événements (${a}/${b})`, searchByTitle: "Rechercher par titre...",
+        noEventCreated: "Aucun événement créé.", noEventMatches: "Aucun événement ne correspond à cette recherche.",
+        registered: "Inscrits", reviews: "Avis", groupEmailBtn: "📢 Email groupé",
+        prevPage: "← Précédent", pageOf: (a, b) => `Page ${a} / ${b}`, nextPage: "Suivant →",
+        volunteersRegisteredCount: (a, b) => `Bénévoles inscrits (${a}/${b})`,
+        filterBySkill: "Filtrer par compétence...", filterByAvailability: "Filtrer par disponibilité...", allLanguages: "Toutes les langues", reset: "Réinitialiser",
+        noVolunteerMatches: "Aucun bénévole ne correspond aux filtres.", registeredOn: "Inscrit le", deactivate: "Désactiver", reactivate: "Réactiver",
+        skills: "Compétences", availability: "Disponibilités",
+        registrationsForEvent: "Inscriptions à l'événement", exportPdf: "📄 Exporter en PDF", noRegistrationForEvent: "Aucune inscription pour cet événement.", close: "Fermer",
+        volunteerReviews: "Avis des bénévoles", avgRating: (n) => `Note moyenne : ${n} / 5`, reviewsCount: (n) => ` (${n} avis)`, noReviewForEvent: "Aucun avis pour cet événement.",
+        groupMessageTitle: "Message groupé aux inscrits", groupMessageSub: "Cet email sera envoyé à tous les bénévoles encore inscrits (hors annulés).",
+        writeMessagePh: "Écris ton message ici...", send: "Envoyer",
+        confirmDeleteTitle: "Confirmer la suppression", confirmDeleteText: (nom) => <>Voulez-vous vraiment supprimer <strong>{nom}</strong> ? Cette action est irreversible.</>,
+        attestationsAtRisk: (n) => `⚠️ ${n} bénévole(s) confirmé(s) sur cet événement — supprimer l'événement supprime aussi leurs inscriptions et rend leur attestation indisponible.`,
+        deletePermanently: "Supprimer definitivement",
+        replyTo: (name) => `Repondre a ${name}`, replySentTo: (email) => `La reponse sera envoyee a : ${email}`,
+        originalMessage: "MESSAGE ORIGINAL", yourReplyPh: "Votre reponse...", sendReply: "Envoyer la reponse",
+        changePasswordModalTitle: "Changer le mot de passe", oldPassword: "Ancien mot de passe", newPassword: "Nouveau mot de passe", confirmNewPassword: "Confirmer le nouveau mot de passe", change: "Changer",
+        msgProjectActivated: "Projet active !", msgProjectDeactivated: "Projet desactive !", msgServerUnreachable: "Impossible de contacter le serveur.",
+        msgProjectAdded: "Projet ajoute avec succes !", msgProjectAddError: "Erreur lors de la création du projet.",
+        msgProjectUpdated: "Projet modifie avec succes !", msgProjectUpdateError: "Erreur lors de la modification du projet.",
+        msgDeleted: "Supprime avec succes !", msgDeleteError: "Erreur lors de la suppression.",
+        msgArticlePublished: "Article publie avec succes !", msgArticlePublishError: "Erreur lors de la publication de l'article.",
+        msgArticleUpdated: "Article modifie avec succes !", msgArticleUpdateError: "Erreur lors de la modification de l'article.",
+        msgReplySent: "Reponse envoyee avec succes !",
+        msgPasswordMismatch: "Les mots de passe ne correspondent pas", msgPasswordTooShort: "Le mot de passe doit contenir au moins 8 caracteres",
+        msgOldPasswordWrong: "Ancien mot de passe incorrect", msgPasswordChanged: "Mot de passe change avec succes !",
+        msgEventCreated: "Événement créé avec succès !", msgEventCreateError: "Erreur lors de la création de l'événement.",
+        msgEventUpdated: "Événement modifié !", msgEventUpdateError: "Erreur lors de la modification de l'événement.",
+        msgStatusUpdated: (status) => `Statut mis à jour : ${status}`, msgStatusError: "Impossible de changer le statut.",
+        msgExportError: "Erreur lors de l'export.",
+        msgAccountReactivated: "Compte réactivé.", msgAccountDeactivated: "Compte désactivé.",
+        msgWriteMessageFirst: "Écris un message avant d'envoyer.", msgEmailSent: "Email envoyé.",
+        msgRegConfirmed: "Inscription confirmée !", msgRegRefused: "Inscription refusée.", msgMessageIgnored: "Message ignore.",
+        locale: "fr-BE"
+    },
+    en: {
+        moduleVolunteers: "VOLUNTEER MODULE", principal: "MAIN", reports: "REPORTS", siteShowcase: "SHOWCASE SITE",
+        administrator: "Administrator", logout: "Log out",
+        tabDashboard: "Dashboard", tabEvents: "Events", tabVolunteers: "Volunteers", tabRegistrations: "Registrations",
+        tabReviews: "Post-event feedback", tabAttestations: "PDF certificates", tabStats: "Statistics",
+        tabProjects: "Projects", tabBlog: "Blog", tabMessages: "Messages",
+        unreadMessagesTitle: "Unread messages", changePasswordTitle: "Change password",
+        activeVolunteers: "ACTIVE VOLUNTEERS", totalOf: (n) => `↑ ${n} in total`, totalOfPlain: (n) => `${n} in total`,
+        upcomingEvents: "UPCOMING EVENTS", pendingRegistrations: "PENDING REGISTRATIONS", toProcess: "↑ to process",
+        participationRate: "PARTICIPATION RATE", confirmedUp: (n) => `↑ ${n} confirmed`,
+        nextEvents: "Upcoming events", seeAll: "See all →", noUpcomingEvent: "No upcoming events.",
+        thEvent: "EVENT", thDate: "DATE", thVolunteers: "VOLUNTEERS", thStatus: "STATUS",
+        full: "Full", open: "Open", manage: "Manage →",
+        thisWeek: "This week", nothingPlanned: "Nothing planned this week.", confirmedVolunteers: (n) => `${n} confirmed volunteer(s)`,
+        quickActions: "Quick actions", newEvent: "New event", addVolunteer: "Add volunteer", attestationPdf: "PDF certificate", stats: "Statistics",
+        registrationsFollowup: "Registration tracking", waitingConfirmedRefused: (w, c, r) => `${w} waiting · ${c} confirmed · ${r} refused`,
+        allRegistrations: (n) => `All registrations (${n})`, noRegistrationYet: "No registrations yet.",
+        thVolunteer: "VOLUNTEER", confirm: "Confirm", refuse: "Refuse",
+        postEventFeedback: (n) => `Post-event feedback (${n})`, noReviewYet: "No reviews yet.",
+        eligibleVolunteers: "Volunteers eligible for a certificate",
+        eligibleSub: "Confirmed participation in a finished event (RG-20) — the volunteer downloads their own certificate from their personal space.",
+        noAttestationYet: "No certificate available yet.",
+        registrationsByMonth: "Registrations by month", participationRateChart: (n) => `Participation rate: ${n}%`,
+        confirmedLabel: "Confirmed", waitingLabel: "Waiting", refusedLabel: "Refused",
+        addProject: "Add a project", projectName: "Project name", category: "Category", description: "Description",
+        appLink: "Application link (http://...)", imageUrlOptional: "Image URL (optional)", preview: "Preview", activeProject: "Active project", addProjectBtn: "Add project",
+        editProject: "Edit project", name: "Name", save: "Save", cancel: "Cancel",
+        projectsCount: (n) => `Projects (${n})`, noCategory: "No category", active: "Active", inactive: "Inactive", edit: "Edit", delete: "Delete",
+        publishArticle: "Publish an article", articleTitle: "Article title", articleContent: "Article content...", publish: "Publish",
+        editArticle: "Edit article", title: "Title", content: "Content",
+        articlesCount: (n) => `Articles (${n})`,
+        messagesCount: (n) => `Messages (${n})`, unreadCount: (n) => `${n} unread`,
+        all: "All", unread: "Unread", read: "Read", noMessageInCategory: "No messages in this category.",
+        newBadge: "NEW", markRead: "Mark read", reply: "Reply", ignore: "Ignore",
+        createEvent: "Create an event", eventTitle: "Title", location: "Location", eventDescription: "Description",
+        dateTime: "Date and time", maxPlacesLabel: "Maximum number of places", maxPlacesPh: "E.g.: 20", createEventBtn: "Create the event",
+        editEvent: "Edit the event",
+        eventsListCount: (a, b) => `Events list (${a}/${b})`, searchByTitle: "Search by title...",
+        noEventCreated: "No events created.", noEventMatches: "No events match this search.",
+        registered: "Registered", reviews: "Reviews", groupEmailBtn: "📢 Group email",
+        prevPage: "← Previous", pageOf: (a, b) => `Page ${a} / ${b}`, nextPage: "Next →",
+        volunteersRegisteredCount: (a, b) => `Registered volunteers (${a}/${b})`,
+        filterBySkill: "Filter by skill...", filterByAvailability: "Filter by availability...", allLanguages: "All languages", reset: "Reset",
+        noVolunteerMatches: "No volunteers match the filters.", registeredOn: "Registered on", deactivate: "Deactivate", reactivate: "Reactivate",
+        skills: "Skills", availability: "Availability",
+        registrationsForEvent: "Registrations for the event", exportPdf: "📄 Export as PDF", noRegistrationForEvent: "No registrations for this event.", close: "Close",
+        volunteerReviews: "Volunteer reviews", avgRating: (n) => `Average rating: ${n} / 5`, reviewsCount: (n) => ` (${n} reviews)`, noReviewForEvent: "No reviews for this event.",
+        groupMessageTitle: "Group message to registrants", groupMessageSub: "This email will be sent to all volunteers still registered (excluding cancelled).",
+        writeMessagePh: "Write your message here...", send: "Send",
+        confirmDeleteTitle: "Confirm deletion", confirmDeleteText: (nom) => <>Do you really want to delete <strong>{nom}</strong>? This action is irreversible.</>,
+        attestationsAtRisk: (n) => `⚠️ ${n} confirmed volunteer(s) for this event — deleting the event also deletes their registrations and makes their certificate unavailable.`,
+        deletePermanently: "Delete permanently",
+        replyTo: (name) => `Reply to ${name}`, replySentTo: (email) => `The reply will be sent to: ${email}`,
+        originalMessage: "ORIGINAL MESSAGE", yourReplyPh: "Your reply...", sendReply: "Send reply",
+        changePasswordModalTitle: "Change password", oldPassword: "Old password", newPassword: "New password", confirmNewPassword: "Confirm new password", change: "Change",
+        msgProjectActivated: "Project activated!", msgProjectDeactivated: "Project deactivated!", msgServerUnreachable: "Could not contact the server.",
+        msgProjectAdded: "Project added successfully!", msgProjectAddError: "Error while creating the project.",
+        msgProjectUpdated: "Project updated successfully!", msgProjectUpdateError: "Error while updating the project.",
+        msgDeleted: "Deleted successfully!", msgDeleteError: "Error while deleting.",
+        msgArticlePublished: "Article published successfully!", msgArticlePublishError: "Error while publishing the article.",
+        msgArticleUpdated: "Article updated successfully!", msgArticleUpdateError: "Error while updating the article.",
+        msgReplySent: "Reply sent successfully!",
+        msgPasswordMismatch: "Passwords do not match", msgPasswordTooShort: "The password must be at least 8 characters long",
+        msgOldPasswordWrong: "Incorrect old password", msgPasswordChanged: "Password changed successfully!",
+        msgEventCreated: "Event created successfully!", msgEventCreateError: "Error while creating the event.",
+        msgEventUpdated: "Event updated!", msgEventUpdateError: "Error while updating the event.",
+        msgStatusUpdated: (status) => `Status updated: ${status}`, msgStatusError: "Could not change the status.",
+        msgExportError: "Error during export.",
+        msgAccountReactivated: "Account reactivated.", msgAccountDeactivated: "Account deactivated.",
+        msgWriteMessageFirst: "Write a message before sending.", msgEmailSent: "Email sent.",
+        msgRegConfirmed: "Registration confirmed!", msgRegRefused: "Registration refused.", msgMessageIgnored: "Message ignored.",
+        locale: "en-GB"
+    },
+    nl: {
+        moduleVolunteers: "VRIJWILLIGERSMODULE", principal: "HOOFDMENU", reports: "RAPPORTEN", siteShowcase: "SHOWCASESITE",
+        administrator: "Beheerder", logout: "Uitloggen",
+        tabDashboard: "Dashboard", tabEvents: "Evenementen", tabVolunteers: "Vrijwilligers", tabRegistrations: "Inschrijvingen",
+        tabReviews: "Feedback na evenement", tabAttestations: "PDF-attesten", tabStats: "Statistieken",
+        tabProjects: "Projecten", tabBlog: "Blog", tabMessages: "Berichten",
+        unreadMessagesTitle: "Ongelezen berichten", changePasswordTitle: "Wachtwoord wijzigen",
+        activeVolunteers: "ACTIEVE VRIJWILLIGERS", totalOf: (n) => `↑ ${n} in totaal`, totalOfPlain: (n) => `${n} in totaal`,
+        upcomingEvents: "KOMENDE EVENEMENTEN", pendingRegistrations: "WACHTENDE INSCHRIJVINGEN", toProcess: "↑ te verwerken",
+        participationRate: "DEELNAMEGRAAD", confirmedUp: (n) => `↑ ${n} bevestigd`,
+        nextEvents: "Komende evenementen", seeAll: "Alles bekijken →", noUpcomingEvent: "Geen komende evenementen.",
+        thEvent: "EVENEMENT", thDate: "DATUM", thVolunteers: "VRIJWILLIGERS", thStatus: "STATUS",
+        full: "Volzet", open: "Open", manage: "Beheren →",
+        thisWeek: "Deze week", nothingPlanned: "Niets gepland deze week.", confirmedVolunteers: (n) => `${n} bevestigde vrijwilliger(s)`,
+        quickActions: "Snelle acties", newEvent: "Nieuw evenement", addVolunteer: "Vrijwilliger toevoegen", attestationPdf: "PDF-attest", stats: "Statistieken",
+        registrationsFollowup: "Opvolging inschrijvingen", waitingConfirmedRefused: (w, c, r) => `${w} wachtend · ${c} bevestigd · ${r} geweigerd`,
+        allRegistrations: (n) => `Alle inschrijvingen (${n})`, noRegistrationYet: "Nog geen inschrijvingen.",
+        thVolunteer: "VRIJWILLIGER", confirm: "Bevestigen", refuse: "Weigeren",
+        postEventFeedback: (n) => `Feedback na evenement (${n})`, noReviewYet: "Nog geen beoordelingen.",
+        eligibleVolunteers: "Vrijwilligers die in aanmerking komen voor een attest",
+        eligibleSub: "Bevestigde deelname aan een afgelopen evenement (RG-20) — de vrijwilliger downloadt zelf zijn attest vanuit zijn persoonlijke ruimte.",
+        noAttestationYet: "Nog geen attest beschikbaar.",
+        registrationsByMonth: "Inschrijvingen per maand", participationRateChart: (n) => `Deelnamegraad: ${n}%`,
+        confirmedLabel: "Bevestigd", waitingLabel: "Wachtend", refusedLabel: "Geweigerd",
+        addProject: "Project toevoegen", projectName: "Projectnaam", category: "Categorie", description: "Beschrijving",
+        appLink: "Applicatielink (http://...)", imageUrlOptional: "Afbeelding-URL (optioneel)", preview: "Voorbeeld", activeProject: "Actief project", addProjectBtn: "Project toevoegen",
+        editProject: "Project bewerken", name: "Naam", save: "Opslaan", cancel: "Annuleren",
+        projectsCount: (n) => `Projecten (${n})`, noCategory: "Geen categorie", active: "Actief", inactive: "Inactief", edit: "Bewerken", delete: "Verwijderen",
+        publishArticle: "Artikel publiceren", articleTitle: "Titel van het artikel", articleContent: "Inhoud van het artikel...", publish: "Publiceren",
+        editArticle: "Artikel bewerken", title: "Titel", content: "Inhoud",
+        articlesCount: (n) => `Artikelen (${n})`,
+        messagesCount: (n) => `Berichten (${n})`, unreadCount: (n) => `${n} ongelezen`,
+        all: "Alle", unread: "Ongelezen", read: "Gelezen", noMessageInCategory: "Geen berichten in deze categorie.",
+        newBadge: "NIEUW", markRead: "Als gelezen markeren", reply: "Antwoorden", ignore: "Negeren",
+        createEvent: "Evenement aanmaken", eventTitle: "Titel", location: "Locatie", eventDescription: "Beschrijving",
+        dateTime: "Datum en tijd", maxPlacesLabel: "Maximum aantal plaatsen", maxPlacesPh: "Bv.: 20", createEventBtn: "Evenement aanmaken",
+        editEvent: "Evenement bewerken",
+        eventsListCount: (a, b) => `Lijst evenementen (${a}/${b})`, searchByTitle: "Zoeken op titel...",
+        noEventCreated: "Geen evenementen aangemaakt.", noEventMatches: "Geen evenementen komen overeen met deze zoekopdracht.",
+        registered: "Ingeschreven", reviews: "Beoordelingen", groupEmailBtn: "📢 Groepsmail",
+        prevPage: "← Vorige", pageOf: (a, b) => `Pagina ${a} / ${b}`, nextPage: "Volgende →",
+        volunteersRegisteredCount: (a, b) => `Ingeschreven vrijwilligers (${a}/${b})`,
+        filterBySkill: "Filteren op vaardigheid...", filterByAvailability: "Filteren op beschikbaarheid...", allLanguages: "Alle talen", reset: "Reset",
+        noVolunteerMatches: "Geen vrijwilligers komen overeen met de filters.", registeredOn: "Ingeschreven op", deactivate: "Deactiveren", reactivate: "Heractiveren",
+        skills: "Vaardigheden", availability: "Beschikbaarheid",
+        registrationsForEvent: "Inschrijvingen voor het evenement", exportPdf: "📄 Exporteren als PDF", noRegistrationForEvent: "Geen inschrijvingen voor dit evenement.", close: "Sluiten",
+        volunteerReviews: "Beoordelingen van vrijwilligers", avgRating: (n) => `Gemiddelde score: ${n} / 5`, reviewsCount: (n) => ` (${n} beoordelingen)`, noReviewForEvent: "Geen beoordelingen voor dit evenement.",
+        groupMessageTitle: "Groepsbericht aan ingeschrevenen", groupMessageSub: "Deze e-mail wordt verzonden naar alle nog ingeschreven vrijwilligers (geannuleerden uitgezonderd).",
+        writeMessagePh: "Schrijf hier je bericht...", send: "Versturen",
+        confirmDeleteTitle: "Verwijdering bevestigen", confirmDeleteText: (nom) => <>Wilt u <strong>{nom}</strong> echt verwijderen? Deze actie is onomkeerbaar.</>,
+        attestationsAtRisk: (n) => `⚠️ ${n} bevestigde vrijwilliger(s) voor dit evenement — het evenement verwijderen verwijdert ook hun inschrijvingen en maakt hun attest onbeschikbaar.`,
+        deletePermanently: "Definitief verwijderen",
+        replyTo: (name) => `Antwoorden aan ${name}`, replySentTo: (email) => `Het antwoord wordt verzonden naar: ${email}`,
+        originalMessage: "OORSPRONKELIJK BERICHT", yourReplyPh: "Uw antwoord...", sendReply: "Antwoord versturen",
+        changePasswordModalTitle: "Wachtwoord wijzigen", oldPassword: "Oud wachtwoord", newPassword: "Nieuw wachtwoord", confirmNewPassword: "Bevestig nieuw wachtwoord", change: "Wijzigen",
+        msgProjectActivated: "Project geactiveerd!", msgProjectDeactivated: "Project gedeactiveerd!", msgServerUnreachable: "Kan geen contact maken met de server.",
+        msgProjectAdded: "Project succesvol toegevoegd!", msgProjectAddError: "Fout bij het aanmaken van het project.",
+        msgProjectUpdated: "Project succesvol bijgewerkt!", msgProjectUpdateError: "Fout bij het bijwerken van het project.",
+        msgDeleted: "Succesvol verwijderd!", msgDeleteError: "Fout bij het verwijderen.",
+        msgArticlePublished: "Artikel succesvol gepubliceerd!", msgArticlePublishError: "Fout bij het publiceren van het artikel.",
+        msgArticleUpdated: "Artikel succesvol bijgewerkt!", msgArticleUpdateError: "Fout bij het bijwerken van het artikel.",
+        msgReplySent: "Antwoord succesvol verzonden!",
+        msgPasswordMismatch: "De wachtwoorden komen niet overeen", msgPasswordTooShort: "Het wachtwoord moet minstens 8 tekens bevatten",
+        msgOldPasswordWrong: "Oud wachtwoord onjuist", msgPasswordChanged: "Wachtwoord succesvol gewijzigd!",
+        msgEventCreated: "Evenement succesvol aangemaakt!", msgEventCreateError: "Fout bij het aanmaken van het evenement.",
+        msgEventUpdated: "Evenement bijgewerkt!", msgEventUpdateError: "Fout bij het bijwerken van het evenement.",
+        msgStatusUpdated: (status) => `Status bijgewerkt: ${status}`, msgStatusError: "Kan de status niet wijzigen.",
+        msgExportError: "Fout bij het exporteren.",
+        msgAccountReactivated: "Account heractiveerd.", msgAccountDeactivated: "Account gedeactiveerd.",
+        msgWriteMessageFirst: "Schrijf een bericht voor het verzenden.", msgEmailSent: "E-mail verzonden.",
+        msgRegConfirmed: "Inschrijving bevestigd!", msgRegRefused: "Inschrijving geweigerd.", msgMessageIgnored: "Bericht genegeerd.",
+        locale: "nl-BE"
+    }
+};
+
+function Admin({ lang }) {
+    const t = T[lang] || T.fr;
     const [projects, setProjects] = useState([]);
     const [posts, setPosts] = useState([]);
     const [messages, setMessages] = useState([]);
@@ -89,7 +312,7 @@ function Admin() {
         const months = [];
         for (let i = 5; i >= 0; i--) {
             const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-            months.push({ key: `${d.getFullYear()}-${d.getMonth()}`, label: d.toLocaleDateString("fr-BE", { month: "short", year: "2-digit" }) });
+            months.push({ key: `${d.getFullYear()}-${d.getMonth()}`, label: d.toLocaleDateString(t.locale, { month: "short", year: "2-digit" }) });
         }
         const counts = months.map(m => allRegistrations.filter(r => {
             if (!r.createdAt) return false;
@@ -143,7 +366,7 @@ function Admin() {
             body: JSON.stringify(updated)
         });
         fetchData();
-        showSuccess(updated.isActive ? "Projet active !" : "Projet desactive !");
+        showSuccess(updated.isActive ? t.msgProjectActivated : t.msgProjectDeactivated);
     };
 
     // Petit helper : envoie la requête et ne montre "succès" que si le serveur a vraiment accepté —
@@ -161,7 +384,7 @@ function Admin() {
             fetchData();
             showSuccess(successMsg);
         } catch {
-            showSuccess("Impossible de contacter le serveur.");
+            showSuccess(t.msgServerUnreachable);
         }
     };
 
@@ -174,8 +397,8 @@ function Admin() {
                 body: JSON.stringify(newProject)
             }),
             () => setNewProject({ name: "", description: "", link: "", category: "", image: "", isActive: true }),
-            "Projet ajoute avec succes !",
-            "Erreur lors de la création du projet."
+            t.msgProjectAdded,
+            t.msgProjectAddError
         );
     };
 
@@ -188,8 +411,8 @@ function Admin() {
                 body: JSON.stringify(editProject)
             }),
             () => setEditProject(null),
-            "Projet modifie avec succes !",
-            "Erreur lors de la modification du projet."
+            t.msgProjectUpdated,
+            t.msgProjectUpdateError
         );
     };
 
@@ -201,8 +424,8 @@ function Admin() {
         await submitOrShowError(
             () => fetch(`http://localhost:8080${urls[type]}`, { method: "DELETE", headers: { Authorization: `Bearer ${token}` } }),
             () => setConfirmDelete(null),
-            "Supprime avec succes !",
-            "Erreur lors de la suppression."
+            t.msgDeleted,
+            t.msgDeleteError
         );
     };
 
@@ -215,8 +438,8 @@ function Admin() {
                 body: JSON.stringify(newPost)
             }),
             () => setNewPost({ title: "", content: "", image: "", isPublished: true }),
-            "Article publie avec succes !",
-            "Erreur lors de la publication de l'article."
+            t.msgArticlePublished,
+            t.msgArticlePublishError
         );
     };
 
@@ -229,8 +452,8 @@ function Admin() {
                 body: JSON.stringify(editPost)
             }),
             () => setEditPost(null),
-            "Article modifie avec succes !",
-            "Erreur lors de la modification de l'article."
+            t.msgArticleUpdated,
+            t.msgArticleUpdateError
         );
     };
 
@@ -251,18 +474,18 @@ function Admin() {
         setReplyMsg(null);
         setReplyText("");
         fetchData();
-        showSuccess("Reponse envoyee avec succes !");
+        showSuccess(t.msgReplySent);
     };
 
     const changePassword = async (e) => {
         e.preventDefault();
         setPasswordError("");
         if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-            setPasswordError("Les mots de passe ne correspondent pas");
+            setPasswordError(t.msgPasswordMismatch);
             return;
         }
         if (passwordForm.newPassword.length < 8) {
-            setPasswordError("Le mot de passe doit contenir au moins 8 caracteres");
+            setPasswordError(t.msgPasswordTooShort);
             return;
         }
         try {
@@ -273,11 +496,11 @@ function Admin() {
             });
             if (!res.ok) {
                 const data = await res.json().catch(() => ({}));
-                throw new Error(data.message || "Ancien mot de passe incorrect");
+                throw new Error(data.message || t.msgOldPasswordWrong);
             }
             setShowPasswordModal(false);
             setPasswordForm({ oldPassword: "", newPassword: "", confirmPassword: "" });
-            showSuccess("Mot de passe change avec succes !");
+            showSuccess(t.msgPasswordChanged);
         } catch (err) {
             setPasswordError(err.message);
         }
@@ -295,8 +518,8 @@ function Admin() {
                 body: JSON.stringify({ ...newEvent, maxPlaces: parseInt(newEvent.maxPlaces) })
             }),
             () => setNewEvent({ title: "", description: "", eventDate: "", location: "", maxPlaces: "", imageUrl: "" }),
-            "Événement créé avec succès !",
-            "Erreur lors de la création de l'événement."
+            t.msgEventCreated,
+            t.msgEventCreateError
         );
     };
 
@@ -309,8 +532,8 @@ function Admin() {
                 body: JSON.stringify({ ...editEvent, maxPlaces: parseInt(editEvent.maxPlaces) })
             }),
             () => setEditEvent(null),
-            "Événement modifié !",
-            "Erreur lors de la modification de l'événement."
+            t.msgEventUpdated,
+            t.msgEventUpdateError
         );
     };
 
@@ -322,8 +545,8 @@ function Admin() {
                 body: JSON.stringify({ status })
             }),
             () => {},
-            `Statut mis à jour : ${status}`,
-            "Impossible de changer le statut."
+            t.msgStatusUpdated(status),
+            t.msgStatusError
         );
     };
 
@@ -341,7 +564,7 @@ function Admin() {
         const res = await fetch(`http://localhost:8080/api/registrations/event/${currentEventId}/export`, {
             headers: { Authorization: `Bearer ${token}` }
         });
-        if (!res.ok) { showSuccess("Erreur lors de l'export."); return; }
+        if (!res.ok) { showSuccess(t.msgExportError); return; }
         const blob = await res.blob();
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
@@ -369,12 +592,12 @@ function Admin() {
         });
         const updated = await res.json();
         setVolunteers(prev => prev.map(v => v.id === id ? updated : v));
-        showSuccess(updated.isActive ? "Compte réactivé." : "Compte désactivé.");
+        showSuccess(updated.isActive ? t.msgAccountReactivated : t.msgAccountDeactivated);
     };
 
     // Section 3.3 — Envoyer un message groupé à tous les inscrits d'un événement (admin)
     const sendGroupEmail = async () => {
-        if (!groupEmailText.trim()) { showSuccess("Écris un message avant d'envoyer."); return; }
+        if (!groupEmailText.trim()) { showSuccess(t.msgWriteMessageFirst); return; }
         const res = await fetch(`http://localhost:8080/api/registrations/event/${currentEventId}/group-email`, {
             method: "POST",
             headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
@@ -383,7 +606,7 @@ function Admin() {
         const data = await res.json();
         setGroupEmailModal(false);
         setGroupEmailText("");
-        showSuccess(data.message || "Email envoyé.");
+        showSuccess(data.message || t.msgEmailSent);
     };
 
     const confirmReg = async (id) => {
@@ -397,7 +620,7 @@ function Admin() {
             if (eventId) viewEventRegistrations(eventId);
         }
         fetchData();
-        showSuccess("Inscription confirmée !");
+        showSuccess(t.msgRegConfirmed);
     };
 
     const rejectReg = async (id) => {
@@ -409,12 +632,12 @@ function Admin() {
             if (eventId) viewEventRegistrations(eventId);
         }
         fetchData();
-        showSuccess("Inscription refusée.");
+        showSuccess(t.msgRegRefused);
     };
 
     const formatDate = (date) => {
         if (!date) return "";
-        return new Date(date).toLocaleDateString("fr-BE", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+        return new Date(date).toLocaleDateString(t.locale, { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
     };
 
     const filteredMessages = messages.filter(m => {
@@ -424,25 +647,25 @@ function Admin() {
     });
 
     const mainTabs = [
-        { id: "dashboard", label: "Tableau de bord", icon: "📊" },
-        { id: "evenements", label: "Événements", count: events.length, badge: statusCounts.WAITING, icon: "📅" },
-        { id: "benevoles", label: "Bénévoles", count: volunteers.length, icon: "👤" },
-        { id: "inscriptions", label: "Inscriptions", count: allRegistrations.length, icon: "☰" },
-        { id: "avis", label: "Retours post-événement", icon: "☆" }
+        { id: "dashboard", label: t.tabDashboard, icon: "📊" },
+        { id: "evenements", label: t.tabEvents, count: events.length, badge: statusCounts.WAITING, icon: "📅" },
+        { id: "benevoles", label: t.tabVolunteers, count: volunteers.length, icon: "👤" },
+        { id: "inscriptions", label: t.tabRegistrations, count: allRegistrations.length, icon: "☰" },
+        { id: "avis", label: t.tabReviews, icon: "☆" }
     ];
     const reportTabs = [
-        { id: "attestations", label: "Attestations PDF", icon: "📄" },
-        { id: "statistiques", label: "Statistiques", icon: "📈" }
+        { id: "attestations", label: t.tabAttestations, icon: "📄" },
+        { id: "statistiques", label: t.tabStats, icon: "📈" }
     ];
     const siteTabs = [
-        { id: "projets", label: "Projets", count: projects.length, icon: "📁" },
-        { id: "blog", label: "Blog", count: posts.length, icon: "📝" },
-        { id: "messages", label: "Messages", badge: unreadCount, icon: "💬" }
+        { id: "projets", label: t.tabProjects, count: projects.length, icon: "📁" },
+        { id: "blog", label: t.tabBlog, count: posts.length, icon: "📝" },
+        { id: "messages", label: t.tabMessages, badge: unreadCount, icon: "💬" }
     ];
     const tabs = [...mainTabs, ...reportTabs, ...siteTabs];
-    const activeTabInfo = tabs.find(t => t.id === activeTab);
+    const activeTabInfo = tabs.find(tb => tb.id === activeTab);
 
-    const today = new Date().toLocaleDateString("fr-BE", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+    const today = new Date().toLocaleDateString(t.locale, { weekday: "long", day: "numeric", month: "long", year: "numeric" });
     const eventsToVenir = events.filter(e => e.status === "OPEN" || e.status === "FULL").length;
 
     return (
@@ -453,11 +676,11 @@ function Admin() {
                     <div style={styles.sidebarLogo}>TS</div>
                     <div>
                         <div style={styles.sidebarBrandName}>Terra Sana</div>
-                        <div style={styles.sidebarBrandSub}>MODULE BÉNÉVOLES</div>
+                        <div style={styles.sidebarBrandSub}>{t.moduleVolunteers}</div>
                     </div>
                 </div>
 
-                <div className="admin-sidebar-hide-mobile" style={styles.sidebarSectionLabel}>PRINCIPAL</div>
+                <div className="admin-sidebar-hide-mobile" style={styles.sidebarSectionLabel}>{t.principal}</div>
                 <nav>
                     {mainTabs.map(tab => (
                         <button key={tab.id} onClick={() => setActiveTab(tab.id)}
@@ -469,7 +692,7 @@ function Admin() {
                     ))}
                 </nav>
 
-                <div className="admin-sidebar-hide-mobile" style={styles.sidebarSectionLabel}>RAPPORTS</div>
+                <div className="admin-sidebar-hide-mobile" style={styles.sidebarSectionLabel}>{t.reports}</div>
                 <nav>
                     {reportTabs.map(tab => (
                         <button key={tab.id} onClick={() => setActiveTab(tab.id)}
@@ -480,7 +703,7 @@ function Admin() {
                     ))}
                 </nav>
 
-                <div className="admin-sidebar-hide-mobile" style={styles.sidebarSectionLabel}>SITE VITRINE</div>
+                <div className="admin-sidebar-hide-mobile" style={styles.sidebarSectionLabel}>{t.siteShowcase}</div>
                 <nav>
                     {siteTabs.map(tab => (
                         <button key={tab.id} onClick={() => setActiveTab(tab.id)}
@@ -495,8 +718,8 @@ function Admin() {
                 <div style={styles.sidebarFooter}>
                     <div style={styles.sidebarAvatar}>A</div>
                     <div>
-                        <div style={styles.sidebarFooterName}>Administrateur</div>
-                        <button onClick={handleLogout} style={styles.sidebarLogout}>Se déconnecter</button>
+                        <div style={styles.sidebarFooterName}>{t.administrator}</div>
+                        <button onClick={handleLogout} style={styles.sidebarLogout}>{t.logout}</button>
                     </div>
                 </div>
             </div>
@@ -506,13 +729,13 @@ function Admin() {
             {successMsg && <div style={styles.successBanner}>{successMsg}</div>}
 
             <div style={styles.header}>
-                <h1 style={styles.title}>{activeTabInfo?.label || "Tableau de bord"}</h1>
+                <h1 style={styles.title}>{activeTabInfo?.label || t.tabDashboard}</h1>
                 <div style={styles.headerRight}>
                     <span style={styles.datePill}>{today.charAt(0).toUpperCase() + today.slice(1)}</span>
-                    <button onClick={() => setActiveTab("messages")} style={styles.iconBtn} title="Messages non lus">
+                    <button onClick={() => setActiveTab("messages")} style={styles.iconBtn} title={t.unreadMessagesTitle}>
                         🔔{unreadCount > 0 && <span style={styles.bellDot} />}
                     </button>
-                    <button onClick={() => setShowPasswordModal(true)} style={styles.iconBtnCircle} title="Changer mot de passe">A</button>
+                    <button onClick={() => setShowPasswordModal(true)} style={styles.iconBtnCircle} title={t.changePasswordTitle}>A</button>
                 </div>
             </div>
 
@@ -520,27 +743,27 @@ function Admin() {
                 <div className="grid-responsive" style={styles.statsRow}>
                     <div style={styles.statCardV2}>
                         <span style={{ ...styles.statIconBox, background: "#e8f5e9" }}>👤</span>
-                        <div style={styles.statLblV2}>BÉNÉVOLES ACTIFS</div>
+                        <div style={styles.statLblV2}>{t.activeVolunteers}</div>
                         <div style={styles.statNumV2}>{volunteers.filter(v => v.isActive !== false).length}</div>
-                        <div style={styles.statTrend}>↑ {volunteers.length} au total</div>
+                        <div style={styles.statTrend}>{t.totalOf(volunteers.length)}</div>
                     </div>
                     <div style={styles.statCardV2}>
                         <span style={{ ...styles.statIconBox, background: "#fff3e0" }}>📅</span>
-                        <div style={styles.statLblV2}>ÉVÉNEMENTS À VENIR</div>
+                        <div style={styles.statLblV2}>{t.upcomingEvents}</div>
                         <div style={styles.statNumV2}>{eventsToVenir}</div>
-                        <div style={{ ...styles.statTrend, color: "#888" }}>{events.length} au total</div>
+                        <div style={{ ...styles.statTrend, color: "#888" }}>{t.totalOfPlain(events.length)}</div>
                     </div>
                     <div style={styles.statCardV2}>
                         <span style={{ ...styles.statIconBox, background: "#e3f2fd" }}>☰</span>
-                        <div style={styles.statLblV2}>INSCRIPTIONS EN ATTENTE</div>
+                        <div style={styles.statLblV2}>{t.pendingRegistrations}</div>
                         <div style={styles.statNumV2}>{statusCounts.WAITING}</div>
-                        <div style={styles.statTrend}>↑ à traiter</div>
+                        <div style={styles.statTrend}>{t.toProcess}</div>
                     </div>
                     <div style={styles.statCardV2}>
                         <span style={{ ...styles.statIconBox, background: "#f3e5f5" }}>★</span>
-                        <div style={styles.statLblV2}>TAUX DE PARTICIPATION</div>
+                        <div style={styles.statLblV2}>{t.participationRate}</div>
                         <div style={styles.statNumV2}>{participationRate}%</div>
-                        <div style={styles.statTrend}>↑ {statusCounts.CONFIRMED} confirmées</div>
+                        <div style={styles.statTrend}>{t.confirmedUp(statusCounts.CONFIRMED)}</div>
                     </div>
                 </div>
             )}
@@ -552,28 +775,28 @@ function Admin() {
                 const inSevenDays = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
                 const thisWeek = upcoming.filter(e => new Date(e.eventDate) <= inSevenDays);
                 const confirmedFor = (eventId) => allRegistrations.filter(r => r.event?.id === eventId && r.status === "CONFIRMED").length;
-                const fmtShort = (d) => new Date(d).toLocaleDateString("fr-BE", { day: "2-digit", month: "short" });
+                const fmtShort = (d) => new Date(d).toLocaleDateString(t.locale, { day: "2-digit", month: "short" });
                 const fmtDay = (d) => new Date(d).getDate();
-                const fmtMonth = (d) => new Date(d).toLocaleDateString("fr-BE", { month: "short" }).toUpperCase();
+                const fmtMonth = (d) => new Date(d).toLocaleDateString(t.locale, { month: "short" }).toUpperCase();
 
                 return (
                     <div className="grid-responsive" style={styles.dashGrid}>
                         <div style={styles.dashMain}>
                             <div style={styles.dashCard}>
                                 <div style={styles.dashCardHeader}>
-                                    <h2 style={styles.sectionTitle}>Prochains événements</h2>
-                                    <button onClick={() => setActiveTab("evenements")} style={styles.dashLink}>Voir tous →</button>
+                                    <h2 style={styles.sectionTitle}>{t.nextEvents}</h2>
+                                    <button onClick={() => setActiveTab("evenements")} style={styles.dashLink}>{t.seeAll}</button>
                                 </div>
                                 {upcoming.length === 0 ? (
-                                    <p style={{ color: "#888", fontSize: "13px", padding: "16px 0" }}>Aucun événement à venir.</p>
+                                    <p style={{ color: "#888", fontSize: "13px", padding: "16px 0" }}>{t.noUpcomingEvent}</p>
                                 ) : (
                                     <table style={styles.dashTable}>
                                         <thead>
                                             <tr>
-                                                <th style={styles.dashTh}>ÉVÉNEMENT</th>
-                                                <th style={styles.dashTh}>DATE</th>
-                                                <th style={styles.dashTh}>BÉNÉVOLES</th>
-                                                <th style={styles.dashTh}>STATUT</th>
+                                                <th style={styles.dashTh}>{t.thEvent}</th>
+                                                <th style={styles.dashTh}>{t.thDate}</th>
+                                                <th style={styles.dashTh}>{t.thVolunteers}</th>
+                                                <th style={styles.dashTh}>{t.thStatus}</th>
                                                 <th style={styles.dashTh}></th>
                                             </tr>
                                         </thead>
@@ -590,11 +813,11 @@ function Admin() {
                                                     </td>
                                                     <td style={styles.dashTd}>
                                                         <span style={{ ...styles.toggleBtn, background: ev.status === "FULL" ? "#fff3e0" : "#e8f5e9", color: ev.status === "FULL" ? "#e65100" : "#2e7d32" }}>
-                                                            {ev.status === "FULL" ? "Complet" : "Ouvert"}
+                                                            {ev.status === "FULL" ? t.full : t.open}
                                                         </span>
                                                     </td>
                                                     <td style={styles.dashTd}>
-                                                        <button onClick={() => { setActiveTab("evenements"); viewEventRegistrations(ev.id); }} style={styles.dashLink}>Gérer →</button>
+                                                        <button onClick={() => { setActiveTab("evenements"); viewEventRegistrations(ev.id); }} style={styles.dashLink}>{t.manage}</button>
                                                     </td>
                                                 </tr>
                                             ))}
@@ -606,9 +829,9 @@ function Admin() {
 
                         <div style={styles.dashSide}>
                             <div style={styles.dashCard}>
-                                <h2 style={styles.sectionTitle}>Cette semaine</h2>
+                                <h2 style={styles.sectionTitle}>{t.thisWeek}</h2>
                                 {thisWeek.length === 0 ? (
-                                    <p style={{ color: "#888", fontSize: "13px" }}>Rien de prévu cette semaine.</p>
+                                    <p style={{ color: "#888", fontSize: "13px" }}>{t.nothingPlanned}</p>
                                 ) : thisWeek.map(ev => (
                                     <div key={ev.id} style={styles.weekItem}>
                                         <div style={styles.weekDate}>
@@ -618,26 +841,26 @@ function Admin() {
                                         <div>
                                             <div style={{ fontWeight: "700", fontSize: "13px" }}>{ev.title}</div>
                                             <div style={{ fontSize: "11px", color: "#888" }}>{ev.location}</div>
-                                            <div style={{ fontSize: "11px", color: "#2D6A4F", fontWeight: "600" }}>{confirmedFor(ev.id)} bénévole(s) confirmé(s)</div>
+                                            <div style={{ fontSize: "11px", color: "#2D6A4F", fontWeight: "600" }}>{t.confirmedVolunteers(confirmedFor(ev.id))}</div>
                                         </div>
                                     </div>
                                 ))}
                             </div>
 
                             <div style={styles.dashCard}>
-                                <h2 style={styles.sectionTitle}>Actions rapides</h2>
+                                <h2 style={styles.sectionTitle}>{t.quickActions}</h2>
                                 <div style={styles.quickActionsGrid}>
                                     <button onClick={() => setActiveTab("evenements")} style={styles.quickActionBtn}>
-                                        <span>📅</span> Nouvel événement
+                                        <span>📅</span> {t.newEvent}
                                     </button>
                                     <button onClick={() => setActiveTab("benevoles")} style={styles.quickActionBtnOutline}>
-                                        <span>👤</span> Ajouter bénévole
+                                        <span>👤</span> {t.addVolunteer}
                                     </button>
                                     <button onClick={() => setActiveTab("attestations")} style={styles.quickActionBtnOutline}>
-                                        <span>📄</span> Attestation PDF
+                                        <span>📄</span> {t.attestationPdf}
                                     </button>
                                     <button onClick={() => setActiveTab("statistiques")} style={styles.quickActionBtnOutline}>
-                                        <span>📈</span> Statistiques
+                                        <span>📈</span> {t.stats}
                                     </button>
                                 </div>
                             </div>
@@ -652,23 +875,23 @@ function Admin() {
                     <div style={styles.inscriptionsBanner}>
                         <span style={styles.inscriptionsBannerIcon}>☰</span>
                         <div>
-                            <div style={styles.inscriptionsBannerTitle}>Suivi des inscriptions</div>
+                            <div style={styles.inscriptionsBannerTitle}>{t.registrationsFollowup}</div>
                             <div style={styles.inscriptionsBannerSub}>
-                                {statusCounts.WAITING} en attente · {statusCounts.CONFIRMED} confirmées · {statusCounts.REFUSED} refusées
+                                {t.waitingConfirmedRefused(statusCounts.WAITING, statusCounts.CONFIRMED, statusCounts.REFUSED)}
                             </div>
                         </div>
                     </div>
                     <div style={styles.dashCard}>
-                    <h2 style={styles.sectionTitle}>Toutes les inscriptions ({allRegistrations.length})</h2>
+                    <h2 style={styles.sectionTitle}>{t.allRegistrations(allRegistrations.length)}</h2>
                     {allRegistrations.length === 0 ? (
-                        <p style={{ color: "#888", fontSize: "13px", padding: "16px 0" }}>Aucune inscription pour le moment.</p>
+                        <p style={{ color: "#888", fontSize: "13px", padding: "16px 0" }}>{t.noRegistrationYet}</p>
                     ) : (
                         <table style={styles.dashTable}>
                             <thead>
                                 <tr>
-                                    <th style={styles.dashTh}>BÉNÉVOLE</th>
-                                    <th style={styles.dashTh}>ÉVÉNEMENT</th>
-                                    <th style={styles.dashTh}>STATUT</th>
+                                    <th style={styles.dashTh}>{t.thVolunteer}</th>
+                                    <th style={styles.dashTh}>{t.thEvent}</th>
+                                    <th style={styles.dashTh}>{t.thStatus}</th>
                                     <th style={styles.dashTh}></th>
                                 </tr>
                             </thead>
@@ -688,8 +911,8 @@ function Admin() {
                                             <td style={styles.dashTd}>
                                                 {r.status === "WAITING" && (
                                                     <div style={{ display: "flex", gap: "6px" }}>
-                                                        <button onClick={() => confirmReg(r.id)} style={styles.replyBtn}>Confirmer</button>
-                                                        <button onClick={() => rejectReg(r.id)} style={styles.deleteBtn}>Refuser</button>
+                                                        <button onClick={() => confirmReg(r.id)} style={styles.replyBtn}>{t.confirm}</button>
+                                                        <button onClick={() => rejectReg(r.id)} style={styles.deleteBtn}>{t.refuse}</button>
                                                     </div>
                                                 )}
                                             </td>
@@ -706,9 +929,9 @@ function Admin() {
             {/* ── RETOURS POST-ÉVÉNEMENT (tous les avis) ── */}
             {activeTab === "avis" && (
                 <div style={styles.dashCard}>
-                    <h2 style={styles.sectionTitle}>Retours post-événement ({allReviews.length})</h2>
+                    <h2 style={styles.sectionTitle}>{t.postEventFeedback(allReviews.length)}</h2>
                     {allReviews.length === 0 ? (
-                        <p style={{ color: "#888", fontSize: "13px", padding: "16px 0" }}>Aucun avis pour le moment.</p>
+                        <p style={{ color: "#888", fontSize: "13px", padding: "16px 0" }}>{t.noReviewYet}</p>
                     ) : allReviews.map(rv => (
                         <div key={rv.id} style={{ ...styles.messageCard, marginTop: "12px" }}>
                             <div style={styles.messageHeader}>
@@ -734,21 +957,21 @@ function Admin() {
             {/* ── ATTESTATIONS PDF (bénévoles éligibles) ── */}
             {activeTab === "attestations" && (
                 <div style={styles.dashCard}>
-                    <h2 style={styles.sectionTitle}>Bénévoles éligibles à une attestation</h2>
+                    <h2 style={styles.sectionTitle}>{t.eligibleVolunteers}</h2>
                     <p style={{ fontSize: "12px", color: "#888", marginTop: "-8px", marginBottom: "16px" }}>
-                        Participation confirmée à un événement terminé (RG-20) — le bénévole télécharge lui-même son attestation depuis son espace personnel.
+                        {t.eligibleSub}
                     </p>
                     {(() => {
                         const eligible = allRegistrations.filter(r => r.status === "CONFIRMED" && r.event?.status === "FINISHED");
                         return eligible.length === 0 ? (
-                            <p style={{ color: "#888", fontSize: "13px" }}>Aucune attestation disponible pour le moment.</p>
+                            <p style={{ color: "#888", fontSize: "13px" }}>{t.noAttestationYet}</p>
                         ) : (
                             <table style={styles.dashTable}>
                                 <thead>
                                     <tr>
-                                        <th style={styles.dashTh}>BÉNÉVOLE</th>
-                                        <th style={styles.dashTh}>ÉVÉNEMENT</th>
-                                        <th style={styles.dashTh}>DATE</th>
+                                        <th style={styles.dashTh}>{t.thVolunteer}</th>
+                                        <th style={styles.dashTh}>{t.thEvent}</th>
+                                        <th style={styles.dashTh}>{t.thDate}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -756,7 +979,7 @@ function Admin() {
                                         <tr key={r.id} style={styles.dashTr}>
                                             <td style={styles.dashTd}><strong>{r.user?.firstName} {r.user?.lastName}</strong></td>
                                             <td style={styles.dashTd}>{r.event?.title}</td>
-                                            <td style={styles.dashTd}>{new Date(r.event?.eventDate).toLocaleDateString("fr-BE")}</td>
+                                            <td style={styles.dashTd}>{new Date(r.event?.eventDate).toLocaleDateString(t.locale)}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -770,12 +993,12 @@ function Admin() {
             {activeTab === "statistiques" && (
                 <div style={styles.chartsRow}>
                     <div style={styles.chartCard}>
-                        <h3 style={styles.chartTitle}>Inscriptions par mois</h3>
+                        <h3 style={styles.chartTitle}>{t.registrationsByMonth}</h3>
                         <Line
                             data={{
                                 labels: monthlyData.labels,
                                 datasets: [{
-                                    label: "Inscriptions",
+                                    label: t.tabRegistrations,
                                     data: monthlyData.counts,
                                     borderColor: "#2D6A4F",
                                     backgroundColor: "rgba(45,106,79,0.1)",
@@ -787,11 +1010,11 @@ function Admin() {
                         />
                     </div>
                     <div style={styles.chartCard}>
-                        <h3 style={styles.chartTitle}>Taux de participation : {participationRate}%</h3>
+                        <h3 style={styles.chartTitle}>{t.participationRateChart(participationRate)}</h3>
                         <div style={{ maxWidth: "220px", margin: "0 auto" }}>
                             <Doughnut
                                 data={{
-                                    labels: ["Confirmées", "En attente", "Refusées"],
+                                    labels: [t.confirmedLabel, t.waitingLabel, t.refusedLabel],
                                     datasets: [{
                                         data: [statusCounts.CONFIRMED, statusCounts.WAITING, statusCounts.REFUSED],
                                         backgroundColor: ["#2e7d32", "#e65100", "#c62828"]
@@ -807,59 +1030,59 @@ function Admin() {
             {activeTab === "projets" && (
                 <div>
                     <div style={styles.section}>
-                        <h2 style={styles.sectionTitle}>Ajouter un projet</h2>
+                        <h2 style={styles.sectionTitle}>{t.addProject}</h2>
                         <form onSubmit={addProject} style={styles.form}>
                             <div style={styles.formGrid}>
-                                <input placeholder="Nom du projet" value={newProject.name} onChange={e => setNewProject({...newProject, name: e.target.value})} style={styles.input} required />
-                                <input placeholder="Categorie" value={newProject.category} onChange={e => setNewProject({...newProject, category: e.target.value})} style={styles.input} />
+                                <input placeholder={t.projectName} value={newProject.name} onChange={e => setNewProject({...newProject, name: e.target.value})} style={styles.input} required />
+                                <input placeholder={t.category} value={newProject.category} onChange={e => setNewProject({...newProject, category: e.target.value})} style={styles.input} />
                             </div>
-                            <input placeholder="Description" value={newProject.description} onChange={e => setNewProject({...newProject, description: e.target.value})} style={styles.input} required />
-                            <input placeholder="Lien application (http://...)" value={newProject.link} onChange={e => setNewProject({...newProject, link: e.target.value})} style={styles.input} />
-                            <input placeholder="URL image (optionnel)" value={newProject.image} onChange={e => setNewProject({...newProject, image: e.target.value})} style={styles.input} />
-                            {newProject.image && <img src={newProject.image} alt="Aperçu" style={styles.imgPreview} onError={e => e.target.style.display = "none"} onLoad={e => e.target.style.display = "block"} />}
+                            <input placeholder={t.description} value={newProject.description} onChange={e => setNewProject({...newProject, description: e.target.value})} style={styles.input} required />
+                            <input placeholder={t.appLink} value={newProject.link} onChange={e => setNewProject({...newProject, link: e.target.value})} style={styles.input} />
+                            <input placeholder={t.imageUrlOptional} value={newProject.image} onChange={e => setNewProject({...newProject, image: e.target.value})} style={styles.input} />
+                            {newProject.image && <img src={newProject.image} alt={t.preview} style={styles.imgPreview} onError={e => e.target.style.display = "none"} onLoad={e => e.target.style.display = "block"} />}
                             <div style={styles.checkRow}>
                                 <input type="checkbox" id="isActive" checked={newProject.isActive} onChange={e => setNewProject({...newProject, isActive: e.target.checked})} />
-                                <label htmlFor="isActive" style={styles.checkLabel}>Projet actif</label>
+                                <label htmlFor="isActive" style={styles.checkLabel}>{t.activeProject}</label>
                             </div>
-                            <button type="submit" style={styles.btn}>Ajouter le projet</button>
+                            <button type="submit" style={styles.btn}>{t.addProjectBtn}</button>
                         </form>
                     </div>
 
                     {editProject && (
                         <div style={styles.section}>
-                            <h2 style={styles.sectionTitle}>Modifier le projet</h2>
+                            <h2 style={styles.sectionTitle}>{t.editProject}</h2>
                             <form onSubmit={updateProject} style={styles.form}>
                                 <div style={styles.formGrid}>
-                                    <input placeholder="Nom" value={editProject.name} onChange={e => setEditProject({...editProject, name: e.target.value})} style={styles.input} required />
-                                    <input placeholder="Categorie" value={editProject.category || ""} onChange={e => setEditProject({...editProject, category: e.target.value})} style={styles.input} />
+                                    <input placeholder={t.name} value={editProject.name} onChange={e => setEditProject({...editProject, name: e.target.value})} style={styles.input} required />
+                                    <input placeholder={t.category} value={editProject.category || ""} onChange={e => setEditProject({...editProject, category: e.target.value})} style={styles.input} />
                                 </div>
-                                <input placeholder="Description" value={editProject.description} onChange={e => setEditProject({...editProject, description: e.target.value})} style={styles.input} />
-                                <input placeholder="Lien" value={editProject.link || ""} onChange={e => setEditProject({...editProject, link: e.target.value})} style={styles.input} />
-                                <input placeholder="URL image (optionnel)" value={editProject.image || ""} onChange={e => setEditProject({...editProject, image: e.target.value})} style={styles.input} />
-                                {editProject.image && <img src={editProject.image} alt="Aperçu" style={styles.imgPreview} onError={e => e.target.style.display = "none"} onLoad={e => e.target.style.display = "block"} />}
+                                <input placeholder={t.description} value={editProject.description} onChange={e => setEditProject({...editProject, description: e.target.value})} style={styles.input} />
+                                <input placeholder={t.name} value={editProject.link || ""} onChange={e => setEditProject({...editProject, link: e.target.value})} style={styles.input} />
+                                <input placeholder={t.imageUrlOptional} value={editProject.image || ""} onChange={e => setEditProject({...editProject, image: e.target.value})} style={styles.input} />
+                                {editProject.image && <img src={editProject.image} alt={t.preview} style={styles.imgPreview} onError={e => e.target.style.display = "none"} onLoad={e => e.target.style.display = "block"} />}
                                 <div style={styles.checkRow}>
                                     <input type="checkbox" id="editIsActive" checked={editProject.isActive} onChange={e => setEditProject({...editProject, isActive: e.target.checked})} />
-                                    <label htmlFor="editIsActive" style={styles.checkLabel}>Projet actif</label>
+                                    <label htmlFor="editIsActive" style={styles.checkLabel}>{t.activeProject}</label>
                                 </div>
                                 <div style={styles.formBtns}>
-                                    <button type="submit" style={styles.btn}>Sauvegarder</button>
-                                    <button type="button" onClick={() => setEditProject(null)} style={styles.cancelBtn}>Annuler</button>
+                                    <button type="submit" style={styles.btn}>{t.save}</button>
+                                    <button type="button" onClick={() => setEditProject(null)} style={styles.cancelBtn}>{t.cancel}</button>
                                 </div>
                             </form>
                         </div>
                     )}
 
                     <div style={styles.section}>
-                        <h2 style={styles.sectionTitle}>Projets ({projects.length})</h2>
+                        <h2 style={styles.sectionTitle}>{t.projectsCount(projects.length)}</h2>
                         <div style={styles.grid}>
                             {projects.map(p => (
                                 <div key={p.id} style={{...styles.projectCard, opacity: p.isActive ? 1 : 0.7}}>
                                     <div style={styles.projectCardTop}>
-                                        <div style={styles.projectCat}>{p.category || "Sans categorie"}</div>
+                                        <div style={styles.projectCat}>{p.category || t.noCategory}</div>
                                         <button
                                             onClick={() => toggleActive(p)}
                                             style={{...styles.toggleBtn, background: p.isActive ? "#e8f5e9" : "#ffebee", color: p.isActive ? "#2e7d32" : "#c62828"}}>
-                                            {p.isActive ? "Actif" : "Inactif"}
+                                            {p.isActive ? t.active : t.inactive}
                                         </button>
                                     </div>
                                     {p.image && <img src={p.image} alt="" style={styles.eventThumb} />}
@@ -867,8 +1090,8 @@ function Admin() {
                                     <div style={styles.cardDesc}>{p.description}</div>
                                     {p.createdAt && <div style={styles.cardDate}>{formatDate(p.createdAt)}</div>}
                                     <div style={styles.cardBtns}>
-                                        <button onClick={() => setEditProject(p)} style={styles.editBtn}>Modifier</button>
-                                        <button onClick={() => confirmAndDelete("project", p.id, p.name)} style={styles.deleteBtn}>Supprimer</button>
+                                        <button onClick={() => setEditProject(p)} style={styles.editBtn}>{t.edit}</button>
+                                        <button onClick={() => confirmAndDelete("project", p.id, p.name)} style={styles.deleteBtn}>{t.delete}</button>
                                     </div>
                                 </div>
                             ))}
@@ -880,34 +1103,34 @@ function Admin() {
             {activeTab === "blog" && (
                 <div>
                     <div style={styles.section}>
-                        <h2 style={styles.sectionTitle}>Publier un article</h2>
+                        <h2 style={styles.sectionTitle}>{t.publishArticle}</h2>
                         <form onSubmit={addPost} style={styles.form}>
-                            <input placeholder="Titre de article" value={newPost.title} onChange={e => setNewPost({...newPost, title: e.target.value})} style={styles.input} required />
-                            <textarea placeholder="Contenu de article..." value={newPost.content} onChange={e => setNewPost({...newPost, content: e.target.value})} style={styles.textarea} required />
-                            <input placeholder="URL image (optionnel)" value={newPost.image} onChange={e => setNewPost({...newPost, image: e.target.value})} style={styles.input} />
-                            {newPost.image && <img src={newPost.image} alt="Aperçu" style={styles.imgPreview} onError={e => e.target.style.display = "none"} onLoad={e => e.target.style.display = "block"} />}
-                            <button type="submit" style={styles.btn}>Publier</button>
+                            <input placeholder={t.articleTitle} value={newPost.title} onChange={e => setNewPost({...newPost, title: e.target.value})} style={styles.input} required />
+                            <textarea placeholder={t.articleContent} value={newPost.content} onChange={e => setNewPost({...newPost, content: e.target.value})} style={styles.textarea} required />
+                            <input placeholder={t.imageUrlOptional} value={newPost.image} onChange={e => setNewPost({...newPost, image: e.target.value})} style={styles.input} />
+                            {newPost.image && <img src={newPost.image} alt={t.preview} style={styles.imgPreview} onError={e => e.target.style.display = "none"} onLoad={e => e.target.style.display = "block"} />}
+                            <button type="submit" style={styles.btn}>{t.publish}</button>
                         </form>
                     </div>
 
                     {editPost && (
                         <div style={styles.section}>
-                            <h2 style={styles.sectionTitle}>Modifier article</h2>
+                            <h2 style={styles.sectionTitle}>{t.editArticle}</h2>
                             <form onSubmit={updatePost} style={styles.form}>
-                                <input placeholder="Titre" value={editPost.title} onChange={e => setEditPost({...editPost, title: e.target.value})} style={styles.input} required />
-                                <textarea placeholder="Contenu" value={editPost.content} onChange={e => setEditPost({...editPost, content: e.target.value})} style={styles.textarea} required />
-                                <input placeholder="URL image (optionnel)" value={editPost.image || ""} onChange={e => setEditPost({...editPost, image: e.target.value})} style={styles.input} />
-                                {editPost.image && <img src={editPost.image} alt="Aperçu" style={styles.imgPreview} onError={e => e.target.style.display = "none"} onLoad={e => e.target.style.display = "block"} />}
+                                <input placeholder={t.title} value={editPost.title} onChange={e => setEditPost({...editPost, title: e.target.value})} style={styles.input} required />
+                                <textarea placeholder={t.content} value={editPost.content} onChange={e => setEditPost({...editPost, content: e.target.value})} style={styles.textarea} required />
+                                <input placeholder={t.imageUrlOptional} value={editPost.image || ""} onChange={e => setEditPost({...editPost, image: e.target.value})} style={styles.input} />
+                                {editPost.image && <img src={editPost.image} alt={t.preview} style={styles.imgPreview} onError={e => e.target.style.display = "none"} onLoad={e => e.target.style.display = "block"} />}
                                 <div style={styles.formBtns}>
-                                    <button type="submit" style={styles.btn}>Sauvegarder</button>
-                                    <button type="button" onClick={() => setEditPost(null)} style={styles.cancelBtn}>Annuler</button>
+                                    <button type="submit" style={styles.btn}>{t.save}</button>
+                                    <button type="button" onClick={() => setEditPost(null)} style={styles.cancelBtn}>{t.cancel}</button>
                                 </div>
                             </form>
                         </div>
                     )}
 
                     <div style={styles.section}>
-                        <h2 style={styles.sectionTitle}>Articles ({posts.length})</h2>
+                        <h2 style={styles.sectionTitle}>{t.articlesCount(posts.length)}</h2>
                         {posts.map(p => (
                             <div key={p.id} style={styles.articleCard}>
                                 <div style={styles.articleHeader}>
@@ -919,8 +1142,8 @@ function Admin() {
                                         </div>
                                     </div>
                                     <div style={styles.cardBtns}>
-                                        <button onClick={() => setEditPost(p)} style={styles.editBtn}>Modifier</button>
-                                        <button onClick={() => confirmAndDelete("post", p.id, p.title)} style={styles.deleteBtn}>Supprimer</button>
+                                        <button onClick={() => setEditPost(p)} style={styles.editBtn}>{t.edit}</button>
+                                        <button onClick={() => confirmAndDelete("post", p.id, p.title)} style={styles.deleteBtn}>{t.delete}</button>
                                     </div>
                                 </div>
                                 <div style={styles.articleContent}>{p.content.substring(0, 120)}{p.content.length > 120 ? "..." : ""}</div>
@@ -934,21 +1157,21 @@ function Admin() {
                 <div style={styles.section}>
                     <div style={styles.messagesHeader}>
                         <h2 style={styles.sectionTitle}>
-                            Messages ({messages.length})
-                            {unreadCount > 0 && <span style={styles.unreadBadge2}>{unreadCount} non lu(s)</span>}
+                            {t.messagesCount(messages.length)}
+                            {unreadCount > 0 && <span style={styles.unreadBadge2}>{t.unreadCount(unreadCount)}</span>}
                         </h2>
                         <div style={styles.msgFilterRow}>
                             {["tous","nonlus","lus"].map(f => (
                                 <button key={f} onClick={() => setFilterMessages(f)}
                                     style={{...styles.filterBtn, ...(filterMessages === f ? styles.filterBtnActive : {})}}>
-                                    {f === "tous" ? "Tous" : f === "nonlus" ? "Non lus" : "Lus"}
+                                    {f === "tous" ? t.all : f === "nonlus" ? t.unread : t.read}
                                     {f === "nonlus" && unreadCount > 0 && <span style={styles.filterCount}>{unreadCount}</span>}
                                 </button>
                             ))}
                         </div>
                     </div>
                     {filteredMessages.length === 0 ? (
-                        <div style={styles.empty}>Aucun message dans cette categorie.</div>
+                        <div style={styles.empty}>{t.noMessageInCategory}</div>
                     ) : filteredMessages.map(m => (
                         <div key={m.id} style={{...styles.messageCard, borderLeft: m.read ? "3px solid #e0e0e0" : "3px solid #2D6A4F"}}>
                             <div style={styles.messageHeader}>
@@ -959,7 +1182,7 @@ function Admin() {
                                     <div>
                                         <div style={styles.messageName}>
                                             {m.name}
-                                            {!m.read && <span style={styles.newBadge}>NOUVEAU</span>}
+                                            {!m.read && <span style={styles.newBadge}>{t.newBadge}</span>}
                                         </div>
                                         <div style={styles.messageEmail}>{m.email}</div>
                                     </div>
@@ -968,10 +1191,10 @@ function Admin() {
                             </div>
                             <div style={styles.messageText}>{m.message}</div>
                             <div style={styles.msgBtns}>
-                                {!m.read && <button onClick={() => markAsRead(m.id)} style={styles.readBtn}>Marquer lu</button>}
-                                <button onClick={() => { setReplyMsg(m); setReplyText(""); markAsRead(m.id); }} style={styles.replyBtn}>Repondre</button>
-                                <button onClick={() => confirmAndDelete("message", m.id, m.name)} style={styles.deleteBtn}>Supprimer</button>
-                                <button onClick={() => { markAsRead(m.id); showSuccess("Message ignore."); }} style={styles.ignoreBtn}>Ignorer</button>
+                                {!m.read && <button onClick={() => markAsRead(m.id)} style={styles.readBtn}>{t.markRead}</button>}
+                                <button onClick={() => { setReplyMsg(m); setReplyText(""); markAsRead(m.id); }} style={styles.replyBtn}>{t.reply}</button>
+                                <button onClick={() => confirmAndDelete("message", m.id, m.name)} style={styles.deleteBtn}>{t.delete}</button>
+                                <button onClick={() => { markAsRead(m.id); showSuccess(t.msgMessageIgnored); }} style={styles.ignoreBtn}>{t.ignore}</button>
                             </div>
                         </div>
                     ))}
@@ -982,32 +1205,32 @@ function Admin() {
             {activeTab === "evenements" && (
                 <div>
                     <div style={styles.section}>
-                        <h2 style={styles.sectionTitle}>Créer un événement</h2>
+                        <h2 style={styles.sectionTitle}>{t.createEvent}</h2>
                         <form onSubmit={createEvent} style={styles.form}>
                             <div style={styles.formGrid}>
-                                <input placeholder="Titre" value={newEvent.title} onChange={e => setNewEvent({...newEvent, title: e.target.value})} style={styles.input} required />
-                                <input placeholder="Lieu" value={newEvent.location} onChange={e => setNewEvent({...newEvent, location: e.target.value})} style={styles.input} required />
+                                <input placeholder={t.eventTitle} value={newEvent.title} onChange={e => setNewEvent({...newEvent, title: e.target.value})} style={styles.input} required />
+                                <input placeholder={t.location} value={newEvent.location} onChange={e => setNewEvent({...newEvent, location: e.target.value})} style={styles.input} required />
                             </div>
-                            <textarea placeholder="Description" value={newEvent.description} onChange={e => setNewEvent({...newEvent, description: e.target.value})} style={styles.textarea} required />
+                            <textarea placeholder={t.eventDescription} value={newEvent.description} onChange={e => setNewEvent({...newEvent, description: e.target.value})} style={styles.textarea} required />
                             <div style={styles.formGrid}>
                                 <div>
-                                    <label style={styles.label}>Date et heure</label>
+                                    <label style={styles.label}>{t.dateTime}</label>
                                     <input type="datetime-local" value={newEvent.eventDate} onChange={e => setNewEvent({...newEvent, eventDate: e.target.value})} style={styles.input} required />
                                 </div>
                                 <div>
-                                    <label style={styles.label}>Nombre de places max</label>
-                                    <input type="number" min="1" placeholder="Ex : 20" value={newEvent.maxPlaces} onChange={e => setNewEvent({...newEvent, maxPlaces: e.target.value})} style={styles.input} required />
+                                    <label style={styles.label}>{t.maxPlacesLabel}</label>
+                                    <input type="number" min="1" placeholder={t.maxPlacesPh} value={newEvent.maxPlaces} onChange={e => setNewEvent({...newEvent, maxPlaces: e.target.value})} style={styles.input} required />
                                 </div>
                             </div>
-                            <input placeholder="URL image (optionnel)" value={newEvent.imageUrl} onChange={e => setNewEvent({...newEvent, imageUrl: e.target.value})} style={styles.input} />
-                            {newEvent.imageUrl && <img src={newEvent.imageUrl} alt="Aperçu" style={styles.imgPreview} onError={e => e.target.style.display = "none"} onLoad={e => e.target.style.display = "block"} />}
-                            <button type="submit" style={styles.btn}>Créer l'événement</button>
+                            <input placeholder={t.imageUrlOptional} value={newEvent.imageUrl} onChange={e => setNewEvent({...newEvent, imageUrl: e.target.value})} style={styles.input} />
+                            {newEvent.imageUrl && <img src={newEvent.imageUrl} alt={t.preview} style={styles.imgPreview} onError={e => e.target.style.display = "none"} onLoad={e => e.target.style.display = "block"} />}
+                            <button type="submit" style={styles.btn}>{t.createEventBtn}</button>
                         </form>
                     </div>
 
                     {editEvent && (
                         <div style={styles.section}>
-                            <h2 style={styles.sectionTitle}>Modifier l'événement</h2>
+                            <h2 style={styles.sectionTitle}>{t.editEvent}</h2>
                             <form onSubmit={updateEvent} style={styles.form}>
                                 <div style={styles.formGrid}>
                                     <input value={editEvent.title} onChange={e => setEditEvent({...editEvent, title: e.target.value})} style={styles.input} required />
@@ -1018,25 +1241,25 @@ function Admin() {
                                     <input type="datetime-local" value={editEvent.eventDate ? editEvent.eventDate.slice(0,16) : ""} onChange={e => setEditEvent({...editEvent, eventDate: e.target.value})} style={styles.input} />
                                     <input type="number" min="1" value={editEvent.maxPlaces} onChange={e => setEditEvent({...editEvent, maxPlaces: e.target.value})} style={styles.input} />
                                 </div>
-                                <input placeholder="URL image (optionnel)" value={editEvent.imageUrl || ""} onChange={e => setEditEvent({...editEvent, imageUrl: e.target.value})} style={styles.input} />
-                                {editEvent.imageUrl && <img src={editEvent.imageUrl} alt="Aperçu" style={styles.imgPreview} onError={e => e.target.style.display = "none"} onLoad={e => e.target.style.display = "block"} />}
+                                <input placeholder={t.imageUrlOptional} value={editEvent.imageUrl || ""} onChange={e => setEditEvent({...editEvent, imageUrl: e.target.value})} style={styles.input} />
+                                {editEvent.imageUrl && <img src={editEvent.imageUrl} alt={t.preview} style={styles.imgPreview} onError={e => e.target.style.display = "none"} onLoad={e => e.target.style.display = "block"} />}
                                 <div style={styles.formBtns}>
-                                    <button type="submit" style={styles.btn}>Sauvegarder</button>
-                                    <button type="button" onClick={() => setEditEvent(null)} style={styles.cancelBtn}>Annuler</button>
+                                    <button type="submit" style={styles.btn}>{t.save}</button>
+                                    <button type="button" onClick={() => setEditEvent(null)} style={styles.cancelBtn}>{t.cancel}</button>
                                 </div>
                             </form>
                         </div>
                     )}
 
                     <div style={styles.section}>
-                        <h2 style={styles.sectionTitle}>Liste des événements ({filteredEvents.length}/{events.length})</h2>
+                        <h2 style={styles.sectionTitle}>{t.eventsListCount(filteredEvents.length, events.length)}</h2>
                         <div style={styles.filterRow}>
-                            <input placeholder="Rechercher par titre..." value={eventSearch}
+                            <input placeholder={t.searchByTitle} value={eventSearch}
                                 onChange={e => { setEventSearch(e.target.value); setEventsPageNum(0); }}
                                 style={styles.filterInput} />
                         </div>
-                        {events.length === 0 ? <div style={styles.empty}>Aucun événement créé.</div>
-                            : filteredEvents.length === 0 ? <div style={styles.empty}>Aucun événement ne correspond à cette recherche.</div>
+                        {events.length === 0 ? <div style={styles.empty}>{t.noEventCreated}</div>
+                            : filteredEvents.length === 0 ? <div style={styles.empty}>{t.noEventMatches}</div>
                             : paginatedEvents.map(ev => {
                             const stStyle = { OPEN: {bg:"#e8f5e9",c:"#2e7d32"}, FULL: {bg:"#fff3e0",c:"#e65100"}, CANCELLED: {bg:"#ffebee",c:"#c62828"}, FINISHED: {bg:"#eeeeee",c:"#616161"} }[ev.status] || {};
                             return (
@@ -1063,11 +1286,11 @@ function Admin() {
                                                 <option value="FINISHED">FINISHED</option>
                                             </select>
                                             <div style={styles.cardBtns}>
-                                                <button onClick={() => viewEventRegistrations(ev.id)} style={styles.replyBtn}>Inscrits</button>
-                                                <button onClick={() => viewEventReviews(ev.id)} style={styles.replyBtn}>Avis</button>
-                                                <button onClick={() => { setCurrentEventId(ev.id); setGroupEmailModal(true); }} style={styles.replyBtn}>📢 Email groupé</button>
-                                                <button onClick={() => setEditEvent(ev)} style={styles.editBtn}>Modifier</button>
-                                                <button onClick={() => confirmAndDelete("event", ev.id, ev.title)} style={styles.deleteBtn}>Supprimer</button>
+                                                <button onClick={() => viewEventRegistrations(ev.id)} style={styles.replyBtn}>{t.registered}</button>
+                                                <button onClick={() => viewEventReviews(ev.id)} style={styles.replyBtn}>{t.reviews}</button>
+                                                <button onClick={() => { setCurrentEventId(ev.id); setGroupEmailModal(true); }} style={styles.replyBtn}>{t.groupEmailBtn}</button>
+                                                <button onClick={() => setEditEvent(ev)} style={styles.editBtn}>{t.edit}</button>
+                                                <button onClick={() => confirmAndDelete("event", ev.id, ev.title)} style={styles.deleteBtn}>{t.delete}</button>
                                             </div>
                                         </div>
                                     </div>
@@ -1077,9 +1300,9 @@ function Admin() {
                         })}
                         {events.length > 0 && (
                             <div style={styles.pagination}>
-                                <button onClick={() => setEventsPageNum(p => Math.max(0, p - 1))} disabled={eventsPageNum === 0} style={styles.pageBtn}>← Précédent</button>
-                                <span style={styles.pageInfo}>Page {eventsPageNum + 1} / {eventsPageCount}</span>
-                                <button onClick={() => setEventsPageNum(p => Math.min(eventsPageCount - 1, p + 1))} disabled={eventsPageNum >= eventsPageCount - 1} style={styles.pageBtn}>Suivant →</button>
+                                <button onClick={() => setEventsPageNum(p => Math.max(0, p - 1))} disabled={eventsPageNum === 0} style={styles.pageBtn}>{t.prevPage}</button>
+                                <span style={styles.pageInfo}>{t.pageOf(eventsPageNum + 1, eventsPageCount)}</span>
+                                <button onClick={() => setEventsPageNum(p => Math.min(eventsPageCount - 1, p + 1))} disabled={eventsPageNum >= eventsPageCount - 1} style={styles.pageBtn}>{t.nextPage}</button>
                             </div>
                         )}
                     </div>
@@ -1089,32 +1312,32 @@ function Admin() {
             {/* ── ONGLET BÉNÉVOLES ──────────────────────────────────────────── */}
             {activeTab === "benevoles" && (
                 <div style={styles.section}>
-                    <h2 style={styles.sectionTitle}>Bénévoles inscrits ({filteredVolunteers.length}/{volunteers.length})</h2>
+                    <h2 style={styles.sectionTitle}>{t.volunteersRegisteredCount(filteredVolunteers.length, volunteers.length)}</h2>
 
                     {/* Filtres avancés : compétence, disponibilité, langue (section 3.6 de l'analyse) */}
                     <div style={styles.filterRow}>
-                        <input placeholder="Filtrer par compétence..." value={volunteerFilter.skill}
+                        <input placeholder={t.filterBySkill} value={volunteerFilter.skill}
                             onChange={e => updateVolunteerFilter("skill", e.target.value)}
                             style={styles.filterInput} />
-                        <input placeholder="Filtrer par disponibilité..." value={volunteerFilter.availability}
+                        <input placeholder={t.filterByAvailability} value={volunteerFilter.availability}
                             onChange={e => updateVolunteerFilter("availability", e.target.value)}
                             style={styles.filterInput} />
                         <select value={volunteerFilter.language}
                             onChange={e => updateVolunteerFilter("language", e.target.value)}
                             style={styles.filterInput}>
-                            <option value="">Toutes les langues</option>
+                            <option value="">{t.allLanguages}</option>
                             <option value="fr">Français</option>
                             <option value="en">English</option>
                             <option value="nl">Nederlands</option>
                         </select>
                         {(volunteerFilter.skill || volunteerFilter.availability || volunteerFilter.language) && (
                             <button onClick={() => { setVolunteerFilter({ skill: "", availability: "", language: "" }); setVolunteersPageNum(0); }} style={styles.cancelBtn}>
-                                Réinitialiser
+                                {t.reset}
                             </button>
                         )}
                     </div>
 
-                    {filteredVolunteers.length === 0 ? <div style={styles.empty}>Aucun bénévole ne correspond aux filtres.</div> : paginatedVolunteers.map(v => {
+                    {filteredVolunteers.length === 0 ? <div style={styles.empty}>{t.noVolunteerMatches}</div> : paginatedVolunteers.map(v => {
                         const lvlColor = { BRONZE: "#cd7f32", ARGENT: "#9e9e9e", OR: "#D4A017" }[v.level] || "#ccc";
                         const isActive = v.isActive !== false; // null/undefined = actif par défaut
                         return (
@@ -1129,7 +1352,7 @@ function Admin() {
                                                 {v.firstName} {v.lastName}
                                                 <span style={{background: lvlColor, color:"#fff", fontSize:"10px", padding:"2px 8px", borderRadius:"20px", fontWeight:"bold"}}>{v.level}</span>
                                                 <span style={{background: isActive ? "#e8f5e9" : "#ffebee", color: isActive ? "#2e7d32" : "#c62828", fontSize:"10px", padding:"2px 8px", borderRadius:"20px", fontWeight:"bold"}}>
-                                                    {isActive ? "Actif" : "Désactivé"}
+                                                    {isActive ? t.active : t.inactive}
                                                 </span>
                                             </div>
                                             <div style={styles.messageEmail}>{v.email}</div>
@@ -1137,22 +1360,22 @@ function Admin() {
                                         </div>
                                     </div>
                                     <div style={{display:"flex", flexDirection:"column", alignItems:"flex-end", gap:"8px"}}>
-                                        <div style={styles.messageDate}>Inscrit le {formatDate(v.createdAt)}</div>
+                                        <div style={styles.messageDate}>{t.registeredOn} {formatDate(v.createdAt)}</div>
                                         <button onClick={() => toggleVolunteerActive(v.id)} style={isActive ? styles.deleteBtn : styles.replyBtn}>
-                                            {isActive ? "Désactiver" : "Réactiver"}
+                                            {isActive ? t.deactivate : t.reactivate}
                                         </button>
                                     </div>
                                 </div>
-                                {v.skills && <div style={{...styles.messageText, marginBottom:"8px"}}><strong>Compétences :</strong> {v.skills}</div>}
-                                {v.availability && <div style={{...styles.messageText}}><strong>Disponibilités :</strong> {v.availability}</div>}
+                                {v.skills && <div style={{...styles.messageText, marginBottom:"8px"}}><strong>{t.skills} :</strong> {v.skills}</div>}
+                                {v.availability && <div style={{...styles.messageText}}><strong>{t.availability} :</strong> {v.availability}</div>}
                             </div>
                         );
                     })}
                     {filteredVolunteers.length > 0 && (
                         <div style={styles.pagination}>
-                            <button onClick={() => setVolunteersPageNum(p => Math.max(0, p - 1))} disabled={volunteersPageNum === 0} style={styles.pageBtn}>← Précédent</button>
-                            <span style={styles.pageInfo}>Page {volunteersPageNum + 1} / {volunteersPageCount}</span>
-                            <button onClick={() => setVolunteersPageNum(p => Math.min(volunteersPageCount - 1, p + 1))} disabled={volunteersPageNum >= volunteersPageCount - 1} style={styles.pageBtn}>Suivant →</button>
+                            <button onClick={() => setVolunteersPageNum(p => Math.max(0, p - 1))} disabled={volunteersPageNum === 0} style={styles.pageBtn}>{t.prevPage}</button>
+                            <span style={styles.pageInfo}>{t.pageOf(volunteersPageNum + 1, volunteersPageCount)}</span>
+                            <button onClick={() => setVolunteersPageNum(p => Math.min(volunteersPageCount - 1, p + 1))} disabled={volunteersPageNum >= volunteersPageCount - 1} style={styles.pageBtn}>{t.nextPage}</button>
                         </div>
                     )}
                 </div>
@@ -1163,13 +1386,13 @@ function Admin() {
                 <div style={styles.modal}>
                     <div style={{...styles.modalBox, width:"600px", maxHeight:"80vh", overflowY:"auto"}}>
                         <div style={{display:"flex", justifyContent:"space-between", alignItems:"center"}}>
-                            <h3 style={styles.modalTitle}>Inscriptions à l'événement</h3>
+                            <h3 style={styles.modalTitle}>{t.registrationsForEvent}</h3>
                             {eventRegistrations.length > 0 && (
-                                <button onClick={exportRegistrationsPdf} style={styles.replyBtn}>📄 Exporter en PDF</button>
+                                <button onClick={exportRegistrationsPdf} style={styles.replyBtn}>{t.exportPdf}</button>
                             )}
                         </div>
                         {eventRegistrations.length === 0 ? (
-                            <p style={styles.modalSub}>Aucune inscription pour cet événement.</p>
+                            <p style={styles.modalSub}>{t.noRegistrationForEvent}</p>
                         ) : [...eventRegistrations].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map(r => {
                             const stStyle = { WAITING:{bg:"#fff3e0",c:"#e65100"}, CONFIRMED:{bg:"#e8f5e9",c:"#2e7d32"}, REFUSED:{bg:"#eeeeee",c:"#616161"} }[r.status] || {};
                             return (
@@ -1181,15 +1404,15 @@ function Admin() {
                                     </div>
                                     {r.status === "WAITING" && (
                                         <div style={styles.cardBtns}>
-                                            <button onClick={() => confirmReg(r.id)} style={styles.replyBtn}>Confirmer</button>
-                                            <button onClick={() => rejectReg(r.id)} style={styles.deleteBtn}>Refuser</button>
+                                            <button onClick={() => confirmReg(r.id)} style={styles.replyBtn}>{t.confirm}</button>
+                                            <button onClick={() => rejectReg(r.id)} style={styles.deleteBtn}>{t.refuse}</button>
                                         </div>
                                     )}
                                 </div>
                             );
                         })}
                         <div style={{textAlign:"center", marginTop:"20px"}}>
-                            <button onClick={() => setEventRegistrationsModal(false)} style={styles.cancelBtn}>Fermer</button>
+                            <button onClick={() => setEventRegistrationsModal(false)} style={styles.cancelBtn}>{t.close}</button>
                         </div>
                     </div>
                 </div>
@@ -1199,13 +1422,13 @@ function Admin() {
             {eventReviewsModal && (
                 <div style={styles.modal}>
                     <div style={{...styles.modalBox, width:"550px", maxHeight:"80vh", overflowY:"auto"}}>
-                        <h3 style={styles.modalTitle}>Avis des bénévoles</h3>
+                        <h3 style={styles.modalTitle}>{t.volunteerReviews}</h3>
                         <p style={{textAlign:"center", fontSize:"15px", fontWeight:"700", color:"#2D6A4F", marginBottom:"16px"}}>
-                            Note moyenne : {eventReviews?.average ? eventReviews.average.toFixed(1) : "—"} / 5
-                            {eventReviews?.reviews?.length > 0 && ` (${eventReviews.reviews.length} avis)`}
+                            {t.avgRating(eventReviews?.average ? eventReviews.average.toFixed(1) : "—")}
+                            {eventReviews?.reviews?.length > 0 && t.reviewsCount(eventReviews.reviews.length)}
                         </p>
                         {(!eventReviews?.reviews || eventReviews.reviews.length === 0) ? (
-                            <p style={styles.modalSub}>Aucun avis pour cet événement.</p>
+                            <p style={styles.modalSub}>{t.noReviewForEvent}</p>
                         ) : eventReviews.reviews.map(rv => (
                             <div key={rv.id} style={styles.articleCard}>
                                 <div style={{fontWeight:"600", fontSize:"14px"}}>{rv.user?.firstName} {rv.user?.lastName}</div>
@@ -1214,7 +1437,7 @@ function Admin() {
                             </div>
                         ))}
                         <div style={{textAlign:"center", marginTop:"20px"}}>
-                            <button onClick={() => setEventReviewsModal(false)} style={styles.cancelBtn}>Fermer</button>
+                            <button onClick={() => setEventReviewsModal(false)} style={styles.cancelBtn}>{t.close}</button>
                         </div>
                     </div>
                 </div>
@@ -1224,14 +1447,14 @@ function Admin() {
             {groupEmailModal && (
                 <div style={styles.modal}>
                     <div style={{...styles.modalBox, width:"500px"}}>
-                        <h3 style={styles.modalTitle}>Message groupé aux inscrits</h3>
-                        <p style={styles.modalSub}>Cet email sera envoyé à tous les bénévoles encore inscrits (hors annulés).</p>
+                        <h3 style={styles.modalTitle}>{t.groupMessageTitle}</h3>
+                        <p style={styles.modalSub}>{t.groupMessageSub}</p>
                         <textarea value={groupEmailText} onChange={e => setGroupEmailText(e.target.value)}
-                            placeholder="Écris ton message ici..."
+                            placeholder={t.writeMessagePh}
                             style={{...styles.input, width:"100%", height:"120px", resize:"none", marginTop:"12px"}} />
                         <div style={styles.modalBtns}>
-                            <button onClick={sendGroupEmail} style={{...styles.modalDeleteBtn, background:"#2D6A4F"}}>Envoyer</button>
-                            <button onClick={() => { setGroupEmailModal(false); setGroupEmailText(""); }} style={styles.cancelBtn}>Annuler</button>
+                            <button onClick={sendGroupEmail} style={{...styles.modalDeleteBtn, background:"#2D6A4F"}}>{t.send}</button>
+                            <button onClick={() => { setGroupEmailModal(false); setGroupEmailText(""); }} style={styles.cancelBtn}>{t.cancel}</button>
                         </div>
                     </div>
                 </div>
@@ -1247,16 +1470,16 @@ function Admin() {
                     <div style={styles.modal}>
                         <div style={styles.modalBox}>
                             <div style={styles.modalIcon}>!</div>
-                            <h3 style={styles.modalTitle}>Confirmer la suppression</h3>
-                            <p style={styles.modalSub}>Voulez-vous vraiment supprimer <strong>{confirmDelete.nom}</strong> ? Cette action est irreversible.</p>
+                            <h3 style={styles.modalTitle}>{t.confirmDeleteTitle}</h3>
+                            <p style={styles.modalSub}>{t.confirmDeleteText(confirmDelete.nom)}</p>
                             {attestationsAtRisk > 0 && (
                                 <p style={{ ...styles.modalSub, background: "#fff3e0", color: "#e65100", padding: "10px 14px", borderRadius: "8px", marginTop: "-8px" }}>
-                                    ⚠️ {attestationsAtRisk} bénévole(s) confirmé(s) sur cet événement — supprimer l'événement supprime aussi leurs inscriptions et rend leur attestation indisponible.
+                                    {t.attestationsAtRisk(attestationsAtRisk)}
                                 </p>
                             )}
                             <div style={styles.modalBtns}>
-                                <button onClick={executeDelete} style={styles.modalDeleteBtn}>Supprimer definitivement</button>
-                                <button onClick={() => setConfirmDelete(null)} style={styles.cancelBtn}>Annuler</button>
+                                <button onClick={executeDelete} style={styles.modalDeleteBtn}>{t.deletePermanently}</button>
+                                <button onClick={() => setConfirmDelete(null)} style={styles.cancelBtn}>{t.cancel}</button>
                             </div>
                         </div>
                     </div>
@@ -1271,19 +1494,19 @@ function Admin() {
                                 {replyMsg.name.charAt(0).toUpperCase()}
                             </div>
                             <div>
-                                <h3 style={styles.modalTitle}>Repondre a {replyMsg.name}</h3>
-                                <p style={styles.modalSub}>La reponse sera envoyee a : {replyMsg.email}</p>
+                                <h3 style={styles.modalTitle}>{t.replyTo(replyMsg.name)}</h3>
+                                <p style={styles.modalSub}>{t.replySentTo(replyMsg.email)}</p>
                             </div>
                         </div>
                         <div style={styles.originalMsg}>
-                            <div style={styles.originalLabel}>MESSAGE ORIGINAL</div>
+                            <div style={styles.originalLabel}>{t.originalMessage}</div>
                             <div style={styles.originalText}>{replyMsg.message}</div>
                         </div>
                         <form onSubmit={replyMessage}>
-                            <textarea placeholder="Votre reponse..." value={replyText} onChange={e => setReplyText(e.target.value)} style={{...styles.textarea, width: "100%", marginBottom: "16px", height: "120px"}} required />
+                            <textarea placeholder={t.yourReplyPh} value={replyText} onChange={e => setReplyText(e.target.value)} style={{...styles.textarea, width: "100%", marginBottom: "16px", height: "120px"}} required />
                             <div style={styles.formBtns}>
-                                <button type="submit" style={styles.btn}>Envoyer la reponse</button>
-                                <button type="button" onClick={() => setReplyMsg(null)} style={styles.cancelBtn}>Annuler</button>
+                                <button type="submit" style={styles.btn}>{t.sendReply}</button>
+                                <button type="button" onClick={() => setReplyMsg(null)} style={styles.cancelBtn}>{t.cancel}</button>
                             </div>
                         </form>
                     </div>
@@ -1293,15 +1516,15 @@ function Admin() {
             {showPasswordModal && (
                 <div style={styles.modal}>
                     <div style={styles.modalBox}>
-                        <h3 style={styles.modalTitle}>Changer le mot de passe</h3>
+                        <h3 style={styles.modalTitle}>{t.changePasswordModalTitle}</h3>
                         {passwordError && <div style={styles.errorMsg}>{passwordError}</div>}
                         <form onSubmit={changePassword} style={{display:"flex",flexDirection:"column",gap:"12px",marginTop:"16px"}}>
-                            <div><label style={styles.label}>Ancien mot de passe</label><input type="password" value={passwordForm.oldPassword} onChange={e => setPasswordForm({...passwordForm, oldPassword: e.target.value})} style={styles.input} required /></div>
-                            <div><label style={styles.label}>Nouveau mot de passe</label><input type="password" value={passwordForm.newPassword} onChange={e => setPasswordForm({...passwordForm, newPassword: e.target.value})} style={styles.input} required /></div>
-                            <div><label style={styles.label}>Confirmer le nouveau mot de passe</label><input type="password" value={passwordForm.confirmPassword} onChange={e => setPasswordForm({...passwordForm, confirmPassword: e.target.value})} style={styles.input} required /></div>
+                            <div><label style={styles.label}>{t.oldPassword}</label><input type="password" value={passwordForm.oldPassword} onChange={e => setPasswordForm({...passwordForm, oldPassword: e.target.value})} style={styles.input} required /></div>
+                            <div><label style={styles.label}>{t.newPassword}</label><input type="password" value={passwordForm.newPassword} onChange={e => setPasswordForm({...passwordForm, newPassword: e.target.value})} style={styles.input} required /></div>
+                            <div><label style={styles.label}>{t.confirmNewPassword}</label><input type="password" value={passwordForm.confirmPassword} onChange={e => setPasswordForm({...passwordForm, confirmPassword: e.target.value})} style={styles.input} required /></div>
                             <div style={styles.formBtns}>
-                                <button type="submit" style={styles.btn}>Changer</button>
-                                <button type="button" onClick={() => { setShowPasswordModal(false); setPasswordError(""); }} style={styles.cancelBtn}>Annuler</button>
+                                <button type="submit" style={styles.btn}>{t.change}</button>
+                                <button type="button" onClick={() => { setShowPasswordModal(false); setPasswordError(""); }} style={styles.cancelBtn}>{t.cancel}</button>
                             </div>
                         </form>
                     </div>

@@ -11,22 +11,69 @@ const CARD_GRADIENTS = [
     "linear-gradient(135deg, #3D6B99, #1E3F5C)"
 ];
 
-// Couleur et libellé selon le statut de l'événement
+// Couleur selon le statut de l'événement (indépendant de la langue) ; libellé traduit dans STATUS_TEXT
 const STATUS_STYLE = {
-    OPEN:      { bg: "#e8f5e9", color: "#2e7d32", label: "Ouvert" },
-    FULL:      { bg: "#fff3e0", color: "#e65100", label: "Complet" },
-    CANCELLED: { bg: "#ffebee", color: "#c62828", label: "Annulé" },
-    FINISHED:  { bg: "#eeeeee", color: "#616161", label: "Terminé" }
+    OPEN:      { bg: "#e8f5e9", color: "#2e7d32" },
+    FULL:      { bg: "#fff3e0", color: "#e65100" },
+    CANCELLED: { bg: "#ffebee", color: "#c62828" },
+    FINISHED:  { bg: "#eeeeee", color: "#616161" }
 };
-
-// Statut d'une inscription déjà existante du bénévole connecté sur cet événement
 const MY_REG_STYLE = {
-    WAITING:   { bg: "#fff3e0", color: "#e65100", label: "En attente" },
-    CONFIRMED: { bg: "#e8f5e9", color: "#2e7d32", label: "Déjà confirmé" },
-    REFUSED:   { bg: "#eeeeee", color: "#616161", label: "Refusé" }
+    WAITING:   { bg: "#fff3e0", color: "#e65100" },
+    CONFIRMED: { bg: "#e8f5e9", color: "#2e7d32" },
+    REFUSED:   { bg: "#eeeeee", color: "#616161" }
 };
 
-function Events() {
+const T = {
+    fr: {
+        loading: "Chargement des événements...",
+        title: "Événements Terra Sana", sub: "Inscrivez-vous aux événements et participez à notre mission",
+        loginBanner: "Connectez-vous pour pouvoir vous inscrire aux événements.", login: "Se connecter",
+        empty: "Aucun événement disponible pour le moment.", pastTitle: "Événements passés",
+        statusText: { OPEN: "Ouvert", FULL: "Complet", CANCELLED: "Annulé", FINISHED: "Terminé" },
+        myRegText: { WAITING: "En attente", CONFIRMED: "Déjà confirmé", REFUSED: "Refusé" },
+        placesRemaining: (n, max) => `${n} place${n === 1 ? "" : "s"} restante${n === 1 ? "" : "s"} sur ${max}`,
+        alreadyReg: (label) => `✓ Vous êtes déjà inscrit — ${label}`,
+        joinWaitlist: "Rejoindre la liste d'attente", register: "S'inscrire",
+        waitlistMsg: "Événement complet — vous êtes sur liste d'attente.",
+        registeredMsg: "Inscription envoyée ! En attente de confirmation.",
+        errorMsg: "Erreur lors de l'inscription.",
+        locale: "fr-BE"
+    },
+    en: {
+        loading: "Loading events...",
+        title: "Terra Sana Events", sub: "Register for events and take part in our mission",
+        loginBanner: "Log in to be able to register for events.", login: "Log in",
+        empty: "No events available right now.", pastTitle: "Past events",
+        statusText: { OPEN: "Open", FULL: "Full", CANCELLED: "Cancelled", FINISHED: "Finished" },
+        myRegText: { WAITING: "Waiting", CONFIRMED: "Already confirmed", REFUSED: "Refused" },
+        placesRemaining: (n, max) => `${n} place${n === 1 ? "" : "s"} left out of ${max}`,
+        alreadyReg: (label) => `✓ You're already registered — ${label}`,
+        joinWaitlist: "Join the waitlist", register: "Register",
+        waitlistMsg: "Event full — you're on the waitlist.",
+        registeredMsg: "Registration sent! Awaiting confirmation.",
+        errorMsg: "Error while registering.",
+        locale: "en-GB"
+    },
+    nl: {
+        loading: "Evenementen laden...",
+        title: "Terra Sana Evenementen", sub: "Schrijf je in voor evenementen en neem deel aan onze missie",
+        loginBanner: "Log in om je te kunnen inschrijven voor evenementen.", login: "Inloggen",
+        empty: "Momenteel geen evenementen beschikbaar.", pastTitle: "Afgelopen evenementen",
+        statusText: { OPEN: "Open", FULL: "Volzet", CANCELLED: "Geannuleerd", FINISHED: "Afgelopen" },
+        myRegText: { WAITING: "In wachtrij", CONFIRMED: "Al bevestigd", REFUSED: "Geweigerd" },
+        placesRemaining: (n, max) => `${n} plaats${n === 1 ? "" : "en"} over op ${max}`,
+        alreadyReg: (label) => `✓ Je bent al ingeschreven — ${label}`,
+        joinWaitlist: "Wachtlijst joinen", register: "Inschrijven",
+        waitlistMsg: "Evenement volzet — je staat op de wachtlijst.",
+        registeredMsg: "Inschrijving verzonden! In afwachting van bevestiging.",
+        errorMsg: "Fout bij het inschrijven.",
+        locale: "nl-BE"
+    }
+};
+
+function Events({ lang }) {
+    const t = T[lang] || T.fr;
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [feedback, setFeedback] = useState({});
@@ -57,19 +104,17 @@ function Events() {
         try {
             const res = await registerToEvent(eventId);
             // Afficher un message de retour selon qu'une position de liste d'attente a été attribuée (RG-09)
-            const msg = res.position
-                ? "Événement complet — vous êtes sur liste d'attente."
-                : "Inscription envoyée ! En attente de confirmation.";
+            const msg = res.position ? t.waitlistMsg : t.registeredMsg;
             setFeedback(prev => ({ ...prev, [eventId]: { ok: true, msg } }));
             setMyRegByEvent(prev => ({ ...prev, [eventId]: res }));
         } catch (err) {
-            setFeedback(prev => ({ ...prev, [eventId]: { ok: false, msg: err.message || "Erreur lors de l'inscription." } }));
+            setFeedback(prev => ({ ...prev, [eventId]: { ok: false, msg: err.message || t.errorMsg } }));
         }
     };
 
-    const formatDate = (d) => new Date(d).toLocaleDateString("fr-BE", { day: "2-digit", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" });
+    const formatDate = (d) => new Date(d).toLocaleDateString(t.locale, { day: "2-digit", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" });
 
-    if (loading) return <div style={s.loading}>Chargement des événements...</div>;
+    if (loading) return <div style={s.loading}>{t.loading}</div>;
 
     // À venir en premier (le plus proche d'abord) ; les événements passés/annulés sont regroupés
     // à part, du plus récent au plus ancien, pour ne pas noyer les nouveaux événements créés
@@ -80,6 +125,7 @@ function Events() {
 
     const renderCard = (ev, i) => {
         const st = STATUS_STYLE[ev.status] || STATUS_STYLE.OPEN;
+        const stLabel = t.statusText[ev.status] || t.statusText.OPEN;
         const fb = feedback[ev.id];
         const isUpcoming = ev.status === "OPEN" || ev.status === "FULL";
         return (
@@ -93,14 +139,14 @@ function Events() {
                 )}
                 <div style={s.body}>
                     <div style={s.statusRow}>
-                        <span style={{ ...s.badge, background: st.bg, color: st.color }}>{st.label}</span>
+                        <span style={{ ...s.badge, background: st.bg, color: st.color }}>{stLabel}</span>
                     </div>
                     <h2 style={s.evTitle}>{ev.title}</h2>
                     <p style={s.desc}>{ev.description}</p>
                     <div style={s.meta}>
                         <span>📅 {formatDate(ev.eventDate)}</span>
                         <span>📍 {ev.location}</span>
-                        <span>👥 {ev.availablePlaces} place{ev.availablePlaces === 1 ? "" : "s"} restante{ev.availablePlaces === 1 ? "" : "s"} sur {ev.maxPlaces}</span>
+                        <span>👥 {t.placesRemaining(ev.availablePlaces, ev.maxPlaces)}</span>
                     </div>
 
                     {fb && (
@@ -114,9 +160,10 @@ function Events() {
                     {isUpcoming && myRegByEvent[ev.id] ? (
                         (() => {
                             const mrs = MY_REG_STYLE[myRegByEvent[ev.id].status] || MY_REG_STYLE.WAITING;
+                            const mrsLabel = t.myRegText[myRegByEvent[ev.id].status] || t.myRegText.WAITING;
                             return (
                                 <div style={{ ...s.alreadyReg, background: mrs.bg, color: mrs.color }}>
-                                    ✓ Vous êtes déjà inscrit — {mrs.label}
+                                    {t.alreadyReg(mrsLabel)}
                                 </div>
                             );
                         })()
@@ -126,7 +173,7 @@ function Events() {
                             disabled={!!fb}
                             style={{ ...s.btn, background: ev.status === "FULL" ? "#ff9800" : GREEN }}
                         >
-                            {ev.status === "FULL" ? "Rejoindre la liste d'attente" : "S'inscrire"}
+                            {ev.status === "FULL" ? t.joinWaitlist : t.register}
                         </button>
                     ) : null}
                 </div>
@@ -137,21 +184,21 @@ function Events() {
     return (
         <div style={s.page}>
             <div style={s.hero}>
-                <h1 style={s.title}>Événements Terra Sana</h1>
-                <p style={s.sub}>Inscrivez-vous aux événements et participez à notre mission</p>
+                <h1 style={s.title}>{t.title}</h1>
+                <p style={s.sub}>{t.sub}</p>
             </div>
 
             <div style={s.header}>
                 {!isLoggedIn && (
                     <div style={s.banner}>
-                        <span>Connectez-vous pour pouvoir vous inscrire aux événements.</span>
-                        <button onClick={() => navigate("/volunteer/login")} style={s.bannerBtn}>Se connecter</button>
+                        <span>{t.loginBanner}</span>
+                        <button onClick={() => navigate("/volunteer/login")} style={s.bannerBtn}>{t.login}</button>
                     </div>
                 )}
             </div>
 
             {events.length === 0 ? (
-                <p style={s.empty}>Aucun événement disponible pour le moment.</p>
+                <p style={s.empty}>{t.empty}</p>
             ) : (
                 <>
                     {upcoming.length > 0 && (
@@ -159,7 +206,7 @@ function Events() {
                     )}
                     {past.length > 0 && (
                         <div style={s.pastSection}>
-                            <h2 style={s.pastTitle}>Événements passés</h2>
+                            <h2 style={s.pastTitle}>{t.pastTitle}</h2>
                             <div style={s.grid}>{past.map(renderCard)}</div>
                         </div>
                     )}

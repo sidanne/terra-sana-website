@@ -3,7 +3,14 @@ import { useNavigate, useSearchParams, Link } from "react-router-dom";
 
 const GREEN = "#2D6A4F";
 
-function AdminResetPassword() {
+const T = {
+    fr: { minLength: "Le mot de passe doit contenir au moins 8 caractères.", mismatch: "Les mots de passe ne correspondent pas.", invalidLink: "Ce lien est invalide ou a expiré.", serverError: "Impossible de contacter le serveur.", invalidIncomplete: "Lien de réinitialisation invalide ou incomplet.", retry: "Refaire une demande", quote: "Un nouveau départ, la même mission : agir ensemble.", quoteAuthor: "— Espace administrateur", title: "Nouveau mot de passe", sub: "Choisissez un nouveau mot de passe pour votre compte administrateur", success: "Mot de passe réinitialisé avec succès ! Redirection vers la connexion...", newPassword: "Nouveau mot de passe (min. 8 caractères)", newPasswordPh: "Nouveau mot de passe", confirm: "Confirmer le mot de passe", confirmPh: "Confirmez le mot de passe", validating: "Validation...", submit: "Réinitialiser le mot de passe" },
+    en: { minLength: "The password must be at least 8 characters long.", mismatch: "Passwords do not match.", invalidLink: "This link is invalid or has expired.", serverError: "Could not contact the server.", invalidIncomplete: "Invalid or incomplete reset link.", retry: "Make a new request", quote: "A fresh start, the same mission: acting together.", quoteAuthor: "— Admin area", title: "New password", sub: "Choose a new password for your administrator account", success: "Password reset successfully! Redirecting to login...", newPassword: "New password (min. 8 characters)", newPasswordPh: "New password", confirm: "Confirm password", confirmPh: "Confirm the password", validating: "Validating...", submit: "Reset password" },
+    nl: { minLength: "Het wachtwoord moet minstens 8 tekens bevatten.", mismatch: "De wachtwoorden komen niet overeen.", invalidLink: "Deze link is ongeldig of verlopen.", serverError: "Kan geen contact maken met de server.", invalidIncomplete: "Ongeldige of onvolledige resetlink.", retry: "Nieuwe aanvraag doen", quote: "Een nieuwe start, dezelfde missie: samen in actie.", quoteAuthor: "— Adminomgeving", title: "Nieuw wachtwoord", sub: "Kies een nieuw wachtwoord voor uw beheerdersaccount", success: "Wachtwoord succesvol gereset! Doorverwijzen naar inloggen...", newPassword: "Nieuw wachtwoord (min. 8 tekens)", newPasswordPh: "Nieuw wachtwoord", confirm: "Bevestig wachtwoord", confirmPh: "Bevestig het wachtwoord", validating: "Bezig met valideren...", submit: "Wachtwoord resetten" }
+};
+
+function AdminResetPassword({ lang }) {
+    const t = T[lang] || T.fr;
     // Le jeton de réinitialisation arrive dans l'URL : /admin/reset-password?token=xxx
     const [searchParams] = useSearchParams();
     const token = searchParams.get("token");
@@ -18,11 +25,11 @@ function AdminResetPassword() {
         e.preventDefault();
         setError("");
         if (form.password.length < 8) {
-            setError("Le mot de passe doit contenir au moins 8 caractères.");
+            setError(t.minLength);
             return;
         }
         if (form.password !== form.confirm) {
-            setError("Les mots de passe ne correspondent pas.");
+            setError(t.mismatch);
             return;
         }
         setLoading(true);
@@ -37,10 +44,10 @@ function AdminResetPassword() {
                 setSuccess(true);
                 setTimeout(() => navigate("/login"), 2500);
             } else {
-                setError(data.message || "Ce lien est invalide ou a expiré.");
+                setError(data.message || t.invalidLink);
             }
         } catch {
-            setError("Impossible de contacter le serveur.");
+            setError(t.serverError);
         }
         setLoading(false);
     };
@@ -51,10 +58,10 @@ function AdminResetPassword() {
                 <div style={s.imagePanel} />
                 <div style={s.formPanel}>
                     <div style={s.card}>
-                        <div style={s.error}>Lien de réinitialisation invalide ou incomplet.</div>
+                        <div style={s.error}>{t.invalidIncomplete}</div>
                         <p style={s.link}>
                             <Link to="/admin/forgot-password" style={{ color: GREEN, fontWeight: "600" }}>
-                                Refaire une demande
+                                {t.retry}
                             </Link>
                         </p>
                     </div>
@@ -68,8 +75,8 @@ function AdminResetPassword() {
             <div style={s.imagePanel}>
                 <div style={s.imageOverlay}>
                     <div style={s.quoteMark}>"</div>
-                    <p style={s.quote}>Un nouveau départ, la même mission : agir ensemble.</p>
-                    <div style={s.quoteAuthor}>— Espace administrateur</div>
+                    <p style={s.quote}>{t.quote}</p>
+                    <div style={s.quoteAuthor}>{t.quoteAuthor}</div>
                 </div>
             </div>
 
@@ -79,31 +86,31 @@ function AdminResetPassword() {
                     <div style={{ ...s.logoIcon, background: GREEN }}>TS</div>
                     <span style={s.logoText}>Terra<span style={{ color: GREEN }}>Sana</span></span>
                 </div>
-                <h1 style={s.title}>Nouveau mot de passe</h1>
-                <p style={s.sub}>Choisissez un nouveau mot de passe pour votre compte administrateur</p>
+                <h1 style={s.title}>{t.title}</h1>
+                <p style={s.sub}>{t.sub}</p>
 
                 {error && <div style={s.error}>{error}</div>}
 
                 {success ? (
                     <div style={s.success}>
-                        Mot de passe réinitialisé avec succès ! Redirection vers la connexion...
+                        {t.success}
                     </div>
                 ) : (
                     <form onSubmit={handleSubmit} style={s.form}>
                         <div style={s.row}>
-                            <label style={s.label}>Nouveau mot de passe (min. 8 caractères)</label>
+                            <label style={s.label}>{t.newPassword}</label>
                             <input type="password" autoComplete="new-password" value={form.password}
                                 onChange={e => setForm({ ...form, password: e.target.value })}
-                                style={s.input} placeholder="Nouveau mot de passe" required minLength={8} />
+                                style={s.input} placeholder={t.newPasswordPh} required minLength={8} />
                         </div>
                         <div style={s.row}>
-                            <label style={s.label}>Confirmer le mot de passe</label>
+                            <label style={s.label}>{t.confirm}</label>
                             <input type="password" autoComplete="new-password" value={form.confirm}
                                 onChange={e => setForm({ ...form, confirm: e.target.value })}
-                                style={s.input} placeholder="Confirmez le mot de passe" required minLength={8} />
+                                style={s.input} placeholder={t.confirmPh} required minLength={8} />
                         </div>
                         <button type="submit" style={{ ...s.btn, background: GREEN }} disabled={loading}>
-                            {loading ? "Validation..." : "Réinitialiser le mot de passe"}
+                            {loading ? t.validating : t.submit}
                         </button>
                     </form>
                 )}

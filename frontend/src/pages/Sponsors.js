@@ -5,11 +5,25 @@ function Sponsors({ lang }) {
         nl: { title: "Onze sponsors", sub: "Partners die de missie van Terra Sana ondersteunen", contact: "Sponsor worden", contactDesc: "Wilt u Terra Sana steunen? Neem contact met ons op!", contactBtn: "Neem contact op", noSponsors: "Nog geen sponsors." }
     }[lang] || { title: "Nos sponsors", sub: "Nos partenaires", contact: "Devenir sponsor", contactDesc: "Contactez-nous !", contactBtn: "Contact", noSponsors: "Aucun sponsor." };
 
-    const sponsors = [
-        { nom: "Bruxelles Environnement", type: "Partenaire officiel", desc: "Agence bruxelloise pour l'environnement et l'energie", color: "#e8f5e9" },
-        { nom: "Region de Bruxelles", type: "Soutien institutionnel", desc: "Soutien institutionnel de la Region de Bruxelles-Capitale", color: "#e3f2fd" },
-        { nom: "Commune de Woluwe", type: "Partenaire local", desc: "Partenariat avec la commune de Woluwe-Saint-Lambert", color: "#fff3e0" }
-    ];
+    const sponsorsData = {
+        fr: [
+            { nom: "Bruxelles Environnement", type: "Partenaire officiel", desc: "Agence bruxelloise pour l'environnement et l'énergie" },
+            { nom: "Région de Bruxelles", type: "Soutien institutionnel", desc: "Soutien institutionnel de la Région de Bruxelles-Capitale" },
+            { nom: "Commune de Woluwe", type: "Partenaire local", desc: "Partenariat avec la commune de Woluwe-Saint-Lambert" }
+        ],
+        en: [
+            { nom: "Bruxelles Environnement", type: "Official partner", desc: "Brussels agency for the environment and energy" },
+            { nom: "Brussels Region", type: "Institutional support", desc: "Institutional support from the Brussels-Capital Region" },
+            { nom: "Municipality of Woluwe", type: "Local partner", desc: "Partnership with the municipality of Woluwe-Saint-Lambert" }
+        ],
+        nl: [
+            { nom: "Leefmilieu Brussel", type: "Officiële partner", desc: "Brusselse agentschap voor leefmilieu en energie" },
+            { nom: "Brussels Gewest", type: "Institutionele steun", desc: "Institutionele steun van het Brussels Hoofdstedelijk Gewest" },
+            { nom: "Gemeente Woluwe", type: "Lokale partner", desc: "Partnerschap met de gemeente Sint-Lambrechts-Woluwe" }
+        ]
+    };
+    const sponsorColors = ["#e8f5e9", "#e3f2fd", "#fff3e0"];
+    const sponsors = (sponsorsData[lang] || sponsorsData.fr).map((sp, i) => ({ ...sp, color: sponsorColors[i] }));
 
     return (
         <div style={styles.page}>

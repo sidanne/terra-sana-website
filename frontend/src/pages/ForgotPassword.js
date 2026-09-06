@@ -4,7 +4,14 @@ import { forgotPassword } from "../services/volunteerApi";
 
 const GREEN = "#2D6A4F";
 
-function ForgotPassword() {
+const T = {
+    fr: { quote: "Un accès sécurisé, une communauté qui grandit chaque jour.", quoteAuthor: "— L'équipe Terra Sana", title: "Mot de passe oublié", sub: "Entrez votre email pour recevoir un lien de réinitialisation", success: "Si un compte existe avec cet email, un lien de réinitialisation valable 30 minutes vient d'être envoyé.", email: "Email", emailPh: "votre@email.com", sending: "Envoi...", send: "Envoyer le lien", back: "← Retour à la connexion" },
+    en: { quote: "Secure access, a community that grows every day.", quoteAuthor: "— The Terra Sana team", title: "Forgot password", sub: "Enter your email to receive a reset link", success: "If an account exists with this email, a reset link valid for 30 minutes has just been sent.", email: "Email", emailPh: "your@email.com", sending: "Sending...", send: "Send link", back: "← Back to login" },
+    nl: { quote: "Veilige toegang, een gemeenschap die elke dag groeit.", quoteAuthor: "— Het Terra Sana-team", title: "Wachtwoord vergeten", sub: "Voer uw e-mail in om een resetlink te ontvangen", success: "Als er een account bestaat met dit e-mailadres, is er zonet een resetlink verzonden die 30 minuten geldig is.", email: "E-mail", emailPh: "uw@email.com", sending: "Verzenden...", send: "Link verzenden", back: "← Terug naar inloggen" }
+};
+
+function ForgotPassword({ lang }) {
+    const t = T[lang] || T.fr;
     const [email, setEmail] = useState("");
     const [sent, setSent] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -23,8 +30,8 @@ function ForgotPassword() {
             <div className="split-panel-image" style={s.imagePanel}>
                 <div style={s.imageOverlay}>
                     <div style={s.quoteMark}>"</div>
-                    <p style={s.quote}>Un accès sécurisé, une communauté qui grandit chaque jour.</p>
-                    <div style={s.quoteAuthor}>— L'équipe Terra Sana</div>
+                    <p style={s.quote}>{t.quote}</p>
+                    <div style={s.quoteAuthor}>{t.quoteAuthor}</div>
                 </div>
             </div>
 
@@ -34,29 +41,29 @@ function ForgotPassword() {
                     <div style={{ ...s.logoIcon, background: GREEN }}>TS</div>
                     <span style={s.logoText}>Terra<span style={{ color: GREEN }}>Sana</span></span>
                 </div>
-                <h1 style={s.title}>Mot de passe oublié</h1>
-                <p style={s.sub}>Entrez votre email pour recevoir un lien de réinitialisation</p>
+                <h1 style={s.title}>{t.title}</h1>
+                <p style={s.sub}>{t.sub}</p>
 
                 {sent ? (
                     <div style={s.success}>
-                        Si un compte existe avec cet email, un lien de réinitialisation valable 30 minutes vient d'être envoyé.
+                        {t.success}
                     </div>
                 ) : (
                     <form onSubmit={handleSubmit} style={s.form}>
                         <div style={s.row}>
-                            <label style={s.label}>Email</label>
+                            <label style={s.label}>{t.email}</label>
                             <input type="email" value={email} onChange={e => setEmail(e.target.value)}
-                                style={s.input} placeholder="votre@email.com" required />
+                                style={s.input} placeholder={t.emailPh} required />
                         </div>
                         <button type="submit" style={{ ...s.btn, background: GREEN }} disabled={loading}>
-                            {loading ? "Envoi..." : "Envoyer le lien"}
+                            {loading ? t.sending : t.send}
                         </button>
                     </form>
                 )}
 
                 <p style={s.link}>
                     <Link to="/volunteer/login" style={{ color: GREEN, fontWeight: "600" }}>
-                        ← Retour à la connexion
+                        {t.back}
                     </Link>
                 </p>
             </div>

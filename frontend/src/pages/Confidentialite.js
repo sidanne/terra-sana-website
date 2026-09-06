@@ -1,24 +1,45 @@
-function Confidentialite() {
+const T = {
+    fr: {
+        title: "Politique de confidentialité", date: "Dernière mise à jour : 2025",
+        sections: [
+            ["1. Collecte des données", "Terra Sana ASBL collecte uniquement les données personnelles que vous nous fournissez volontairement via le formulaire de contact (nom, email, message). Ces données sont utilisées uniquement pour répondre à vos demandes."],
+            ["2. Utilisation des données", "Vos données ne sont jamais vendues, partagées ou transmises à des tiers. Elles sont conservées de manière sécurisée dans notre base de données et utilisées uniquement pour la gestion interne de l'association."],
+            ["3. Vos droits", "Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Pour exercer ces droits, contactez-nous à : Terrasana@outlook.be"],
+            ["4. Contact", "Terra Sana ASBL — 53/3, 1200 Woluwe-Saint-Lambert, Bruxelles — Terrasana@outlook.be"]
+        ]
+    },
+    en: {
+        title: "Privacy policy", date: "Last updated: 2025",
+        sections: [
+            ["1. Data collection", "Terra Sana ASBL only collects the personal data you voluntarily provide via the contact form (name, email, message). This data is used solely to respond to your requests."],
+            ["2. Use of data", "Your data is never sold, shared or transferred to third parties. It is stored securely in our database and used only for the association's internal management."],
+            ["3. Your rights", "In accordance with the GDPR, you have the right to access, rectify and delete your data. To exercise these rights, contact us at: Terrasana@outlook.be"],
+            ["4. Contact", "Terra Sana ASBL — 53/3, 1200 Woluwe-Saint-Lambert, Brussels — Terrasana@outlook.be"]
+        ]
+    },
+    nl: {
+        title: "Privacybeleid", date: "Laatst bijgewerkt: 2025",
+        sections: [
+            ["1. Gegevensverzameling", "Terra Sana ASBL verzamelt enkel de persoonsgegevens die u vrijwillig verstrekt via het contactformulier (naam, e-mail, bericht). Deze gegevens worden uitsluitend gebruikt om op uw verzoeken te reageren."],
+            ["2. Gebruik van gegevens", "Uw gegevens worden nooit verkocht, gedeeld of doorgegeven aan derden. Ze worden veilig bewaard in onze database en enkel gebruikt voor het intern beheer van de vereniging."],
+            ["3. Uw rechten", "In overeenstemming met de AVG heeft u recht op inzage, rectificatie en verwijdering van uw gegevens. Om deze rechten uit te oefenen, contacteer ons via: Terrasana@outlook.be"],
+            ["4. Contact", "Terra Sana ASBL — 53/3, 1200 Sint-Lambrechts-Woluwe, Brussel — Terrasana@outlook.be"]
+        ]
+    }
+};
+
+function Confidentialite({ lang }) {
+    const t = T[lang] || T.fr;
     return (
         <div style={styles.container}>
-            <h1 style={styles.title}>Politique de confidentialite</h1>
-            <p style={styles.date}>Derniere mise a jour : 2025</p>
-            <div style={styles.section}>
-                <h2 style={styles.h2}>1. Collecte des donnees</h2>
-                <p style={styles.p}>Terra Sana ASBL collecte uniquement les donnees personnelles que vous nous fournissez volontairement via le formulaire de contact (nom, email, message). Ces donnees sont utilisees uniquement pour repondre a vos demandes.</p>
-            </div>
-            <div style={styles.section}>
-                <h2 style={styles.h2}>2. Utilisation des donnees</h2>
-                <p style={styles.p}>Vos donnees ne sont jamais vendues, partagees ou transmises a des tiers. Elles sont conservees de maniere securisee dans notre base de donnees et utilisees uniquement pour la gestion interne de association.</p>
-            </div>
-            <div style={styles.section}>
-                <h2 style={styles.h2}>3. Vos droits</h2>
-                <p style={styles.p}>Conformement au RGPD, vous disposez d un droit d acces, de rectification et de suppression de vos donnees. Pour exercer ces droits, contactez-nous a : Terrasana@outlook.be</p>
-            </div>
-            <div style={styles.section}>
-                <h2 style={styles.h2}>4. Contact</h2>
-                <p style={styles.p}>Terra Sana ASBL � 53/3, 1200 Woluwe-Saint-Lambert, Bruxelles � Terrasana@outlook.be</p>
-            </div>
+            <h1 style={styles.title}>{t.title}</h1>
+            <p style={styles.date}>{t.date}</p>
+            {t.sections.map(([h2, p], i) => (
+                <div key={i} style={styles.section}>
+                    <h2 style={styles.h2}>{h2}</h2>
+                    <p style={styles.p}>{p}</p>
+                </div>
+            ))}
         </div>
     );
 }

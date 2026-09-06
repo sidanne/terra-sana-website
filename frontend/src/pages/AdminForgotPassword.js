@@ -3,7 +3,14 @@ import { Link } from "react-router-dom";
 
 const GREEN = "#2D6A4F";
 
-function AdminForgotPassword() {
+const T = {
+    fr: { quote: "Un accès sécurisé, même pour l'administration.", quoteAuthor: "— Espace administrateur", title: "Mot de passe oublié", sub: "Entrez votre nom d'utilisateur pour recevoir un lien de réinitialisation", success: "Si ce compte existe, un lien de réinitialisation valable 30 minutes vient d'être envoyé.", username: "Nom d'utilisateur", usernamePh: "admin", sending: "Envoi...", send: "Envoyer le lien", back: "← Retour à la connexion" },
+    en: { quote: "Secure access, even for administration.", quoteAuthor: "— Admin area", title: "Forgot password", sub: "Enter your username to receive a reset link", success: "If this account exists, a reset link valid for 30 minutes has just been sent.", username: "Username", usernamePh: "admin", sending: "Sending...", send: "Send link", back: "← Back to login" },
+    nl: { quote: "Veilige toegang, ook voor administratie.", quoteAuthor: "— Adminomgeving", title: "Wachtwoord vergeten", sub: "Voer uw gebruikersnaam in om een resetlink te ontvangen", success: "Als dit account bestaat, is er zonet een resetlink verzonden die 30 minuten geldig is.", username: "Gebruikersnaam", usernamePh: "admin", sending: "Verzenden...", send: "Link verzenden", back: "← Terug naar inloggen" }
+};
+
+function AdminForgotPassword({ lang }) {
+    const t = T[lang] || T.fr;
     const [username, setUsername] = useState("");
     const [sent, setSent] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -26,8 +33,8 @@ function AdminForgotPassword() {
             <div style={s.imagePanel}>
                 <div style={s.imageOverlay}>
                     <div style={s.quoteMark}>"</div>
-                    <p style={s.quote}>Un accès sécurisé, même pour l'administration.</p>
-                    <div style={s.quoteAuthor}>— Espace administrateur</div>
+                    <p style={s.quote}>{t.quote}</p>
+                    <div style={s.quoteAuthor}>{t.quoteAuthor}</div>
                 </div>
             </div>
 
@@ -37,29 +44,29 @@ function AdminForgotPassword() {
                         <div style={{ ...s.logoIcon, background: GREEN }}>TS</div>
                         <span style={s.logoText}>Terra<span style={{ color: GREEN }}>Sana</span></span>
                     </div>
-                    <h1 style={s.title}>Mot de passe oublié</h1>
-                    <p style={s.sub}>Entrez votre nom d'utilisateur pour recevoir un lien de réinitialisation</p>
+                    <h1 style={s.title}>{t.title}</h1>
+                    <p style={s.sub}>{t.sub}</p>
 
                     {sent ? (
                         <div style={s.success}>
-                            Si ce compte existe, un lien de réinitialisation valable 30 minutes vient d'être envoyé.
+                            {t.success}
                         </div>
                     ) : (
                         <form onSubmit={handleSubmit} style={s.form}>
                             <div style={s.row}>
-                                <label style={s.label}>Nom d'utilisateur</label>
+                                <label style={s.label}>{t.username}</label>
                                 <input value={username} onChange={e => setUsername(e.target.value)}
-                                    autoComplete="username" style={s.input} placeholder="admin" required />
+                                    autoComplete="username" style={s.input} placeholder={t.usernamePh} required />
                             </div>
                             <button type="submit" style={{ ...s.btn, background: GREEN }} disabled={loading}>
-                                {loading ? "Envoi..." : "Envoyer le lien"}
+                                {loading ? t.sending : t.send}
                             </button>
                         </form>
                     )}
 
                     <p style={s.link}>
                         <Link to="/login" style={{ color: GREEN, fontWeight: "600" }}>
-                            ← Retour à la connexion
+                            {t.back}
                         </Link>
                     </p>
                 </div>

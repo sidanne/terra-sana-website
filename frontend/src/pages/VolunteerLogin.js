@@ -5,7 +5,14 @@ import { volunteerLogin } from "../services/volunteerApi";
 const GREEN = "#2D6A4F";
 const GOLD = "#D4A017";
 
-function VolunteerLogin() {
+const T = {
+    fr: { quote: "Ensemble, cultivons un impact durable pour notre communauté.", quoteAuthor: "— L'équipe Terra Sana", title: "Espace Bénévole", sub: "Connectez-vous pour accéder à vos événements", email: "Email", emailPh: "votre@email.com", password: "Mot de passe", passwordPh: "Votre mot de passe", loading: "Connexion...", submit: "Se connecter", forgot: "Mot de passe oublié ?", noAccount: "Pas encore de compte ?", createAccount: "Créer un compte", genericError: "Email ou mot de passe incorrect.", serverError: "Impossible de contacter le serveur. Vérifiez que le backend est lancé." },
+    en: { quote: "Together, let's grow a lasting impact for our community.", quoteAuthor: "— The Terra Sana team", title: "Volunteer Area", sub: "Log in to access your events", email: "Email", emailPh: "your@email.com", password: "Password", passwordPh: "Your password", loading: "Logging in...", submit: "Log in", forgot: "Forgot your password?", noAccount: "No account yet?", createAccount: "Create an account", genericError: "Incorrect email or password.", serverError: "Could not contact the server. Check that the backend is running." },
+    nl: { quote: "Samen bouwen we aan een blijvende impact voor onze gemeenschap.", quoteAuthor: "— Het Terra Sana-team", title: "Vrijwilligersruimte", sub: "Log in om toegang te krijgen tot uw evenementen", email: "E-mail", emailPh: "uw@email.com", password: "Wachtwoord", passwordPh: "Uw wachtwoord", loading: "Bezig met inloggen...", submit: "Inloggen", forgot: "Wachtwoord vergeten?", noAccount: "Nog geen account?", createAccount: "Account aanmaken", genericError: "Onjuist e-mailadres of wachtwoord.", serverError: "Kan geen verbinding maken met de server. Controleer of de backend actief is." }
+};
+
+function VolunteerLogin({ lang }) {
+    const t = T[lang] || T.fr;
     const [form, setForm] = useState({ email: "", password: "" });
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
@@ -18,7 +25,7 @@ function VolunteerLogin() {
         try {
             const data = await volunteerLogin(form.email, form.password);
             if (!data.token) {
-                setError(data.message || "Email ou mot de passe incorrect.");
+                setError(data.message || t.genericError);
                 setLoading(false);
                 return;
             }
@@ -26,7 +33,7 @@ function VolunteerLogin() {
             localStorage.setItem("volunteerToken", data.token);
             navigate("/volunteer/dashboard");
         } catch {
-            setError("Impossible de contacter le serveur. Vérifiez que le backend est lancé.");
+            setError(t.serverError);
         }
         setLoading(false);
     };
@@ -36,8 +43,8 @@ function VolunteerLogin() {
             <div className="split-panel-image" style={s.imagePanel}>
                 <div style={s.imageOverlay}>
                     <div style={s.quoteMark}>"</div>
-                    <p style={s.quote}>Ensemble, cultivons un impact durable pour notre communauté.</p>
-                    <div style={s.quoteAuthor}>— L'équipe Terra Sana</div>
+                    <p style={s.quote}>{t.quote}</p>
+                    <div style={s.quoteAuthor}>{t.quoteAuthor}</div>
                 </div>
             </div>
 
@@ -47,39 +54,39 @@ function VolunteerLogin() {
                         <div style={{ ...s.logoIcon, background: GREEN }}>TS</div>
                         <span style={s.logoText}>Terra<span style={{ color: GREEN }}>Sana</span></span>
                     </div>
-                    <h1 style={s.title}>Espace Bénévole</h1>
-                    <p style={s.sub}>Connectez-vous pour accéder à vos événements</p>
+                    <h1 style={s.title}>{t.title}</h1>
+                    <p style={s.sub}>{t.sub}</p>
 
                     {error && <div style={s.error}>{error}</div>}
 
                     <form onSubmit={handleSubmit} style={s.form}>
                         <div style={s.row}>
-                            <label style={s.label}>Email</label>
+                            <label style={s.label}>{t.email}</label>
                             <input type="email" name="email" autoComplete="username" value={form.email}
                                 onChange={e => setForm({ ...form, email: e.target.value })}
-                                style={s.input} placeholder="votre@email.com" required />
+                                style={s.input} placeholder={t.emailPh} required />
                         </div>
                         <div style={s.row}>
-                            <label style={s.label}>Mot de passe</label>
+                            <label style={s.label}>{t.password}</label>
                             <input type="password" name="password" autoComplete="current-password" value={form.password}
                                 onChange={e => setForm({ ...form, password: e.target.value })}
-                                style={s.input} placeholder="Votre mot de passe" required />
+                                style={s.input} placeholder={t.passwordPh} required />
                         </div>
                         <button type="submit" style={{ ...s.btn, background: GREEN }} disabled={loading}>
-                            {loading ? "Connexion..." : "Se connecter"}
+                            {loading ? t.loading : t.submit}
                         </button>
                     </form>
 
                     <p style={{ ...s.link, marginTop: "14px" }}>
                         <Link to="/volunteer/forgot-password" style={{ color: GOLD, fontWeight: "600" }}>
-                            Mot de passe oublié ?
+                            {t.forgot}
                         </Link>
                     </p>
 
                     <p style={s.link}>
-                        Pas encore de compte ?{" "}
+                        {t.noAccount}{" "}
                         <Link to="/volunteer/register" style={{ color: GREEN, fontWeight: "600" }}>
-                            Créer un compte
+                            {t.createAccount}
                         </Link>
                     </p>
                 </div>
