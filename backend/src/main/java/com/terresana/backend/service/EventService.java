@@ -53,6 +53,8 @@ public class EventService {
     }
 
     public Event create(Event event, Admin creator) {
+        event.setTitle(event.getTitle().trim());
+        checkNoDuplicate(event.getTitle(), event.getEventDate(), null);
         event.setStatus(EventStatus.OPEN);
         event.setAdmin(creator);
         // Si l'admin n'a pas fourni d'image, on en choisit une automatiquement selon le sujet de l'événement
@@ -64,7 +66,9 @@ public class EventService {
 
     public Event update(Long id, Event updated) {
         Event event = findById(id);
-        event.setTitle(updated.getTitle());
+        String newTitle = updated.getTitle().trim();
+        checkNoDuplicate(newTitle, updated.getEventDate(), id);
+        event.setTitle(newTitle);
         event.setDescription(updated.getDescription());
         event.setEventDate(updated.getEventDate());
         event.setLocation(updated.getLocation());
@@ -74,6 +78,17 @@ public class EventService {
             event.setImageUrl(eventImageService.pickImageFor(event.getTitle(), event.getDescription()));
         }
         return attachAvailablePlaces(eventRepo.save(event));
+    }
+
+    // Empêche de créer/renommer un événement vers un titre + une date strictement identiques à un
+    // événement déjà existant (quasi certainement une erreur de saisie plutôt qu'un choix voulu) ;
+    // excludeId ignore l'événement lui-même lors d'une mise à jour qui ne change ni titre ni date.
+    private void checkNoDuplicate(String title, LocalDateTime eventDate, Long excludeId) {
+        boolean duplicate = eventRepo.findByTitleIgnoreCaseAndEventDate(title, eventDate).stream()
+                .anyMatch(e -> !e.getId().equals(excludeId));
+        if (duplicate) {
+            throw new RuntimeException("Un événement avec ce titre existe déjà à cette date.");
+        }
     }
 
     // Places encore libres = maxPlaces - inscriptions CONFIRMED, jamais négatif (ex: si complet exactement).
