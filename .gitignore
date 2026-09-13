@@ -34,3 +34,10 @@ build/
 
 ### Secrets (jamais commités — voir application.properties.example) ###
 backend/src/main/resources/application.properties
+
+### Logs runtime ###
+backend/*.log
+backend/*.log.*.gz
+
+### Config locale de l'outil Claude Code (pas du projet) ###
+.claude/
