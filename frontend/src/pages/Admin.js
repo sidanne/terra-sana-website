@@ -330,6 +330,9 @@ function Admin({ lang }) {
     };
     const participationRate = allRegistrations.length > 0
         ? Math.round((statusCounts.CONFIRMED / allRegistrations.length) * 100) : 0;
+    // Libellé traduit d'un statut d'inscription (le badge affichait jusqu'ici la valeur brute WAITING/CONFIRMED/REFUSED,
+    // jamais traduite, contrairement au reste de l'interface autour de lui)
+    const statusLabel = { WAITING: t.waitingLabel, CONFIRMED: t.confirmedLabel, REFUSED: t.refusedLabel };
 
     // Liste des bénévoles filtrée par compétence / disponibilité / langue (recherche insensible à la casse)
     const filteredVolunteers = volunteers.filter(v => {
@@ -906,7 +909,7 @@ function Admin({ lang }) {
                                             </td>
                                             <td style={styles.dashTd}>{r.event?.title}</td>
                                             <td style={styles.dashTd}>
-                                                <span style={{ ...styles.toggleBtn, background: stStyle.bg, color: stStyle.c }}>{r.status}</span>
+                                                <span style={{ ...styles.toggleBtn, background: stStyle.bg, color: stStyle.c }}>{statusLabel[r.status] || r.status}</span>
                                             </td>
                                             <td style={styles.dashTd}>
                                                 {r.status === "WAITING" && (
@@ -1400,7 +1403,7 @@ function Admin({ lang }) {
                                     <div>
                                         <div style={{fontWeight:"600", fontSize:"14px"}}>{r.user?.firstName} {r.user?.lastName}</div>
                                         <div style={{fontSize:"12px", color:"#888"}}>{r.user?.email}</div>
-                                        <span style={{...styles.toggleBtn, background:stStyle.bg, color:stStyle.c, fontSize:"11px", marginTop:"4px", display:"inline-block"}}>{r.status}</span>
+                                        <span style={{...styles.toggleBtn, background:stStyle.bg, color:stStyle.c, fontSize:"11px", marginTop:"4px", display:"inline-block"}}>{statusLabel[r.status] || r.status}</span>
                                     </div>
                                     {r.status === "WAITING" && (
                                         <div style={styles.cardBtns}>
