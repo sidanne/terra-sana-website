@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Secrets (jamais commités — voir application.properties.example) ###
+backend/src/main/resources/application.properties
