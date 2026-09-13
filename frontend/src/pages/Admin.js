@@ -648,9 +648,9 @@ function Admin({ lang }) {
 
     const mainTabs = [
         { id: "dashboard", label: t.tabDashboard, icon: "📊" },
-        { id: "evenements", label: t.tabEvents, count: events.length, badge: statusCounts.WAITING, icon: "📅" },
+        { id: "evenements", label: t.tabEvents, count: events.length, icon: "📅" },
         { id: "benevoles", label: t.tabVolunteers, count: volunteers.length, icon: "👤" },
-        { id: "inscriptions", label: t.tabRegistrations, count: allRegistrations.length, icon: "☰" },
+        { id: "inscriptions", label: t.tabRegistrations, count: allRegistrations.length, badge: statusCounts.WAITING, icon: "☰" },
         { id: "avis", label: t.tabReviews, icon: "☆" }
     ];
     const reportTabs = [
