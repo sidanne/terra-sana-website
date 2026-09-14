@@ -218,10 +218,11 @@ const backPage = [
   new Paragraph({ spacing: { before: 0, after: 700 }, alignment: AlignmentType.CENTER,
     children: [new ImageRun({ data: fs.readFileSync(SCR_DIR + 'logo_terrasana.png'), transformation: { width: 300, height: 139 }, type: "png" })],
   }),
-  new Paragraph({ spacing: { before: 0, after: 40 }, alignment: AlignmentType.CENTER,
+  new Paragraph({ spacing: { before: 0, after: 260 }, alignment: AlignmentType.CENTER,
     children: [new TextRun({ text: "TERRA SANA ASBL", bold: true, size: 22, color: GREEN, font: FONT, characterSpacing: 20 })] }),
-  new Paragraph({ spacing: { before: 0, after: 40 }, alignment: AlignmentType.CENTER,
-    children: [new TextRun({ text: "EAFC UCCLE", bold: true, size: 22, color: GREEN_DARK, font: FONT, characterSpacing: 20 })] }),
+  new Paragraph({ spacing: { before: 0, after: 0 }, alignment: AlignmentType.CENTER,
+    children: [new ImageRun({ data: fs.readFileSync(SCR_DIR + 'smiley.png'), transformation: { width: 70, height: 70 }, type: "png" })],
+  }),
 ];
 
 // ── Remerciements ────────────────────────────────────────────────────────
