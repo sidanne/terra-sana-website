@@ -41,3 +41,6 @@ backend/*.log.*.gz
 
 ### Config locale de l'outil Claude Code (pas du projet) ###
 .claude/
+
+### Sauvegardes ponctuelles contenant des données personnelles réelles ###
+backend/*_SAUVEGARDE.json

@@ -12,10 +12,10 @@ const persistance = [
   p([rt("Admin, Project, BlogPost et ContactMessage"), rt(" proviennent du site existant, livré durant le stage. "), rt("AppUser, Event, Registration et Review"), rt(" sont les quatre entités créées spécifiquement pour ce TFE. Trois énumérations (EventStatus, Level, RegistrationStatus) typent les attributs à valeurs fermées et sont reliées par une dépendance en trait pointillé aux classes qui les utilisent.")]),
   ...imgPara(SCR + "diagramme_classes.png", 580, 674, "Figure 2 — Diagramme de classes du module bénévoles et événements"),
 
-  p("Les neuf associations du diagramme se lisent comme suit : un Admin gère plusieurs Project, publie plusieurs BlogPost, reçoit plusieurs ContactMessage et crée plusieurs Event (relations 1 — 0..*) ; un Admin valide 0 ou plusieurs Registration (relation 0..1 — 0..* côté Registration, puisqu'une inscription n'a pas encore d'administrateur validateur tant qu'elle est en attente) ; un AppUser rédige plusieurs Review et effectue plusieurs Registration ; enfin, un Event accueille plusieurs Registration et concerne plusieurs Review."),
+  p("Les neuf associations du diagramme se lisent comme suit : un Admin gère plusieurs Project, publie plusieurs BlogPost, reçoit plusieurs ContactMessage et crée plusieurs Event (multiplicités 1 et 0..*) ; un Admin valide 0 ou plusieurs Registration (multiplicités 0..1 et 0..* côté Registration, puisqu'une inscription n'a pas encore d'administrateur validateur tant qu'elle est en attente) ; un AppUser rédige plusieurs Review et effectue plusieurs Registration ; enfin, un Event accueille plusieurs Registration et concerne plusieurs Review."),
 
   h3("2.2.2. Dictionnaire de données"),
-  p("Le dictionnaire ci-dessous reprend l'ensemble des tables de la base MySQL terresana, à la fois celles héritées du stage et les quatre nouvelles tables créées pour le module TFE. Conformément aux consignes, il précise, pour chaque champ, le type SQL, les contraintes et le rôle métier — sans mentionner les clés étrangères, déjà exprimées par les associations nommées du diagramme de classes (section 2.2.1) ; elles ne réapparaissent qu'au niveau du schéma physique (section 2.2.3), seul niveau où la clé étrangère est une réalité technique et non plus une redondance."),
+  p("Le dictionnaire ci-dessous reprend l'ensemble des tables de la base MySQL terre_sana, à la fois celles héritées du stage et les quatre nouvelles tables créées pour le module TFE. Conformément aux consignes, il précise, pour chaque champ, le type SQL, les contraintes et le rôle métier, sans mentionner les clés étrangères, déjà exprimées par les associations nommées du diagramme de classes (section 2.2.1) ; elles ne réapparaissent qu'au niveau du schéma physique (section 2.2.3), seul niveau où la clé étrangère est une réalité technique et non plus une redondance."),
 
   p([rt("Tables héritées du stage", { bold: true, color: M.GREEN })]),
 
@@ -40,7 +40,7 @@ const persistance = [
   caption("Table contact_message — messages du formulaire de contact"),
 
   p([rt("Nouvelles tables du module TFE", { bold: true, color: M.GREEN })]),
-  p("app_users porte l'ensemble du profil bénévole. Seuls quatre champs sont obligatoires (nom, prénom, email, mot de passe) ; tous les autres — téléphone, ville, compétences, disponibilités — restent facultatifs, conformément au principe de minimisation des données appliqué sur le formulaire d'inscription (section 3.4.2). Le champ level est dénormalisé à dessein : plutôt que de recalculer le niveau à chaque affichage à partir de l'historique complet des inscriptions, il est stocké et mis à jour explicitement par updateLevel() (section 3.3.3), ce qui évite de recompter les participations confirmées à chaque chargement du profil."),
+  p("app_users porte l'ensemble du profil bénévole. Seuls quatre champs sont obligatoires (nom, prénom, email, mot de passe) ; tous les autres (téléphone, ville, compétences, disponibilités) restent facultatifs, conformément au principe de minimisation des données appliqué sur le formulaire d'inscription (section 3.4.2). Le champ level est dénormalisé à dessein : plutôt que de recalculer le niveau à chaque affichage à partir de l'historique complet des inscriptions, il est stocké et mis à jour explicitement par updateLevel() (section 3.3.3), ce qui évite de recompter les participations confirmées à chaque chargement du profil."),
 
   table(["Champ", "Type SQL", "Contrainte", "Description"],
     [
@@ -61,7 +61,7 @@ const persistance = [
     [1900, 1650, 2100, 3600]),
   caption("Table app_users — bénévoles"),
 
-  p("events porte les données propres à chaque activité organisée par Terra Sana, ainsi qu'une référence vers l'administrateur qui l'a créée — utile dès lors que Terra Sana envisagerait, à l'avenir, plusieurs comptes administrateurs (section 4.4). Le champ status n'est pas laissé au libre choix de l'administrateur : seule la valeur CANCELLED lui est réellement ouverte, OPEN/FULL/FINISHED étant recalculés par EventService selon le remplissage et la date (RG-06)."),
+  p("events porte les données propres à chaque activité organisée par Terra Sana, ainsi qu'une référence vers l'administrateur qui l'a créée, utile dès lors que Terra Sana envisagerait, à l'avenir, plusieurs comptes administrateurs (section 4.4). Le champ status n'est pas laissé au libre choix de l'administrateur : seule la valeur CANCELLED lui est réellement ouverte, OPEN/FULL/FINISHED étant recalculés par EventService selon le remplissage et la date (RG-06)."),
 
   table(["Champ", "Type SQL", "Contrainte", "Description"],
     [
@@ -91,7 +91,7 @@ const persistance = [
     [1900, 1650, 2100, 3600]),
   caption("Table registrations — inscriptions et liste d'attente"),
 
-  p("reviews associe, comme registrations, un bénévole (RG-15) et un événement, avec la même contrainte d'unicité, mais répond à un besoin différent : elle ne trace pas une participation, mais un avis, et n'existe que pour les événements réellement terminés. La contrainte CHECK sur rating traduit directement RG-18 au niveau base de données, en complément — et non à la place — de la validation déjà effectuée côté frontend et côté service. La note moyenne affichée sur le tableau de bord (section 3.4.6) n'est, comme les places disponibles d'un événement, jamais stockée : elle est recalculée à chaque consultation à partir de l'ensemble des avis de l'événement — reviews.stream().mapToInt(Review::getRating).average() — plutôt que maintenue comme un total glissant qui risquerait de se désynchroniser des avis réellement en base."),
+  p("reviews associe, comme registrations, un bénévole (RG-15) et un événement, avec la même contrainte d'unicité, mais répond à un besoin différent : elle ne trace pas une participation, mais un avis, et n'existe que pour les événements réellement terminés. La contrainte CHECK sur rating traduit directement RG-18 au niveau base de données, en complément de la validation déjà effectuée côté frontend et côté service (et non à sa place). La note moyenne affichée sur le tableau de bord (section 3.4.6) n'est, comme les places disponibles d'un événement, jamais stockée : elle est recalculée à chaque consultation à partir de l'ensemble des avis de l'événement (reviews.stream().mapToInt(Review::getRating).average()), plutôt que maintenue comme un total glissant qui risquerait de se désynchroniser des avis réellement en base."),
 
   table(["Champ", "Type SQL", "Contrainte", "Description"],
     [
@@ -105,7 +105,7 @@ const persistance = [
   caption("Table reviews — retours post-événement"),
 
   h3("2.2.3. Schéma physique de la base de données"),
-  p("Le schéma physique découle directement du diagramme de classes et du dictionnaire de données ci-dessus : chaque entité devient une table, chaque association devient une clé étrangère avec une contrainte référentielle. La base respecte les règles de normalisation (3NF). Le script SQL complet (création des huit tables, contraintes et index) est reproduit intégralement en Annexe A ; un extrait représentatif — la création des tables events et registrations, qui concentrent l'essentiel des règles de gestion — est présenté ci-dessous."),
+  p("Le schéma physique découle directement du diagramme de classes et du dictionnaire de données ci-dessus : chaque entité devient une table, chaque association devient une clé étrangère avec une contrainte référentielle. La base respecte les règles de normalisation (3NF). Le script SQL complet (création des huit tables, contraintes et index) est reproduit intégralement en Annexe A ; un extrait représentatif, la création des tables events et registrations qui concentrent l'essentiel des règles de gestion, est présenté ci-dessous."),
   codeBlock([
     "CREATE TABLE events (",
     "  id BIGINT AUTO_INCREMENT PRIMARY KEY,",
@@ -129,11 +129,11 @@ const persistance = [
     ");",
   ]),
 
-  p("La normalisation en troisième forme normale se vérifie concrètement sur chaque table : aucun champ n'est une donnée calculable à partir d'autres champs de la même ligne (le nombre de places disponibles d'un événement, par exemple, n'est jamais stocké — il est recalculé à la demande à partir du décompte des inscriptions CONFIRMED, évitant tout risque d'incohérence entre une valeur stockée et la réalité des inscriptions), et chaque attribut non-clé dépend de la clé primaire entière plutôt que d'une partie de celle-ci. La contrainte UNIQUE(user_id, event_id) sur registrations et reviews illustre ce même souci : plutôt que de vérifier applicativement qu'un bénévole ne s'inscrit pas deux fois (RG-09) ou n'avise pas deux fois (RG-17), la contrainte est portée par la base elle-même, qui rejette toute tentative d'insertion en doublon indépendamment du code applicatif qui l'a produite."),
-  p("Deux stratégies de suppression en cascade sont appliquées de façon différenciée : ON DELETE CASCADE sur les clés étrangères vers app_users et events (la suppression d'un bénévole ou d'un événement entraîne logiquement celle de ses inscriptions et avis), mais aucune suppression en cascade n'est définie vers admin, précisément parce que RG-03 impose qu'un compte bénévole soit désactivé plutôt que supprimé — la cascade ne s'applique donc en pratique jamais dans ce sens pour les données de bénévoles actifs."),
+  p("La normalisation en troisième forme normale se vérifie concrètement sur chaque table : aucun champ n'est une donnée calculable à partir d'autres champs de la même ligne (le nombre de places disponibles d'un événement, par exemple, n'est jamais stocké : il est recalculé à la demande à partir du décompte des inscriptions CONFIRMED, évitant tout risque d'incohérence entre une valeur stockée et la réalité des inscriptions), et chaque attribut non-clé dépend de la clé primaire entière plutôt que d'une partie de celle-ci. La contrainte UNIQUE(user_id, event_id) sur registrations et reviews illustre ce même souci : plutôt que de vérifier applicativement qu'un bénévole ne s'inscrit pas deux fois (RG-09) ou n'avise pas deux fois (RG-17), la contrainte est portée par la base elle-même, qui rejette toute tentative d'insertion en doublon indépendamment du code applicatif qui l'a produite."),
+  p("Deux stratégies de suppression en cascade sont appliquées de façon différenciée : ON DELETE CASCADE sur les clés étrangères vers app_users et events (la suppression d'un bénévole ou d'un événement entraîne logiquement celle de ses inscriptions et avis), mais aucune suppression en cascade n'est définie vers admin, précisément parce que RG-03 impose qu'un compte bénévole soit désactivé plutôt que supprimé : la cascade ne s'applique donc en pratique jamais dans ce sens pour les données de bénévoles actifs."),
 
   h2("2.3. Autres diagrammes UML"),
-  p("Cette section ajoute deux diagrammes d'état UML, chacun modélisant le cycle de vie complet d'une entité du module à travers ses transitions possibles — le pendant dynamique du diagramme de classes, qui ne décrit que la structure statique. Chaque diagramme est accompagné d'un tableau détaillant, transition par transition, la règle de gestion qui la déclenche."),
+  p("Cette section ajoute deux diagrammes d'état UML, chacun modélisant le cycle de vie complet d'une entité du module à travers ses transitions possibles : le pendant dynamique du diagramme de classes, qui ne décrit que la structure statique. Chaque diagramme est accompagné d'un tableau détaillant, transition par transition, la règle de gestion qui la déclenche."),
   p("Le premier retrace le cycle de vie d'une inscription (Registration), directement gouverné par les règles RG-09 à RG-13 : toute inscription naît WAITING, qu'il y ait ou non une place disponible, puis évolue vers CONFIRMED ou REFUSED sur décision explicite de l'administrateur. Une désinscription confirmée déclenche la promotion automatique du premier bénévole en liste d'attente ; le pseudo-état final (cercle plein cerclé) représente la suppression de la ligne d'inscription elle-même, qu'elle intervienne depuis WAITING (désinscription libre) ou depuis CONFIRMED (désinscription avec promotion du suivant)."),
   ...imgPara(SCR + "diagramme_etat_registration.png", 560, 379, "Figure 3 — Diagramme d'état : cycle de vie d'une inscription (Registration)"),
 
@@ -162,15 +162,15 @@ const persistance = [
     "    return registrationRepo.save(reg);",
     "}",
   ]),
-  p("Ce recomptage au moment de l'action, plutôt qu'une simple lecture d'un compteur potentiellement obsolète, évite un cas limite réel : si l'administrateur laisse deux onglets de son tableau de bord ouverts et confirme depuis chacun une inscription en attente pour le dernier créneau disponible, seule la première confirmation réussit — la seconde échoue proprement avec un message explicite plutôt que de dépasser silencieusement la capacité de l'événement. La désinscription applique une distinction symétrique : quitter la liste d'attente ne libère aucune place, seule l'annulation d'une inscription CONFIRMED déclenche la recherche d'un remplaçant (RG-13)."),
+  p("Ce recomptage au moment de l'action, plutôt qu'une simple lecture d'un compteur potentiellement obsolète, évite un cas limite réel : si l'administrateur laisse deux onglets de son tableau de bord ouverts et confirme depuis chacun une inscription en attente pour le dernier créneau disponible, seule la première confirmation réussit : la seconde échoue proprement avec un message explicite plutôt que de dépasser silencieusement la capacité de l'événement. La désinscription applique une distinction symétrique : quitter la liste d'attente ne libère aucune place, seule l'annulation d'une inscription CONFIRMED déclenche la recherche d'un remplaçant (RG-13)."),
 
-  p("Le second diagramme retrace le cycle de vie d'un événement (Event), qui suit une logique différente de celle d'une inscription : OPEN et FULL sont réversibles l'un vers l'autre selon le remplissage réel (checkAndMarkFull / checkAndMarkOpen, section 3.2.3), tandis que FINISHED et CANCELLED sont tous deux définitifs — le premier atteint automatiquement par la tâche planifiée dès que la date est dépassée, le second uniquement sur décision explicite de l'administrateur, à tout moment de la vie de l'événement."),
+  p("Le second diagramme retrace le cycle de vie d'un événement (Event), qui suit une logique différente de celle d'une inscription : OPEN et FULL sont réversibles l'un vers l'autre selon le remplissage réel (checkAndMarkFull / checkAndMarkOpen, section 3.2.3), tandis que FINISHED et CANCELLED sont tous deux définitifs : le premier atteint automatiquement par la tâche planifiée dès que la date est dépassée, le second uniquement sur décision explicite de l'administrateur, à tout moment de la vie de l'événement."),
   ...imgPara(SCR + "diagramme_etat_event.png", 560, 408, "Figure 4 — Diagramme d'état : cycle de vie d'un événement (Event)"),
 
   table(["État", "Condition", "Règle de gestion"], [
     ["OPEN", "Statut par défaut à la création, tant que des places restent disponibles", "RG-06"],
     ["FULL", "Le nombre d'inscriptions CONFIRMED atteint maxPlaces", "RG-06"],
-    ["FINISHED", "La date de l'événement (eventDate) est dépassée — bascule automatique par tâche planifiée (section 3.2.3)", "RG-06, RG-07"],
+    ["FINISHED", "La date de l'événement (eventDate) est dépassée, bascule automatique par tâche planifiée (section 3.2.3)", "RG-06, RG-07"],
     ["CANCELLED", "Uniquement sur décision explicite de l'administrateur, à tout moment", "RG-06"],
   ], [1400, 4750, 1900]),
   caption("Tableau 6 — Détail des transitions du cycle de vie d'un événement"),
@@ -178,7 +178,7 @@ const persistance = [
 
   p("En complément, les deux diagrammes de séquence ci-dessous détaillent, étape par étape, les interactions entre le frontend React, les contrôleurs Spring Boot et la base de données pour les deux scénarios les plus représentatifs du module : l'inscription à un événement, et la promotion automatique depuis la liste d'attente."),
 
-  h3("Scénario 1 — Inscription d'un bénévole à un événement"),
+  h3("Scénario 1 : Inscription d'un bénévole à un événement"),
   table(["Étape", "Acteur", "Action"], [
     ["1", "Bénévole", "Consulte la liste des événements et clique sur « S'inscrire » pour un événement donné"],
     ["2", "Frontend (React)", "Envoie POST /api/registrations/event/{id} avec le jeton JWT du bénévole dans l'en-tête Authorization"],
@@ -192,7 +192,7 @@ const persistance = [
   ], [900, 2500, 5650]),
   caption("Tableau 7 — Diagramme de séquence (détail des étapes) : inscription à un événement"),
 
-  h3("Scénario 2 — Promotion automatique depuis la liste d'attente"),
+  h3("Scénario 2 : Promotion automatique depuis la liste d'attente"),
   table(["Étape", "Acteur", "Action"], [
     ["1", "Administrateur", "Confirme la désinscription d'un bénévole déjà CONFIRMED pour un événement"],
     ["2", "Frontend (React)", "Envoie PUT /api/registrations/{id}/cancel avec le jeton JWT de l'administrateur"],

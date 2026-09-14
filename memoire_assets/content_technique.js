@@ -27,7 +27,7 @@ const technique = [
   p("La figure ci-dessous illustre cette pile technique par grande couche, chaque bloc étant coloré selon l'identité visuelle usuelle de la technologie qu'il représente."),
   ...imgPara(SCR + "tech_stack.png", 560, 319, "Figure 5 — Pile technique du module, par couche"),
 
-  p("Deux alternatives ont été écartées consciemment. Côté base de données, une solution NoSQL (MongoDB) aurait été envisageable pour sa flexibilité de schéma, mais les données du module (bénévoles, événements, inscriptions) sont fortement relationnelles — une inscription n'a de sens qu'accompagnée d'un bénévole ET d'un événement existants, avec une contrainte d'unicité stricte sur ce couple (RG-09) — ce que MySQL exprime nativement via des clés étrangères et une contrainte UNIQUE, là où une base documentaire demanderait de réimplémenter ces garanties manuellement dans le code applicatif. Côté backend, une pile Node.js/Express aurait permis de rester dans un unique langage avec le frontend React, mais Spring Boot a été préféré pour rester cohérent avec les technologies du cursus académique et démontrer une architecture typée de bout en bout, du contrôleur jusqu'à la colonne SQL."),
+  p("Deux alternatives ont été écartées consciemment. Côté base de données, une solution NoSQL (MongoDB) aurait été envisageable pour sa flexibilité de schéma, mais les données du module (bénévoles, événements, inscriptions) sont fortement relationnelles : une inscription n'a de sens qu'accompagnée d'un bénévole ET d'un événement existants, avec une contrainte d'unicité stricte sur ce couple (RG-09), ce que MySQL exprime nativement via des clés étrangères et une contrainte UNIQUE, là où une base documentaire demanderait de réimplémenter ces garanties manuellement dans le code applicatif. Côté backend, une pile Node.js/Express aurait permis de rester dans un unique langage avec le frontend React, mais Spring Boot a été préféré pour rester cohérent avec les technologies du cursus académique et démontrer une architecture typée de bout en bout, du contrôleur jusqu'à la colonne SQL."),
 
   p("Le choix de Spring Data JPA plutôt que du JDBC pur ou d'un query builder plus léger se justifie par le volume de requêtes dérivées qu'autorise le module (section 3.2.2) : la majorité des accès aux données du module TFE s'exprime par de simples signatures de méthode, sans SQL manuel, ce qui réduit le risque d'erreur de syntaxe et concentre l'effort de développement sur la logique métier plutôt que sur l'écriture répétitive de requêtes. jjwt a été préféré à une implémentation JWT maison pour la même raison qui justifie BCrypt plutôt qu'un hachage SHA fait main : la cryptographie appliquée ne se réinvente pas, elle s'appuie sur des bibliothèques éprouvées et maintenues. Enfin, iText7 a été retenu pour la génération de PDF plutôt que JasperReports, envisagé un temps : pour des documents au contenu simple (une attestation, une liste tabulaire), iText7 permet un contrôle direct et minimal du contenu généré, sans la couche de templates XML que JasperReports impose pour des rapports plus complexes que ceux réellement nécessaires ici."),
 
@@ -71,10 +71,10 @@ const technique = [
     "@JsonIgnore",
     "private String resetToken; // ni en entrée, ni en sortie : jamais exposé au client",
   ]),
-  p("Le mot de passe utilise WRITE_ONLY et non @JsonIgnore, car @JsonIgnore aurait aussi bloqué la désérialisation du champ envoyé par le formulaire d'inscription — le mot de passe doit rester acceptable en entrée tout en étant systématiquement omis des réponses JSON. Le jeton de réinitialisation, à l'inverse, n'a jamais besoin d'être envoyé par le client : @JsonIgnore l'exclut complètement, empêchant qu'il puisse fuiter dans une réponse API et permettre une prise de compte."),
+  p("Le mot de passe utilise WRITE_ONLY et non @JsonIgnore, car @JsonIgnore aurait aussi bloqué la désérialisation du champ envoyé par le formulaire d'inscription : le mot de passe doit rester acceptable en entrée tout en étant systématiquement omis des réponses JSON. Le jeton de réinitialisation, à l'inverse, n'a jamais besoin d'être envoyé par le client : @JsonIgnore l'exclut complètement, empêchant qu'il puisse fuiter dans une réponse API et permettre une prise de compte."),
 
   h3("3.2.2. Requêtes dérivées Spring Data JPA"),
-  p("Spring Data JPA permet de définir une requête simplement en nommant la méthode selon une convention précise, sans écrire la moindre ligne de SQL ou de JPQL — Spring génère l'implémentation à partir du nom lui-même. RegistrationRepository en est une illustration directe, chaque méthode correspondant à un besoin métier précis du module :"),
+  p("Spring Data JPA permet de définir une requête simplement en nommant la méthode selon une convention précise, sans écrire la moindre ligne de SQL ou de JPQL : Spring génère l'implémentation à partir du nom lui-même. RegistrationRepository en est une illustration directe, chaque méthode correspondant à un besoin métier précis du module :"),
   codeBlock([
     "public interface RegistrationRepository extends JpaRepository<Registration, Long> {",
     "",
@@ -88,10 +88,10 @@ const technique = [
     "    List<Registration> findByEventAndStatusOrderByCreatedAtAsc(Event event, RegistrationStatus status);",
     "}",
   ]),
-  p("Le nom findByEventAndStatusOrderByCreatedAtAsc se lit littéralement comme la règle qu'il implémente : trouver les inscriptions d'un événement (By Event), dont le statut correspond (And Status), triées par date de création croissante (OrderBy CreatedAt Asc) — c'est-à-dire exactement la liste d'attente dans l'ordre d'arrivée nécessaire à RG-13, sans qu'une seule ligne de logique de tri n'ait été écrite manuellement."),
+  p("Le nom findByEventAndStatusOrderByCreatedAtAsc se lit littéralement comme la règle qu'il implémente : trouver les inscriptions d'un événement (By Event), dont le statut correspond (And Status), triées par date de création croissante (OrderBy CreatedAt Asc), c'est-à-dire exactement la liste d'attente dans l'ordre d'arrivée nécessaire à RG-13, sans qu'une seule ligne de logique de tri n'ait été écrite manuellement."),
 
   h3("3.2.3. Intégrations externes et traitement planifié"),
-  p("Le module n'appelle aucune API externe à l'exécution : les photos associées aux événements (section 3.3.2) proviennent d'une table de correspondance fixe d'URL Unsplash déjà vérifiées, choisies localement par mots-clés, et non d'un appel réseau à un service tiers — un choix qui évite toute dépendance de disponibilité envers un service externe pour une fonctionnalité aussi secondaire qu'une image d'illustration. Le seul service externe réellement sollicité est le serveur SMTP de Gmail, pour l'envoi des e-mails (section 3.3.5)."),
+  p("Le module n'appelle aucune API externe à l'exécution : les photos associées aux événements (section 3.3.2) proviennent d'une table de correspondance fixe d'URL Unsplash déjà vérifiées, choisies localement par mots-clés, et non d'un appel réseau à un service tiers : un choix qui évite toute dépendance de disponibilité envers un service externe pour une fonctionnalité aussi secondaire qu'une image d'illustration. Le seul service externe réellement sollicité est le serveur SMTP de Gmail, pour l'envoi des e-mails (section 3.3.5)."),
   p("Le module comporte en revanche un traitement planifié : une tâche @Scheduled de Spring, exécutée automatiquement toutes les cinq minutes, fait basculer en FINISHED tout événement encore marqué OPEN ou FULL dont la date est désormais dépassée (RG-06). Sans ce mécanisme, un événement resté OPEN après son déroulement continuerait, par exemple, à accepter de nouvelles inscriptions ou à autoriser un avis prématuré, en contradiction avec RG-07 et RG-16."),
   codeBlock([
     "// Bascule automatiquement en FINISHED tout événement OPEN/FULL dont la date est",
@@ -107,7 +107,7 @@ const technique = [
     "    }",
     "}",
   ]),
-  p("Le choix d'un intervalle de cinq minutes, plutôt qu'un calcul à la demande à chaque affichage, tient à la sémantique même du statut FINISHED : contrairement au nombre de places disponibles (section 2.2.3), qui doit toujours refléter l'instant présent, le passage à FINISHED déclenche des effets de bord — ouverture du dépôt d'avis (RG-16), éligibilité à l'attestation (RG-21) — qu'il est plus sûr de matérialiser explicitement en base à intervalles réguliers plutôt que de recalculer silencieusement à chaque lecture."),
+  p("Le choix d'un intervalle de cinq minutes, plutôt qu'un calcul à la demande à chaque affichage, tient à la sémantique même du statut FINISHED : contrairement au nombre de places disponibles (section 2.2.3), qui doit toujours refléter l'instant présent, le passage à FINISHED déclenche des effets de bord (ouverture du dépôt d'avis RG-16, éligibilité à l'attestation RG-21) qu'il est plus sûr de matérialiser explicitement en base à intervalles réguliers plutôt que de recalculer silencieusement à chaque lecture."),
 
   h2("3.3. Fonctionnalités transversales notables"),
   p("Quatre mécanismes, moins visibles qu'un écran mais représentatifs des choix d'implémentation retenus, méritent d'être détaillés : la gestion centralisée des erreurs, l'attribution automatique d'une photo aux événements et projets, l'envoi asynchrone des e-mails, et l'architecture retenue pour l'interface multilingue."),
@@ -124,11 +124,11 @@ const technique = [
     "    }",
     "}",
   ]),
-  p("Ce choix centralise en un seul endroit une responsabilité qui, sans lui, devrait être dupliquée dans chaque contrôleur (bloc try/catch autour de chaque appel de service) — c'est ce mécanisme qui permet, par exemple, au frontend d'afficher directement le message « Un événement existe déjà le [date] à [lieu]. » renvoyé par EventService lorsqu'un doublon RG-08 est détecté, plutôt qu'un message d'erreur générique."),
+  p("Ce choix centralise en un seul endroit une responsabilité qui, sans lui, devrait être dupliquée dans chaque contrôleur (bloc try/catch autour de chaque appel de service). C'est ce mécanisme qui permet, par exemple, au frontend d'afficher directement le message « Un événement existe déjà le [date] à [lieu]. » renvoyé par EventService lorsqu'un doublon RG-08 est détecté, plutôt qu'un message d'erreur générique."),
 
   h3("3.3.2. Attribution automatique des photos (EventImageService)"),
-  p("L'administrateur de Terra Sana ne dispose généralement pas d'une URL d'image sous la main au moment de créer un événement ou un projet. Plutôt que d'afficher une image par défaut identique pour toutes les activités, EventImageService (et son équivalent ProjectImageService) recherche des mots-clés dans le titre et la description de l'événement, et associe la première catégorie thématique correspondante à une photo Unsplash déjà vérifiée — une quarantaine de catégories sont couvertes (cuisine, distribution alimentaire, sport, formation, nettoyage, marché bio, etc.)."),
-  p("Deux détails d'implémentation évitent les faux positifs les plus fréquents : le mot-clé « don » est volontairement exclu au profit de « dons »/« don alimentaire », car « don » est un sous-mot de l'adverbe très courant « donc » ; et « distribution » seul est trop générique (distribution de magazines n'a rien à voir avec de la nourriture), d'où la restriction à « distribution alimentaire ». Lorsqu'une catégorie propose plusieurs photos, la variante retenue est choisie de façon stable — pas aléatoire — via un hachage du texte complet, afin qu'un même événement affiche toujours la même image d'un rechargement à l'autre, tout en répartissant les événements d'une même catégorie sur plusieurs visuels différents :"),
+  p("L'administrateur de Terra Sana ne dispose généralement pas d'une URL d'image sous la main au moment de créer un événement ou un projet. Plutôt que d'afficher une image par défaut identique pour toutes les activités, EventImageService (et son équivalent ProjectImageService) recherche des mots-clés dans le titre et la description de l'événement, et associe la première catégorie thématique correspondante à une photo Unsplash déjà vérifiée. Une quarantaine de catégories sont couvertes (cuisine, distribution alimentaire, sport, formation, nettoyage, marché bio, etc.)."),
+  p("Deux détails d'implémentation évitent les faux positifs les plus fréquents : le mot-clé « don » est volontairement exclu au profit de « dons »/« don alimentaire », car « don » est un sous-mot de l'adverbe très courant « donc » ; et « distribution » seul est trop générique (distribution de magazines n'a rien à voir avec de la nourriture), d'où la restriction à « distribution alimentaire ». Lorsqu'une catégorie propose plusieurs photos, la variante retenue est choisie de façon stable, et non aléatoire, via un hachage du texte complet, afin qu'un même événement affiche toujours la même image d'un rechargement à l'autre, tout en répartissant les événements d'une même catégorie sur plusieurs visuels différents :"),
   codeBlock([
     "private String pickVariant(List<String> options, String rawText) {",
     "    if (options.size() == 1) return options.get(0);",
@@ -139,7 +139,7 @@ const technique = [
   p("Ce mécanisme reste une heuristique par mots-clés, et non une reconnaissance d'image : un champ URL manuel permet à l'administrateur de le remplacer pour tout événement au sujet réellement inédit."),
 
   h3("3.3.3. Calcul du niveau de fidélité (updateLevel)"),
-  p("La méthode updateLevel d'AppUserService recalcule le niveau du bénévole après chaque événement affectant le nombre de ses participations confirmées — aussi bien une nouvelle confirmation qu'une désinscription qui en fait perdre une. Le niveau n'est donc jamais figé une fois atteint : il reflète à tout instant le nombre réel de participations confirmées (RG-19)."),
+  p("La méthode updateLevel d'AppUserService recalcule le niveau du bénévole après chaque événement affectant le nombre de ses participations confirmées, aussi bien une nouvelle confirmation qu'une désinscription qui en fait perdre une. Le niveau n'est donc jamais figé une fois atteint : il reflète à tout instant le nombre réel de participations confirmées (RG-19)."),
   codeBlock([
     "public void updateLevel(AppUser user, long confirmedCount) {",
     "    Level oldLevel = user.getLevel();",
@@ -154,7 +154,7 @@ const technique = [
     "    }",
     "}",
   ]),
-  p("Le détail qui mérite d'être souligné porte sur l'envoi de l'e-mail de félicitations (RG-20) : la comparaison newLevel.ordinal() > oldLevel.ordinal() garantit que ce message n'est déclenché qu'en cas de progression effective. Sans cette vérification, un bénévole dont le niveau redescendrait d'ARGENT à BRONZE après une désinscription recevrait, par erreur, le même e-mail de félicitations qu'une réelle promotion — un cas limite qui n'apparaît pas dans une lecture rapide de la règle de gestion, mais que le code met en évidence."),
+  p("Le détail qui mérite d'être souligné porte sur l'envoi de l'e-mail de félicitations (RG-20) : la comparaison newLevel.ordinal() > oldLevel.ordinal() garantit que ce message n'est déclenché qu'en cas de progression effective. Sans cette vérification, un bénévole dont le niveau redescendrait d'ARGENT à BRONZE après une désinscription recevrait, par erreur, le même e-mail de félicitations qu'une réelle promotion : un cas limite qui n'apparaît pas dans une lecture rapide de la règle de gestion, mais que le code met en évidence."),
 
   h3("3.3.4. Génération des attestations PDF (PdfService)"),
   p("La génération des attestations et des exports de liste d'inscrits repose sur iText7, utilisé en mode « bas niveau » (construction directe de paragraphes et de tableaux) plutôt que via un système de templates, pour un contenu qui reste volontairement simple. Le contrôle d'accès à l'attestation, déjà appliqué côté contrôleur, est revérifié une seconde fois à l'intérieur même du service, avant toute génération du document :"),
@@ -172,7 +172,7 @@ const technique = [
     "    // ... construction du document PDF (iText7)",
     "}",
   ]),
-  p("Cette double vérification (RG-21) illustre un principe déjà rencontré en section 3.5.3 pour le mot de passe : toute règle de gestion touchant à une action sensible est revérifiée au plus près de l'exécution réelle, plutôt que déléguée à un unique point de contrôle en amont. La charte graphique du site est reprise jusque dans le document PDF lui-même — l'attestation utilise la même couleur verte (RGB 45, 106, 79) que l'interface, via la classe DeviceRgb d'iText7."),
+  p("Cette double vérification (RG-21) illustre un principe déjà rencontré en section 3.5.3 pour le mot de passe : toute règle de gestion touchant à une action sensible est revérifiée au plus près de l'exécution réelle, plutôt que déléguée à un unique point de contrôle en amont. La charte graphique du site est reprise jusque dans le document PDF lui-même : l'attestation utilise la même couleur verte (RGB 45, 106, 79) que l'interface, via la classe DeviceRgb d'iText7."),
 
   h3("3.3.5. Envoi asynchrone des e-mails (EmailService)"),
   p("Le module envoie automatiquement un e-mail à chaque étape clé du parcours bénévole : confirmation d'inscription, refus, promotion depuis la liste d'attente, changement de niveau, annulation d'un événement, message groupé de l'administrateur, réinitialisation de mot de passe. Toutes ces méthodes sont annotées @Async : l'aller-retour SMTP réel peut prendre une à trois secondes, un délai qui serait perceptible et bloquant s'il fallait l'attendre avant de répondre à la requête HTTP qui l'a déclenché. Grâce à @Async, le contrôleur retourne sa réponse (par exemple la confirmation d'une inscription) immédiatement, pendant que l'envoi de l'e-mail se poursuit sur un thread séparé, géré par le pool de tâches asynchrones de Spring."),
@@ -184,14 +184,14 @@ const technique = [
     "// ...",
     "remaining: (n, max) => `${n} of ${max} spots left`,",
   ]),
-  p("Les données propres à Terra Sana (titres d'événements, descriptions saisies par l'administrateur) ne sont volontairement pas traduites automatiquement : seule l'interface elle-même — labels, boutons, messages de succès ou d'erreur — l'est, ce qui évite d'introduire une dépendance à un service de traduction externe pour du contenu géré par l'association elle-même."),
+  p("Les données propres à Terra Sana (titres d'événements, descriptions saisies par l'administrateur) ne sont volontairement pas traduites automatiquement : seule l'interface elle-même (labels, boutons, messages de succès ou d'erreur) l'est, ce qui évite d'introduire une dépendance à un service de traduction externe pour du contenu géré par l'association elle-même."),
 
   h3("3.3.7. Pagination et filtres avancés"),
   p("Les listes d'événements et de bénévoles côté administrateur reposent sur l'interface Pageable de Spring Data JPA plutôt que sur un chargement complet suivi d'une pagination côté client : chaque appel à /api/events/paged ou /api/volunteers/paged précise un numéro de page et une taille, et seule la page demandée est effectivement extraite de la base de données. Ce choix évite de transférer l'intégralité des bénévoles ou des événements passés à chaque ouverture du tableau de bord, un point qui deviendra sensible si Terra Sana accumule plusieurs années d'historique d'événements."),
   p("Le filtrage des bénévoles par compétence, disponibilité et langue (section 3.4.6, onglet Bénévoles) combine plusieurs conditions optionnelles dans une même requête JPA : lorsque l'administrateur laisse un champ de filtre vide, la condition correspondante est simplement omise plutôt que comparée à une chaîne vide, afin de retourner l'ensemble des bénévoles quand aucun critère n'est renseigné."),
 
   h3("3.3.8. Graphiques du tableau de bord (Chart.js)"),
-  p("L'onglet Statistiques du tableau de bord administrateur affiche deux visualisations construites avec Chart.js à partir des données réelles de l'association : une courbe (Line) du nombre d'inscriptions par mois sur les six derniers mois, et un diagramme en anneau (Doughnut) répartissant les inscriptions entre CONFIRMED, WAITING et REFUSED, permettant de visualiser en un coup d'œil le taux de participation global. Ces deux graphiques sont recalculés côté frontend à chaque chargement, à partir des inscriptions récupérées via l'API — aucune agrégation statistique n'est pré-calculée ni stockée côté serveur, ce qui garantit que les chiffres affichés reflètent toujours l'état courant de la base."),
+  p("L'onglet Statistiques du tableau de bord administrateur affiche deux visualisations construites avec Chart.js à partir des données réelles de l'association : une courbe (Line) du nombre d'inscriptions par mois sur les six derniers mois, et un diagramme en anneau (Doughnut) répartissant les inscriptions entre CONFIRMED, WAITING et REFUSED, permettant de visualiser en un coup d'œil le taux de participation global. Ces deux graphiques sont recalculés côté frontend à chaque chargement, à partir des inscriptions récupérées via l'API : aucune agrégation statistique n'est pré-calculée ni stockée côté serveur, ce qui garantit que les chiffres affichés reflètent toujours l'état courant de la base."),
 
   h2("3.4. Présentation des interfaces"),
   p("Cette section présente les principaux écrans du module, tels qu'implémentés, avec une capture d'écran et une explication fonctionnelle pour chacun."),
@@ -211,7 +211,7 @@ const technique = [
   ...imgPara(SCR + "volunteer-dashboard.png", 580, 362, "Figure 10 — Espace personnel d'un bénévole nouvellement inscrit"),
 
   h3("3.4.4. Liste des événements"),
-  p("La page publique des événements affiche l'ensemble des activités à venir sous forme de cartes (photo, statut, date, lieu, places restantes) ainsi qu'une section « Événements passés » distincte, avec le statut TERMINÉ ou ANNULÉ. Chaque carte permet de s'inscrire directement en un clic. Une fois l'inscription envoyée, la carte affiche immédiatement un retour visuel — confirmation d'envoi, puis rappel que le bénévole est déjà inscrit et en attente de validation par l'administrateur."),
+  p("La page publique des événements affiche l'ensemble des activités à venir sous forme de cartes (photo, statut, date, lieu, places restantes) ainsi qu'une section « Événements passés » distincte, avec le statut TERMINÉ ou ANNULÉ. Chaque carte permet de s'inscrire directement en un clic. Une fois l'inscription envoyée, la carte affiche immédiatement un retour visuel : confirmation d'envoi, puis rappel que le bénévole est déjà inscrit et en attente de validation par l'administrateur."),
   ...imgPara(SCR + "events-list.png", 580, 362, "Figure 11 — Liste publique des événements Terra Sana (extrait)"),
   ...imgPara(SCR + "dashboard-registrations-tab.png", 580, 362, "Figure 12 — Retour visuel après une demande d'inscription (RG-10, RG-11)"),
 
@@ -232,7 +232,7 @@ const technique = [
   caption("Tableau 11 — Parcours complet d'un bénévole, du premier contact à l'attestation"),
 
   h3("3.4.6. Tableau de bord administrateur"),
-  p("Le tableau de bord administrateur, accessible uniquement au rôle ADMIN (RG-24), centralise la gestion opérationnelle du module. Onze onglets organisent cette gestion, répartis en trois groupes dans la barre latérale : Principal (tableau de bord, événements, bénévoles, inscriptions, retours post-événement), Rapports (attestations PDF, statistiques) et Site vitrine (projets, blog, messages — ces trois derniers hérités du site développé pendant le stage). Les sous-sections suivantes détaillent chacun des écrans propres au module TFE, avec une capture d'écran réelle et son fonctionnement."),
+  p("Le tableau de bord administrateur, accessible uniquement au rôle ADMIN (RG-24), centralise la gestion opérationnelle du module. Onze onglets organisent cette gestion, répartis en trois groupes dans la barre latérale : Principal (tableau de bord, événements, bénévoles, inscriptions, retours post-événement), Rapports (attestations PDF, statistiques) et Site vitrine (projets, blog, messages, ces trois derniers hérités du site développé pendant le stage). Les sous-sections suivantes détaillent chacun des écrans propres au module TFE, avec une capture d'écran réelle et son fonctionnement."),
 
   p("La page d'accueil du tableau de bord affiche une vue synthétique de l'activité : quatre indicateurs clés (bénévoles actifs, événements à venir, inscriptions en attente, taux de participation), la liste des prochains événements avec leur taux de remplissage, et des raccourcis vers les actions les plus fréquentes."),
   ...imgPara(SCR + "admin-dashboard.png", 580, 362, "Figure 13 — Tableau de bord administrateur : vue d'ensemble"),
@@ -243,17 +243,17 @@ const technique = [
   p("L'onglet Inscriptions centralise, tous événements confondus, la validation manuelle exigée par RG-11 : chaque ligne affiche le bénévole, l'événement concerné et son statut, avec deux boutons Confirmer / Refuser directement disponibles pour toute inscription encore WAITING."),
   ...imgPara(SCR + "admin-registrations.png", 580, 362, "Figure 15 — Suivi et validation des inscriptions (RG-11)"),
 
-  p("L'onglet Bénévoles liste l'ensemble des comptes inscrits, avec leur niveau de fidélité (RG-19), leur statut actif/inactif et un bouton de désactivation conforme à RG-03 (le compte est neutralisé, jamais supprimé, pour préserver son historique). Trois filtres — compétence, disponibilité, langue — permettent à l'administrateur de cibler rapidement un profil recherché pour un événement particulier."),
+  p("L'onglet Bénévoles liste l'ensemble des comptes inscrits, avec leur niveau de fidélité (RG-19), leur statut actif/inactif et un bouton de désactivation conforme à RG-03 (le compte est neutralisé, jamais supprimé, pour préserver son historique). Trois filtres (compétence, disponibilité, langue) permettent à l'administrateur de cibler rapidement un profil recherché pour un événement particulier."),
   ...imgPara(SCR + "admin-volunteers.png", 580, 362, "Figure 16 — Liste et filtrage des bénévoles"),
 
-  p("L'onglet Statistiques restitue graphiquement, via Chart.js (section 3.3.8), l'évolution des inscriptions sur les six derniers mois et la répartition des statuts d'inscription — une lecture immédiate de l'activité de l'association qu'aucun fichier Excel ne permettait auparavant (section 1.3)."),
+  p("L'onglet Statistiques restitue graphiquement, via Chart.js (section 3.3.8), l'évolution des inscriptions sur les six derniers mois et la répartition des statuts d'inscription, pour une lecture immédiate de l'activité de l'association qu'aucun fichier Excel ne permettait auparavant (section 1.3)."),
   ...imgPara(SCR + "admin-statistics.png", 580, 362, "Figure 17 — Statistiques du tableau de bord (Chart.js)"),
 
-  p("Enfin, l'onglet Attestations PDF liste les bénévoles éligibles à une attestation de participation — c'est-à-dire ceux dont l'inscription est CONFIRMED à un événement déjà FINISHED (RG-21) — à titre indicatif pour l'administrateur : chaque bénévole télécharge lui-même son propre document depuis son espace personnel (section 3.4.3)."),
+  p("Enfin, l'onglet Attestations PDF liste les bénévoles éligibles à une attestation de participation (c'est-à-dire ceux dont l'inscription est CONFIRMED à un événement déjà FINISHED, RG-21), à titre indicatif pour l'administrateur : chaque bénévole télécharge lui-même son propre document depuis son espace personnel (section 3.4.3)."),
   ...imgPara(SCR + "admin-attestations.png", 580, 362, "Figure 18 — Suivi des attestations éligibles (RG-21)"),
 
   h3("3.4.7. Pages institutionnelles et interface multilingue"),
-  p("Les pages du site vitrine hérité du stage (À propos, Contact, Aide/FAQ…) ont été redessinées avec la nouvelle charte graphique et restent, elles aussi, entièrement traduites en trois langues — y compris les questions fréquentes, comme l'illustre la capture ci-dessous, prise après bascule du sélecteur de langue sur l'anglais."),
+  p("Les pages du site vitrine hérité du stage (À propos, Contact, Aide/FAQ…) ont été redessinées avec la nouvelle charte graphique et restent, elles aussi, entièrement traduites en trois langues, y compris les questions fréquentes, comme l'illustre la capture ci-dessous, prise après bascule du sélecteur de langue sur l'anglais."),
   ...imgPara(SCR + "about.png", 580, 362, "Figure 19 — Page « À propos » de Terra Sana"),
   ...imgPara(SCR + "contact.png", 580, 362, "Figure 20 — Formulaire de contact"),
   ...imgPara(SCR + "aide-en.png", 580, 362, "Figure 21 — Page d'aide affichée en anglais, après changement de langue"),
@@ -265,7 +265,7 @@ const technique = [
   p("La sécurité du module s'appuie sur Spring Security et une authentification JWT entièrement stateless : aucune session n'est conservée côté serveur, chaque requête porte sa propre preuve d'identité dans l'en-tête HTTP Authorization."),
 
   h3("3.5.1. Deux jetons distincts (RG-25)"),
-  p("Conformément à RG-25, les bénévoles et l'administrateur reçoivent chacun un jeton signé avec un secret distinct (JwtUtil pour l'admin, VolunteerJwtUtil pour le bénévole), tous deux valables 24 heures (RG-23). Le filtre JwtFilter tente successivement les deux JwtUtil lors de la validation d'une requête et assigne le rôle ROLE_ADMIN ou ROLE_VOLUNTEER en conséquence — le rôle n'est pas un claim porté par le jeton lui-même, il est déduit de la clé de signature qui a permis de le valider. Ce filtre, exécuté une seule fois par requête (OncePerRequestFilter), s'intercale avant le filtre d'authentification standard de Spring Security :"),
+  p("Conformément à RG-25, les bénévoles et l'administrateur reçoivent chacun un jeton signé avec un secret distinct (JwtUtil pour l'admin, VolunteerJwtUtil pour le bénévole), tous deux valables 24 heures (RG-23). Le filtre JwtFilter tente successivement les deux JwtUtil lors de la validation d'une requête et assigne le rôle ROLE_ADMIN ou ROLE_VOLUNTEER en conséquence : le rôle n'est pas un claim porté par le jeton lui-même, il est déduit de la clé de signature qui a permis de le valider. Ce filtre, exécuté une seule fois par requête (OncePerRequestFilter), s'intercale avant le filtre d'authentification standard de Spring Security :"),
   codeBlock([
     "protected void doFilterInternal(HttpServletRequest request,",
     "        HttpServletResponse response, FilterChain chain) {",
@@ -314,7 +314,7 @@ const technique = [
   ]),
 
   h3("3.5.3. Hachage des mots de passe et validation côté serveur"),
-  p("Les mots de passe ne sont jamais stockés en clair : BCryptPasswordEncoder les hache à l'inscription et vérifie l'authenticité à la connexion, avec un sel intégré automatiquement (RG-02). La longueur minimale de 8 caractères imposée par RG-02 est vérifiée deux fois : une première fois côté frontend (attribut minLength du formulaire, pour un retour immédiat à l'utilisateur), et une seconde fois, indépendamment, côté backend dans AppUserService — car un attribut HTML n'empêche en rien un appel direct à l'API contournant le formulaire :"),
+  p("Les mots de passe ne sont jamais stockés en clair : BCryptPasswordEncoder les hache à l'inscription et vérifie l'authenticité à la connexion, avec un sel intégré automatiquement (RG-02). La longueur minimale de 8 caractères imposée par RG-02 est vérifiée deux fois : une première fois côté frontend (attribut minLength du formulaire, pour un retour immédiat à l'utilisateur), et une seconde fois, indépendamment, côté backend dans AppUserService, car un attribut HTML n'empêche en rien un appel direct à l'API contournant le formulaire :"),
   codeBlock([
     "public AppUser register(AppUser user) {",
     "    if (userRepo.existsByEmail(user.getEmail())) {",
@@ -328,29 +328,33 @@ const technique = [
     "    return userRepo.save(user);",
     "}",
   ]),
-  p("Ce principe — ne jamais faire confiance à la seule validation du navigateur — est appliqué systématiquement dans les services du module, chaque règle de gestion touchant à une donnée saisie par l'utilisateur étant revérifiée côté serveur avant toute écriture en base."),
+  p("Ce principe, ne jamais faire confiance à la seule validation du navigateur, est appliqué systématiquement dans les services du module, chaque règle de gestion touchant à une donnée saisie par l'utilisateur étant revérifiée côté serveur avant toute écriture en base."),
 
   h3("3.5.4. Configuration CORS"),
-  p("La configuration CORS est appliquée globalement au niveau de Spring Security lui-même — et pas seulement via l'annotation @CrossOrigin — afin que les réponses 401/403 générées par Security elle-même portent également les en-têtes CORS attendus par le navigateur."),
+  p("La configuration CORS est appliquée globalement au niveau de Spring Security lui-même (et pas seulement via l'annotation @CrossOrigin), afin que les réponses 401/403 générées par Security elle-même portent également les en-têtes CORS attendus par le navigateur."),
 
   h2("3.6. Environnement de développement et de démonstration"),
   p("Conformément au plan de travail validé avec Madame Namur, l'application est développée et présentée en environnement local, via WAMP Server sous Windows (Apache, MySQL, PHP côté outillage local) : aucun déploiement en ligne (type Railway ou Vercel) n'est prévu dans le cadre de ce TFE. Ce choix permet de concentrer l'effort sur la qualité de l'analyse, la conformité aux bonnes pratiques et la robustesse fonctionnelle du module, plutôt que sur la configuration d'une infrastructure cloud."),
   p("Le code source est versionné sur GitHub tout au long du développement (dépôt indiqué en Annexe C), avec des commits réguliers documentant chaque étape plutôt qu'un unique commit final. Cette discipline de commit fréquent s'est révélée particulièrement utile après un incident survenu en cours de projet : un outil de migration automatisée a un jour remisé (git stash) l'ensemble des modifications non commitées du backend sans prévenir, ce qui aurait pu faire disparaître plusieurs jours de travail si les changements avaient été accumulés dans un unique commit prévu en fin de journée plutôt que validés au fil de l'eau. L'incident, documenté plus en détail en section 4.2, a renforcé la rigueur apportée au versionnement pour le reste du développement."),
+  p("Le panneau de contrôle WAMP Server ci-dessous confirme les trois services requis actifs en local (Apache, MySQL, PHP) ainsi que l'accès à phpMyAdmin, l'outil utilisé tout au long du développement pour créer, inspecter et corriger la base de données."),
+  ...imgPara(SCR + "wamp_home.png", 580, 326, "Figure 24 — Panneau de contrôle WAMP Server, services actifs"),
+  p("La capture suivante montre la structure réelle de la base terre_sana telle qu'observée dans phpMyAdmin au moment de la rédaction de ce rapport : huit tables, conformes au diagramme de classes (section 2.2.1) et au dictionnaire de données (section 2.2.2), sans écart entre le modèle documenté et la base effectivement utilisée par l'application."),
+  ...imgPara(SCR + "phpmyadmin_structure.png", 580, 326, "Figure 25 — Structure de la base terre_sana dans phpMyAdmin (huit tables)"),
 
   h3("3.6.1. Mise en route locale"),
   p("Reproduire l'environnement de démonstration ne nécessite que WAMP Server, Node.js et un IDE Java. Les étapes suivantes permettent de lancer le module depuis une copie du dépôt GitHub (Annexe C) :"),
   table(["Étape", "Commande / action"], [
-    ["1. Base de données", "Démarrer WAMP Server, créer la base terresana via phpMyAdmin, exécuter le script de l'Annexe A"],
+    ["1. Base de données", "Démarrer WAMP Server, créer la base terre_sana via phpMyAdmin, exécuter le script de l'Annexe A"],
     ["2. Configuration backend", "Renseigner application.properties : URL JDBC, identifiants MySQL, secrets JWT, identifiants Gmail SMTP"],
-    ["3. Démarrage backend", "mvn spring-boot:run depuis le dossier backend/ — API disponible sur http://localhost:8080"],
-    ["4. Démarrage frontend", "npm install puis npm start depuis le dossier frontend/ — application sur http://localhost:3000"],
+    ["3. Démarrage backend", "mvn spring-boot:run depuis le dossier backend/ ; API disponible sur http://localhost:8080"],
+    ["4. Démarrage frontend", "npm install puis npm start depuis le dossier frontend/ ; application sur http://localhost:3000"],
     ["5. Compte administrateur", "Un compte admin est inséré directement en base (table admin) pour la première connexion"],
   ], [2300, 6950]),
   caption("Tableau 13 — Étapes de mise en route de l'environnement local"),
 
   h3("3.6.2. Vérification et tests manuels"),
   p("En l'absence de suite de tests automatisés (limite reconnue en section 4.3), la conformité de chaque règle de gestion a été vérifiée manuellement, directement dans le navigateur, à chaque étape significative du développement : création d'un événement à une date et un lieu déjà utilisés pour confirmer le rejet attendu (RG-08), inscription à un événement complet pour vérifier le placement en liste d'attente (RG-10), désinscription d'un bénévole confirmé pour observer la promotion automatique du suivant (RG-13), et bascule systématique entre les trois langues de l'interface pour s'assurer qu'aucun texte ne restait figé en français après un changement de langue."),
-  p("Cette démarche, bien que manuelle, a permis d'identifier et de corriger plusieurs anomalies avant la rédaction de ce rapport — notamment un premier jet de la règle RG-08 qui ne comparait que le titre et l'horaire exacts des événements, insuffisant pour détecter un doublon portant un intitulé différent au même lieu et à la même date, corrigé après qu'un contre-exemple concret a mis le problème en évidence."),
+  p("Cette démarche, bien que manuelle, a permis d'identifier et de corriger plusieurs anomalies avant la rédaction de ce rapport, notamment un premier jet de la règle RG-08 qui ne comparait que le titre et l'horaire exacts des événements, insuffisant pour détecter un doublon portant un intitulé différent au même lieu et à la même date, corrigé après qu'un contre-exemple concret a mis le problème en évidence."),
   p("Le tableau ci-dessous reprend un échantillon représentatif des scénarios rejoués manuellement, sélectionnés pour couvrir un cas nominal et un cas limite pour chacun des groupes de règles de gestion les plus sensibles."),
   table(["Scénario testé", "Résultat attendu", "Résultat constaté"], [
     ["Créer un événement à une date et un lieu déjà utilisés par un autre événement, avec un titre différent", "Rejet avec message précisant la date et le lieu en conflit (RG-08)", "Conforme"],

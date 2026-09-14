@@ -15,11 +15,11 @@ function link(text, url) {
 const annexes = [
   h1("VII. Annexes"),
 
-  h2("Annexe A — Script SQL complet"),
-  p("Le script ci-dessous crée l'intégralité des huit tables de la base de données terresana, dans l'ordre imposé par les dépendances de clés étrangères."),
+  h2("Annexe A : Script SQL complet"),
+  p("Le script ci-dessous crée l'intégralité des huit tables de la base de données terre_sana, dans l'ordre imposé par les dépendances de clés étrangères."),
   codeBlock([
-    "CREATE DATABASE IF NOT EXISTS terresana CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;",
-    "USE terresana;",
+    "CREATE DATABASE IF NOT EXISTS terre_sana CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;",
+    "USE terre_sana;",
     "",
     "-- Table : admin (héritée du stage)",
     "CREATE TABLE admin (",
@@ -118,10 +118,10 @@ const annexes = [
   p("Les index sur les clés étrangères et les colonnes UNIQUE sont créés automatiquement par MySQL et n'apparaissent donc pas explicitement ci-dessus. Les trois index complémentaires ajoutés ciblent précisément les requêtes les plus fréquemment exécutées par le module : idx_events_date_location accélère la vérification de doublon (RG-08), appelée à chaque création ou modification d'événement, et idx_registrations_status accélère le comptage des places disponibles, recalculé à chaque affichage d'un événement plutôt que stocké (section 2.2.3)."),
   pageBreak(),
 
-  h2("Annexe B — Note sur les captures d'écran"),
-  p("Les captures d'écran présentées en section 3.4 ont été réalisées en environnement local (localhost), à partir de données de démonstration créées pour les besoins de ce rapport — notamment un compte bénévole de test (« Camille Dupont ») créé via le formulaire d'inscription public pour illustrer l'espace personnel bénévole en conditions réelles plutôt qu'à l'état vide."),
+  h2("Annexe B : Note sur les captures d'écran"),
+  p("Les captures d'écran présentées en section 3.4 ont été réalisées en environnement local (localhost), à partir de données de démonstration créées pour les besoins de ce rapport, notamment un compte bénévole de test (« Camille Dupont ») créé via le formulaire d'inscription public pour illustrer l'espace personnel bénévole en conditions réelles plutôt qu'à l'état vide."),
 
-  h2("Annexe C — Dépôt GitHub"),
+  h2("Annexe C : Dépôt GitHub"),
   p("Le code source complet du site Terra Sana, incluant le module de gestion des bénévoles et des événements développé dans le cadre de ce TFE, est disponible à l'adresse suivante :"),
   link("https://github.com/sidanne/terra-sana-website", "https://github.com/sidanne/terra-sana-website"),
 ];

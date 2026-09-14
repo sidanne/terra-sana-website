@@ -64,17 +64,15 @@ function rgItem(code, text) {
     alignment: AlignmentType.JUSTIFIED,
     indent: { left: 340, hanging: 340 },
     children: [
-      new TextRun({ text: code + " — ", bold: true, color: GREEN, size: 21, font: FONT }),
+      new TextRun({ text: code + " : ", bold: true, color: GREEN, size: 21, font: FONT }),
       new TextRun({ text, size: 21, font: FONT, color: TEXT }),
     ],
   });
 }
 function caption(text) {
-  return new Paragraph({
-    spacing: { before: 100, after: 280 },
-    alignment: AlignmentType.CENTER,
-    children: [new TextRun({ text, italics: true, size: 19, color: GREY, font: FONT })],
-  });
+  // Les légendes "Tableau N — ..." / "Table X — ..." sont volontairement omises,
+  // au même titre que les légendes de figures : seul un espacement reste.
+  return new Paragraph({ spacing: { after: 240 }, children: [] });
 }
 function imgPara(path, width, height, cap) {
   // Les légendes "Figure N — ..." sont volontairement omises : seule l'image est affichée.
@@ -215,8 +213,11 @@ const backPage = [
   new Paragraph({ children: [floatingImg(SCR_DIR + 'back_triangle.png', 460, 650, HorizontalPositionAlign.LEFT, VerticalPositionAlign.BOTTOM)] }),
   new Paragraph({ spacing: { before: 2200, after: 100 }, alignment: AlignmentType.CENTER,
     children: [new TextRun({ text: "Alain Youndjeu Tchouapi", bold: true, size: 40, color: GREEN_DARK, font: FONT })] }),
-  new Paragraph({ spacing: { before: 0, after: 900 }, alignment: AlignmentType.CENTER,
-    children: [new TextRun({ text: "Module de gestion des bénévoles et des événements — Terra Sana ASBL", italics: true, size: 22, color: TEXT, font: FONT })] }),
+  new Paragraph({ spacing: { before: 0, after: 300 }, alignment: AlignmentType.CENTER,
+    children: [new TextRun({ text: "Module de gestion des bénévoles et des événements, Terra Sana ASBL", italics: true, size: 22, color: TEXT, font: FONT })] }),
+  new Paragraph({ spacing: { before: 0, after: 600 }, alignment: AlignmentType.CENTER,
+    children: [new ImageRun({ data: fs.readFileSync(SCR_DIR + 'logo_terrasana.png'), transformation: { width: 130, height: 60 }, type: "png" })],
+  }),
   new Paragraph({ spacing: { before: 0, after: 40 }, alignment: AlignmentType.CENTER,
     children: [new TextRun({ text: "TERRA SANA ASBL", bold: true, size: 22, color: GREEN, font: FONT, characterSpacing: 20 })] }),
   new Paragraph({ spacing: { before: 0, after: 40 }, alignment: AlignmentType.CENTER,
@@ -229,7 +230,7 @@ const remerciements = [
   p("Avant d'entrer dans le corps de ce rapport, je tiens à remercier toutes les personnes qui ont contribué, de près ou de loin, à la réalisation de ce travail de fin d'études."),
   p([rt("Mes premiers remerciements vont à Madame Marie-Christine Namur", { bold: true }), rt(", ma promotrice, pour son encadrement, sa disponibilité et la rigueur de ses retours tout au long de la phase d'analyse et de développement de ce module. Ses conseils ont directement orienté plusieurs choix de conception présentés dans ce rapport.")]),
   p([rt("Je remercie également Monsieur Didier Seraye", { bold: true }), rt(", Responsable Administratif de Terra Sana ASBL et mon maître de stage, pour la confiance qu'il m'a accordée durant le stage puis pour sa disponibilité lors des échanges qui ont permis de cadrer précisément les besoins réels de l'association en matière de gestion des bénévoles et des événements.")]),
-  p("Ma reconnaissance va aussi à l'ensemble du corps professoral de l'EAFC Uccle, pour la qualité de la formation dispensée durant ces trois années de Bachelier en Informatique de Gestion, et pour les bases méthodologiques — analyse, modélisation, bonnes pratiques de développement — sans lesquelles ce travail n'aurait pas la même rigueur."),
+  p("Ma reconnaissance va aussi à l'ensemble du corps professoral de l'EAFC Uccle, pour la qualité de la formation dispensée durant ces trois années de Bachelier en Informatique de Gestion, et pour les bases méthodologiques (analyse, modélisation, bonnes pratiques de développement) sans lesquelles ce travail n'aurait pas la même rigueur."),
   p("Enfin, je remercie mes proches et mes camarades de promotion pour leur soutien constant durant cette dernière année d'études, en particulier durant les semaines les plus intenses de rédaction et de développement."),
   pageBreak(),
 ];
@@ -237,9 +238,14 @@ const remerciements = [
 // ── Résumé ───────────────────────────────────────────────────────────────
 const resume = [
   h1("Résumé"),
-  p("Terra Sana ASBL, association bruxelloise active depuis 2019 dans l'alimentation locale et le circuit court, gérait jusqu'ici ses bénévoles et ses événements de façon entièrement manuelle — fichiers Excel partagés, confirmations envoyées une à une par email, aucune trace exploitable de la participation des bénévoles. Ce travail de fin d'études développe, en continuité du site vitrine réalisé durant le stage effectué au sein de l'association, un module complet de gestion des bénévoles et des événements : création de compte et espace personnel, inscription aux événements avec liste d'attente automatique, validation par l'administrateur, notifications par email, retours post-événement, niveaux de fidélité calculés automatiquement et attestations de participation téléchargeables."),
+  p("Terra Sana ASBL, association bruxelloise active depuis 2019 dans l'alimentation locale et le circuit court, gérait jusqu'ici ses bénévoles et ses événements de façon entièrement manuelle : fichiers Excel partagés, confirmations envoyées une à une par email, aucune trace exploitable de la participation des bénévoles. Ce travail de fin d'études développe, en continuité du site vitrine réalisé durant le stage effectué au sein de l'association, un module complet de gestion des bénévoles et des événements : création de compte et espace personnel, inscription aux événements avec liste d'attente automatique, validation par l'administrateur, notifications par email, retours post-événement, niveaux de fidélité calculés automatiquement et attestations de participation téléchargeables."),
   p("L'analyse s'appuie sur vingt-cinq règles de gestion établies à partir d'entretiens directs avec le responsable administratif de l'association, un diagramme de classes à huit entités et une base de données MySQL normalisée. L'implémentation repose sur une architecture 3-tiers Spring Boot / React / MySQL, avec une authentification JWT à deux rôles distincts (bénévole et administrateur), un tableau de bord administrateur entièrement traduit en français, anglais et néerlandais, et une suite de mécanismes automatisés (attribution de photos par mots-clés, envoi d'e-mails asynchrone, génération de PDF) documentés dans le dossier technique. Le module est développé et démontré en environnement local, conformément au périmètre validé avec l'encadrement académique."),
-  p([rt("Mots-clés : ", { bold: true }), rt("Spring Boot, React, JWT, MySQL, gestion associative, bénévolat, application web multilingue.")]),
+  p([rt("Mots-clés :", { bold: true })]),
+  new Paragraph({
+    alignment: AlignmentType.CENTER,
+    spacing: { before: 80, after: 160 },
+    children: [new ImageRun({ data: fs.readFileSync(SCR_DIR + 'mots_cles.png'), transformation: { width: 480, height: 88 }, type: "png" })],
+  }),
   pageBreak(),
 ];
 
@@ -272,24 +278,24 @@ const TOC_ENTRIES = [
   ["1.6. Sources d'information", 7, 2],
   ["II. Dossier d'analyse", 8, 1],
   ["2.1. Cahier des charges", 8, 2],
-  ["2.2. Persistance des données", 15, 2],
-  ["2.3. Autres diagrammes UML", 20, 2],
-  ["III. Dossier technique", 24, 1],
-  ["3.1. Choix technologiques", 24, 2],
-  ["3.2. Architecture globale", 25, 2],
-  ["3.3. Fonctionnalités transversales notables", 27, 2],
-  ["3.4. Présentation des interfaces", 30, 2],
-  ["3.5. Sécurité", 41, 2],
-  ["3.6. Environnement de développement et de démonstration", 43, 2],
-  ["IV. Conclusion", 45, 1],
-  ["4.1. Apports personnels", 45, 2],
-  ["4.2. Difficultés rencontrées", 46, 2],
-  ["4.3. Regard critique sur le travail réalisé", 46, 2],
-  ["4.4. Perspectives", 47, 2],
-  ["4.5. Mot de fin", 47, 2],
-  ["V. Glossaire", 48, 1],
-  ["VI. Bibliographie / Webographie", 49, 1],
-  ["VII. Annexes", 51, 1],
+  ["2.2. Persistance des données", 16, 2],
+  ["2.3. Autres diagrammes UML", 21, 2],
+  ["III. Dossier technique", 25, 1],
+  ["3.1. Choix technologiques", 25, 2],
+  ["3.2. Architecture globale", 26, 2],
+  ["3.3. Fonctionnalités transversales notables", 28, 2],
+  ["3.4. Présentation des interfaces", 31, 2],
+  ["3.5. Sécurité", 42, 2],
+  ["3.6. Environnement de développement et de démonstration", 44, 2],
+  ["IV. Conclusion", 47, 1],
+  ["4.1. Apports personnels", 47, 2],
+  ["4.2. Difficultés rencontrées", 48, 2],
+  ["4.3. Regard critique sur le travail réalisé", 48, 2],
+  ["4.4. Perspectives", 49, 2],
+  ["4.5. Mot de fin", 49, 2],
+  ["V. Glossaire", 50, 1],
+  ["VI. Bibliographie / Webographie", 51, 1],
+  ["VII. Annexes", 53, 1],
 ];
 
 const tocPage = [

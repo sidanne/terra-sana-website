@@ -12,11 +12,11 @@ const {
 } = require('docx');
 
 const doc = new Document({
-  title: "Module de gestion des bénévoles et des événements — Terra Sana ASBL",
-  subject: "Travail de fin d'études — Bachelier en Informatique de Gestion",
+  title: "Module de gestion des bénévoles et des événements, Terra Sana ASBL",
+  subject: "Travail de fin d'études, Bachelier en Informatique de Gestion",
   creator: "Alain Youndjeu Tchouapi",
   lastModifiedBy: "Alain Youndjeu Tchouapi",
-  description: "TFE EAFC Uccle — Module de gestion des bénévoles et des événements pour Terra Sana ASBL",
+  description: "TFE EAFC Uccle, Module de gestion des bénévoles et des événements pour Terra Sana ASBL",
   styles: {
     default: {
       document: { run: { font: M.FONT, size: 21 } },
@@ -47,7 +47,7 @@ const doc = new Document({
               spacing: { after: 40 },
               border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: M.GOLD, space: 4 } },
               children: [
-                new TextRun({ text: "Alain Youndjeu Tchouapi — Épreuve Intégrée", size: 17, color: "555555", font: M.FONT }),
+                new TextRun({ text: "Alain Youndjeu Tchouapi · Épreuve Intégrée", size: 17, color: "555555", font: M.FONT }),
               ],
             }),
             new Paragraph({
