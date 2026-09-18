@@ -42,6 +42,7 @@ public class AppUser {
     private LocalDate birthDate;
     private String gender;
     private String city;
+    @Column(length = 20)
     private String postalCode;
     private String skills;
     private String availability;

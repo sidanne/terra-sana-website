@@ -140,7 +140,7 @@ const analyse = [
   rgItem("RG-04", "La demande de réinitialisation du mot de passe utilise un jeton à usage unique valable 30 minutes, envoyé par email."),
 
   h3("B. Événements"),
-  p("Ce deuxième groupe fixe les données minimales qu'un événement doit porter pour être exploitable (date, lieu, capacité), la façon dont son statut évolue de lui-même au fil du temps, et une garde-fou pratique demandé directement par Monsieur Seraye après qu'un doublon de créneau se soit déjà produit dans les fichiers Excel de l'association."),
+  p("Ce deuxième groupe fixe les données minimales qu'un événement doit porter pour être exploitable (date, lieu, capacité), la façon dont son statut évolue de lui-même au fil du temps, et un garde-fou pratique demandé directement par Monsieur Seraye après qu'un doublon de créneau se soit déjà produit dans les fichiers Excel de l'association."),
   rgItem("RG-05", "Chaque événement porte obligatoirement une date, un lieu et un nombre maximum de participants."),
   rgItem("RG-06", "Le statut d'un événement évolue automatiquement : OPEN par défaut, FULL dès que toutes les places sont prises, FINISHED une fois la date passée, CANCELLED uniquement sur décision explicite de l'administrateur."),
   rgItem("RG-07", "Un événement passé (FINISHED ou CANCELLED) n'accepte plus de nouvelles inscriptions."),

@@ -161,7 +161,7 @@ const coverElements = [
     children: [new TextRun({ text: "Travail de Fin d'Études", bold: true, size: 56, color: GREEN_DARK, font: FONT })] }),
   new Paragraph({ spacing: { before: 0, after: 900 }, alignment: AlignmentType.CENTER,
     border: { bottom: { style: BorderStyle.SINGLE, size: 8, color: GOLD, space: 8 } },
-    children: [new TextRun({ text: "Module de gestion des bénévoles et de réservation des événements", size: 24, color: TEXT, font: FONT })] }),
+    children: [new TextRun({ text: "Module de gestion des bénévoles et des événements", size: 24, color: TEXT, font: FONT })] }),
 
   new Table({
     width: { size: 9350, type: WidthType.DXA },
@@ -213,15 +213,12 @@ const backPage = [
   new Paragraph({ children: [floatingImg(SCR_DIR + 'back_triangle.png', 460, 650, HorizontalPositionAlign.LEFT, VerticalPositionAlign.BOTTOM)] }),
   new Paragraph({ spacing: { before: 2200, after: 100 }, alignment: AlignmentType.CENTER,
     children: [new TextRun({ text: "Alain Youndjeu Tchouapi", bold: true, size: 40, color: GREEN_DARK, font: FONT })] }),
-  new Paragraph({ spacing: { before: 0, after: 300 }, alignment: AlignmentType.CENTER,
-    children: [new TextRun({ text: "Module de gestion des bénévoles et des événements, Terra Sana ASBL", italics: true, size: 22, color: TEXT, font: FONT })] }),
   new Paragraph({ spacing: { before: 0, after: 700 }, alignment: AlignmentType.CENTER,
-    children: [new ImageRun({ data: fs.readFileSync(SCR_DIR + 'logo_terrasana.png'), transformation: { width: 300, height: 139 }, type: "png" })],
-  }),
+    children: [new TextRun({ text: "Module de gestion des bénévoles et des événements, Terra Sana ASBL", italics: true, size: 22, color: TEXT, font: FONT })] }),
   new Paragraph({ spacing: { before: 0, after: 260 }, alignment: AlignmentType.CENTER,
     children: [new TextRun({ text: "TERRA SANA ASBL", bold: true, size: 22, color: GREEN, font: FONT, characterSpacing: 20 })] }),
   new Paragraph({ spacing: { before: 0, after: 0 }, alignment: AlignmentType.CENTER,
-    children: [new ImageRun({ data: fs.readFileSync(SCR_DIR + 'smiley.png'), transformation: { width: 70, height: 70 }, type: "png" })],
+    children: [new ImageRun({ data: fs.readFileSync(SCR_DIR + 'smiley.png'), transformation: { width: 130, height: 130 }, type: "png" })],
   }),
 ];
 

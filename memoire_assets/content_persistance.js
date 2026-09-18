@@ -19,21 +19,25 @@ const persistance = [
 
   p([rt("Tables héritées du stage", { bold: true, color: M.GREEN })]),
 
+  p([rt("admin", { bold: true, color: M.GREEN_DARK }), rt(" : compte administrateur unique")]),
   table(["Champ", "Type SQL", "Contrainte", "Description"],
     [["id", "BIGINT", "PK, AUTO_INCREMENT", "Identifiant."], ["username", "VARCHAR(100)", "NOT NULL, UNIQUE", "Identifiant de connexion."], ["password", "VARCHAR(255)", "NOT NULL", "Mot de passe haché (BCrypt)."]],
     [1400, 1650, 2500, 3800]),
   caption("Table admin — compte administrateur unique"),
 
+  p([rt("project", { bold: true, color: M.GREEN_DARK }), rt(" : applications du hub interne")]),
   table(["Champ", "Type SQL", "Contrainte", "Description"],
     [["id", "BIGINT", "PK, AUTO_INCREMENT", "Identifiant."], ["name", "VARCHAR(200)", "NOT NULL", "Nom de l'application."], ["description", "TEXT", "NOT NULL", "Présentation."], ["link, documentation_link", "VARCHAR(500)", "NULL", "URL vers l'app et sa doc."], ["image, category", "VARCHAR(255)", "NULL", "Illustration et catégorie."], ["is_active", "BOOLEAN", "DEFAULT TRUE", "Visible ou non sur le hub."], ["created_at", "DATETIME", "NOT NULL", "Date de création."]],
     [1400, 1650, 2500, 3800]),
   caption("Table project — applications du hub interne"),
 
+  p([rt("blog_post", { bold: true, color: M.GREEN_DARK }), rt(" : articles du blog")]),
   table(["Champ", "Type SQL", "Contrainte", "Description"],
-    [["id", "BIGINT", "PK, AUTO_INCREMENT", "Identifiant."], ["title, content", "VARCHAR / TEXT", "NOT NULL", "Contenu de l'article."], ["image", "VARCHAR(255)", "NULL", "Illustration."], ["is_published", "BOOLEAN", "DEFAULT FALSE", "Publié ou brouillon."], ["created_at", "DATETIME", "NOT NULL", "Date de rédaction."]],
+    [["id", "BIGINT", "PK, AUTO_INCREMENT", "Identifiant."], ["title, content", "VARCHAR(255) / TEXT", "NOT NULL", "Titre et contenu de l'article."], ["image", "VARCHAR(255)", "NULL", "Illustration."], ["is_published", "BOOLEAN", "DEFAULT FALSE", "Publié ou brouillon."], ["created_at", "DATETIME", "NOT NULL", "Date de rédaction."]],
     [1400, 1650, 2500, 3800]),
   caption("Table blog_post — articles du blog"),
 
+  p([rt("contact_message", { bold: true, color: M.GREEN_DARK }), rt(" : messages du formulaire de contact")]),
   table(["Champ", "Type SQL", "Contrainte", "Description"],
     [["id", "BIGINT", "PK, AUTO_INCREMENT", "Identifiant."], ["name, email", "VARCHAR(255)", "NOT NULL", "Coordonnées de l'expéditeur."], ["message", "VARCHAR(5000)", "NOT NULL", "Contenu du message."], ["is_read", "BOOLEAN", "DEFAULT FALSE", "Traité ou non."], ["created_at", "DATETIME", "NOT NULL", "Date de réception."]],
     [1400, 1650, 2500, 3800]),
@@ -42,15 +46,17 @@ const persistance = [
   p([rt("Nouvelles tables du module TFE", { bold: true, color: M.GREEN })]),
   p("app_users porte l'ensemble du profil bénévole. Seuls quatre champs sont obligatoires (nom, prénom, email, mot de passe) ; tous les autres (téléphone, ville, compétences, disponibilités) restent facultatifs, conformément au principe de minimisation des données appliqué sur le formulaire d'inscription (section 3.4.2). Le champ level est dénormalisé à dessein : plutôt que de recalculer le niveau à chaque affichage à partir de l'historique complet des inscriptions, il est stocké et mis à jour explicitement par updateLevel() (section 3.3.3), ce qui évite de recompter les participations confirmées à chaque chargement du profil."),
 
+  p([rt("app_users", { bold: true, color: M.GREEN_DARK }), rt(" : bénévoles")]),
   table(["Champ", "Type SQL", "Contrainte", "Description"],
     [
       ["id", "BIGINT", "PK, AUTO_INCREMENT", "Identifiant."],
       ["first_name, last_name", "VARCHAR(100)", "NOT NULL", "Identité du bénévole."],
       ["email", "VARCHAR(200)", "NOT NULL, UNIQUE", "Email de connexion (RG-01)."],
       ["password", "VARCHAR(255)", "NOT NULL", "Haché BCrypt (RG-02)."],
-      ["phone, birth_date, gender", "VARCHAR / DATE", "NULL", "Coordonnées facultatives."],
-      ["city, postal_code", "VARCHAR(255)", "NULL", "Localité."],
-      ["skills, availability", "TEXT / VARCHAR", "NULL", "Compétences et disponibilités."],
+      ["phone, birth_date, gender", "VARCHAR(255) / DATE", "NULL", "Coordonnées facultatives."],
+      ["city", "VARCHAR(255)", "NULL", "Localité."],
+      ["postal_code", "VARCHAR(20)", "NULL", "Code postal."],
+      ["skills, availability", "TEXT / VARCHAR(255)", "NULL", "Compétences et disponibilités."],
       ["preferred_language", "VARCHAR(5)", "DEFAULT 'fr'", "Langue préférée (FR/EN/NL)."],
       ["level", "VARCHAR(10)", "DEFAULT 'BRONZE'", "BRONZE / ARGENT / OR (RG-19)."],
       ["is_active", "BOOLEAN", "DEFAULT TRUE", "Compte actif (RG-03)."],
@@ -63,6 +69,7 @@ const persistance = [
 
   p("events porte les données propres à chaque activité organisée par Terra Sana, ainsi qu'une référence vers l'administrateur qui l'a créée, utile dès lors que Terra Sana envisagerait, à l'avenir, plusieurs comptes administrateurs (section 4.4). Le champ status n'est pas laissé au libre choix de l'administrateur : seule la valeur CANCELLED lui est réellement ouverte, OPEN/FULL/FINISHED étant recalculés par EventService selon le remplissage et la date (RG-06)."),
 
+  p([rt("events", { bold: true, color: M.GREEN_DARK }), rt(" : événements")]),
   table(["Champ", "Type SQL", "Contrainte", "Description"],
     [
       ["id", "BIGINT", "PK, AUTO_INCREMENT", "Identifiant."],
@@ -80,6 +87,7 @@ const persistance = [
 
   p("registrations est la table pivot du module, associant un bénévole et un événement, et retraçant également quel administrateur a traité la demande. Tant que l'administrateur n'a pas explicitement statué (RG-11), cette information de traitement reste vide, ce qui permet de distinguer une inscription encore en attente d'une inscription refusée sans ambiguïté. La contrainte d'unicité porte à elle seule toute la garantie de RG-09, indépendamment de ce que vérifie ou non le code applicatif au moment de l'insertion."),
 
+  p([rt("registrations", { bold: true, color: M.GREEN_DARK }), rt(" : inscriptions et liste d'attente")]),
   table(["Champ", "Type SQL", "Contrainte", "Description"],
     [
       ["id", "BIGINT", "PK, AUTO_INCREMENT", "Identifiant."],
@@ -93,6 +101,7 @@ const persistance = [
 
   p("reviews associe, comme registrations, un bénévole (RG-15) et un événement, avec la même contrainte d'unicité, mais répond à un besoin différent : elle ne trace pas une participation, mais un avis, et n'existe que pour les événements réellement terminés. La contrainte CHECK sur rating traduit directement RG-18 au niveau base de données, en complément de la validation déjà effectuée côté frontend et côté service (et non à sa place). La note moyenne affichée sur le tableau de bord (section 3.4.6) n'est, comme les places disponibles d'un événement, jamais stockée : elle est recalculée à chaque consultation à partir de l'ensemble des avis de l'événement (reviews.stream().mapToInt(Review::getRating).average()), plutôt que maintenue comme un total glissant qui risquerait de se désynchroniser des avis réellement en base."),
 
+  p([rt("reviews", { bold: true, color: M.GREEN_DARK }), rt(" : retours post-événement")]),
   table(["Champ", "Type SQL", "Contrainte", "Description"],
     [
       ["id", "BIGINT", "PK, AUTO_INCREMENT", "Identifiant."],
@@ -129,7 +138,7 @@ const persistance = [
     ");",
   ]),
 
-  p("La normalisation en troisième forme normale se vérifie concrètement sur chaque table : aucun champ n'est une donnée calculable à partir d'autres champs de la même ligne (le nombre de places disponibles d'un événement, par exemple, n'est jamais stocké : il est recalculé à la demande à partir du décompte des inscriptions CONFIRMED, évitant tout risque d'incohérence entre une valeur stockée et la réalité des inscriptions), et chaque attribut non-clé dépend de la clé primaire entière plutôt que d'une partie de celle-ci. La contrainte UNIQUE(user_id, event_id) sur registrations et reviews illustre ce même souci : plutôt que de vérifier applicativement qu'un bénévole ne s'inscrit pas deux fois (RG-09) ou n'avise pas deux fois (RG-17), la contrainte est portée par la base elle-même, qui rejette toute tentative d'insertion en doublon indépendamment du code applicatif qui l'a produite."),
+  p("La normalisation en troisième forme normale se vérifie concrètement sur chaque table : aucun champ n'est une donnée calculable à partir d'autres champs de la même ligne (le nombre de places disponibles d'un événement, par exemple, n'est jamais stocké : il est recalculé à la demande à partir du décompte des inscriptions CONFIRMED, évitant tout risque d'incohérence entre une valeur stockée et la réalité des inscriptions), et chaque attribut non-clé dépend de la clé primaire entière plutôt que d'une partie de celle-ci. La contrainte UNIQUE(user_id, event_id) sur registrations et reviews illustre ce même souci : plutôt que de vérifier applicativement qu'un bénévole ne s'inscrit pas deux fois (RG-09) ou ne met pas deux fois un avis sur un même événement (RG-17), la contrainte est portée par la base elle-même, qui rejette toute tentative d'insertion en doublon indépendamment du code applicatif qui l'a produite."),
   p("Deux stratégies de suppression en cascade sont appliquées de façon différenciée : ON DELETE CASCADE sur les clés étrangères vers app_users et events (la suppression d'un bénévole ou d'un événement entraîne logiquement celle de ses inscriptions et avis), mais aucune suppression en cascade n'est définie vers admin, précisément parce que RG-03 impose qu'un compte bénévole soit désactivé plutôt que supprimé : la cascade ne s'applique donc en pratique jamais dans ce sens pour les données de bénévoles actifs."),
 
   h2("2.3. Autres diagrammes UML"),
@@ -141,8 +150,9 @@ const persistance = [
     ["1", "Création → WAITING", "Toute inscription démarre en attente, avec position calculée si l'événement est déjà complet (RG-10)"],
     ["2", "WAITING → CONFIRMED", "Validation explicite par l'administrateur (RG-11) ; email de confirmation envoyé (RG-12)"],
     ["3", "WAITING → REFUSED", "Refus explicite par l'administrateur (RG-11) ; email envoyé (RG-12)"],
-    ["4", "CONFIRMED → (suppression)", "Désinscription volontaire du bénévole, possible avant le début de l'événement (RG-14)"],
-    ["5", "WAITING → CONFIRMED (auto)", "Promotion automatique du premier en liste d'attente après une désinscription confirmée (RG-13)"],
+    ["4", "WAITING → (suppression)", "Désinscription libre depuis la liste d'attente ; aucune place n'était occupée, donc aucune promotion à déclencher (RG-14)"],
+    ["5", "CONFIRMED → (suppression)", "Désinscription volontaire du bénévole, possible avant le début de l'événement (RG-14)"],
+    ["6", "WAITING → CONFIRMED (auto)", "Promotion automatique du premier en liste d'attente après une désinscription confirmée (RG-13)"],
   ], [900, 3400, 4750]),
   caption("Tableau 5 — Détail des transitions du cycle de vie d'une inscription"),
 
@@ -174,9 +184,9 @@ const persistance = [
     ["CANCELLED", "Uniquement sur décision explicite de l'administrateur, à tout moment", "RG-06"],
   ], [1400, 4750, 1900]),
   caption("Tableau 6 — Détail des transitions du cycle de vie d'un événement"),
-  p("Un événement CANCELLED ou FINISHED n'accepte plus de nouvelle inscription (RG-07) : le bouton « S'inscrire » disparaît alors de l'interface publique, et le contrôleur rejette également toute tentative d'inscription envoyée directement à l'API pour ce statut, la vérification n'étant jamais laissée à la seule charge du frontend."),
+  p("Un événement CANCELLED ou FINISHED n'accepte plus de nouvelles inscriptions (RG-07) : le bouton « S'inscrire » disparaît alors de l'interface publique, et le contrôleur rejette également toute tentative d'inscription envoyée directement à l'API pour ce statut, la vérification n'étant jamais laissée à la seule charge du frontend."),
 
-  p("En complément, les deux diagrammes de séquence ci-dessous détaillent, étape par étape, les interactions entre le frontend React, les contrôleurs Spring Boot et la base de données pour les deux scénarios les plus représentatifs du module : l'inscription à un événement, et la promotion automatique depuis la liste d'attente."),
+  p("En complément, les deux scénarios ci-dessous détaillent, étape par étape, les interactions entre le frontend React, les contrôleurs Spring Boot et la base de données pour les deux scénarios les plus représentatifs du module : l'inscription à un événement, et la promotion automatique depuis la liste d'attente."),
 
   h3("Scénario 1 : Inscription d'un bénévole à un événement"),
   table(["Étape", "Acteur", "Action"], [
