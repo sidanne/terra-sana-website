@@ -103,7 +103,7 @@ function headerRow(labels, widths) {
   });
 }
 function dataRow(values, widths, bg) {
-  return new TableRow({ children: values.map((v, i) => cell(v, { width: widths[i], bg, size: 18 })) });
+  return new TableRow({ cantSplit: true, children: values.map((v, i) => cell(v, { width: widths[i], bg, size: 18 })) });
 }
 function table(headers, rows, widths) {
   return new Table({
