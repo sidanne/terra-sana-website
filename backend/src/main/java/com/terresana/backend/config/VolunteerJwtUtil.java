@@ -9,7 +9,7 @@ import java.util.Date;
 
 /**
  * Génère et valide les tokens JWT des bénévoles, avec une clé secrète
- * indépendante de celle de l'administrateur (RG-24).
+ * indépendante de celle de l'administrateur (RG-25).
  */
 @Component
 public class VolunteerJwtUtil {
@@ -22,7 +22,7 @@ public class VolunteerJwtUtil {
         this.key = Keys.hmacShaKeyFor(java.util.Base64.getDecoder().decode(secret));
     }
 
-    // Durée volontairement distincte de celle de l'admin (RG-24) — 7 jours au lieu de 24h,
+    // Durée volontairement distincte de celle de l'admin (RG-23, RG-25) — 7 jours au lieu de 24h,
     // car un bénévole revient consulter ses inscriptions sur plusieurs jours contrairement à l'admin
     private final long EXPIRATION = 604800000;
 

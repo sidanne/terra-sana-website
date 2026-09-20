@@ -14,14 +14,15 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Data
-@Table(name = "app_users")
+@Table(name = "app_users",
+       uniqueConstraints = @UniqueConstraint(name = "uq_app_users_email", columnNames = "email"))
 public class AppUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, length = 200)
     private String email;
 
     // Mot de passe stocké haché en BCrypt — jamais en clair (RG-02), ni même le hash dans une réponse JSON.
@@ -31,28 +32,34 @@ public class AppUser {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String firstName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String lastName;
 
     // Champs facultatifs du profil
+    @Column(length = 30)
     private String phone;
     private LocalDate birthDate;
+    @Column(length = 20)
     private String gender;
     private String city;
     @Column(length = 20)
     private String postalCode;
+    @Column(columnDefinition = "TEXT")
     private String skills;
     private String availability;
+    @Column(length = 5)
     private String preferredLanguage = "fr";
 
-    // Niveau calculé automatiquement selon les participations (RG-18)
+    // Niveau calculé automatiquement selon les participations (RG-19)
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Level level = Level.BRONZE;
 
     // Compte actif — désactivable sans suppression pour conserver l'historique (RG-03)
+    @Column(nullable = false)
     private Boolean isActive = true;
 
     // Champs pour la réinitialisation de mot de passe par email (RG-04) —
@@ -61,5 +68,6 @@ public class AppUser {
     private String resetToken;
     private LocalDateTime resetTokenExpiry;
 
+    @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 }

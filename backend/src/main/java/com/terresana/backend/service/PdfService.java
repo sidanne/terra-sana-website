@@ -25,7 +25,7 @@ import java.util.Map;
 
 /**
  * Génère les documents PDF du module bénévoles avec iText7 :
- * attestations de participation (RG-20) et exports de listes d'inscrits (RG-21).
+ * attestations de participation (RG-21) et exports de listes d'inscrits (RG-22).
  */
 @Service
 public class PdfService {
@@ -35,7 +35,7 @@ public class PdfService {
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter DATETIME_FMT = DateTimeFormatter.ofPattern("dd/MM/yyyy 'à' HH:mm");
 
-    // RG-20 — Génère l'attestation uniquement si la participation est confirmée et l'événement terminé
+    // RG-21 — Génère l'attestation uniquement si la participation est confirmée et l'événement terminé
     public byte[] generateAttestation(AppUser user, Event event, Registration registration) {
         if (registration.getStatus() != RegistrationStatus.CONFIRMED) {
             throw new RuntimeException("Attestation disponible uniquement pour une participation confirmée.");
@@ -80,7 +80,7 @@ public class PdfService {
         return out.toByteArray();
     }
 
-    // RG-21 — Export PDF de la liste des inscrits, réservé à l'administrateur (contrôle fait au niveau du contrôleur)
+    // RG-22 — Export PDF de la liste des inscrits, réservé à l'administrateur (contrôle fait au niveau du contrôleur)
     public byte[] generateRegistrationsList(Event event, List<Registration> registrations) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try (PdfDocument pdf = new PdfDocument(new PdfWriter(out)); Document doc = new Document(pdf)) {
@@ -117,7 +117,7 @@ public class PdfService {
         return out.toByteArray();
     }
 
-    // RG-20 — Export PDF de l'historique de participation d'un bénévole (événements confirmés et terminés uniquement)
+    // RG-21 — Export PDF de l'historique de participation d'un bénévole (événements confirmés et terminés uniquement)
     public byte[] generateParticipationHistory(AppUser user, List<Registration> registrations, Map<Long, Review> reviewsByEventId) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try (PdfDocument pdf = new PdfDocument(new PdfWriter(out)); Document doc = new Document(pdf)) {

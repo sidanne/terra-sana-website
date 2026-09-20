@@ -27,16 +27,18 @@ public class Event {
     @Column(nullable = false)
     private LocalDateTime eventDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 300)
     private String location;
 
     // Nombre maximum de bénévoles acceptés pour cet événement
     @Column(nullable = false)
     private Integer maxPlaces;
 
+    @Column(length = 500)
     private String imageUrl;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private EventStatus status = EventStatus.OPEN;
 
     // Administrateur créateur de l'événement (relation "crée" du diagramme de classes)
@@ -44,6 +46,7 @@ public class Event {
     @JoinColumn(name = "admin_id")
     private Admin admin;
 
+    @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
     // Places encore disponibles (maxPlaces - inscriptions CONFIRMED) — calculé par EventService avant

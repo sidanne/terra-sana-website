@@ -22,22 +22,22 @@ public class ReviewService {
     }
 
     public Review addReview(AppUser user, Event event, int rating, String comment) {
-        // Un avis ne peut être laissé que sur un événement terminé (RG-15)
+        // Un avis ne peut être laissé que sur un événement terminé (RG-16)
         if (event.getStatus() != EventStatus.FINISHED) {
             throw new RuntimeException("Tu ne peux laisser un avis qu'après la fin de l'événement.");
         }
-        // Seul un participant confirmé peut laisser un avis (RG-14)
+        // Seul un participant confirmé peut laisser un avis (RG-15)
         boolean participated = registrationRepo.findByUserAndEvent(user, event)
                 .map(r -> r.getStatus() == RegistrationStatus.CONFIRMED)
                 .orElse(false);
         if (!participated) {
             throw new RuntimeException("Tu dois avoir participé à l'événement pour laisser un avis.");
         }
-        // Un seul avis par bénévole par événement (RG-16)
+        // Un seul avis par bénévole par événement (RG-17)
         if (reviewRepo.existsByUserAndEvent(user, event)) {
             throw new RuntimeException("Tu as déjà laissé un avis pour cet événement.");
         }
-        // La note doit être comprise entre 1 et 5 (RG-17)
+        // La note doit être comprise entre 1 et 5 (RG-18)
         if (rating < 1 || rating > 5) {
             throw new RuntimeException("La note doit être comprise entre 1 et 5.");
         }

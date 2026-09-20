@@ -135,7 +135,7 @@ public class AppUserController {
         return userService.toggleActive(id);
     }
 
-    // RG-20 — Télécharge l'attestation PDF de participation du bénévole connecté pour un événement donné
+    // RG-21 — Télécharge l'attestation PDF de participation du bénévole connecté pour un événement donné
     @GetMapping("/me/attestation/{eventId}")
     public ResponseEntity<byte[]> downloadAttestation(@PathVariable Long eventId, HttpServletRequest request) {
         AppUser user = userService.findByEmail(extractEmail(request));
@@ -150,7 +150,7 @@ public class AppUserController {
         return new ResponseEntity<>(pdf, headers, org.springframework.http.HttpStatus.OK);
     }
 
-    // RG-20 — Export PDF de l'historique complet de participation du bénévole connecté
+    // RG-21 — Export PDF de l'historique complet de participation du bénévole connecté
     @GetMapping("/me/participation-history")
     public ResponseEntity<byte[]> downloadParticipationHistory(HttpServletRequest request) {
         AppUser user = userService.findByEmail(extractEmail(request));

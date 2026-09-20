@@ -7,12 +7,12 @@ import java.time.LocalDateTime;
 
 /**
  * Lien entre un bénévole (AppUser) et un événement (Event).
- * Un bénévole ne peut avoir qu'une seule inscription par événement (RG-08).
+ * Un bénévole ne peut avoir qu'une seule inscription par événement (RG-09).
  */
 @Entity
 @Data
 @Table(name = "registrations",
-       uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "event_id"}))
+       uniqueConstraints = @UniqueConstraint(name = "uq_registration_user_event", columnNames = {"user_id", "event_id"}))
 public class Registration {
 
     @Id
@@ -27,17 +27,19 @@ public class Registration {
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
 
-    // Toute nouvelle inscription reste WAITING jusqu'à validation explicite de l'admin (RG-10)
+    // Toute nouvelle inscription reste WAITING jusqu'à validation explicite de l'admin (RG-11)
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private RegistrationStatus status = RegistrationStatus.WAITING;
 
-    // Position dans la liste d'attente (1 = premier) — renseignée seulement si l'événement était complet à l'inscription (RG-09)
+    // Position dans la liste d'attente (1 = premier) — renseignée seulement si l'événement était complet à l'inscription (RG-10)
     private Integer position;
 
-    // Admin ayant confirmé ou refusé l'inscription — null tant qu'elle n'a pas été traitée (RG-10)
+    // Admin ayant confirmé ou refusé l'inscription — null tant qu'elle n'a pas été traitée (RG-11)
     @ManyToOne
     @JoinColumn(name = "validated_by_id")
     private Admin validatedBy;
 
+    @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 }

@@ -30,7 +30,7 @@ public class RegistrationService {
     }
 
     public Registration register(AppUser user, Event event) {
-        // Un bénévole ne peut pas s'inscrire deux fois au même événement (RG-08)
+        // Un bénévole ne peut pas s'inscrire deux fois au même événement (RG-09)
         if (registrationRepo.findByUserAndEvent(user, event).isPresent()) {
             throw new RuntimeException("Tu es déjà inscrit à cet événement.");
         }
@@ -41,8 +41,8 @@ public class RegistrationService {
         Registration reg = new Registration();
         reg.setUser(user);
         reg.setEvent(event);
-        // Toute inscription reste WAITING jusqu'à validation explicite de l'admin (RG-10) ;
-        // si l'événement est déjà complet, une position de liste d'attente est en plus calculée (RG-09)
+        // Toute inscription reste WAITING jusqu'à validation explicite de l'admin (RG-11) ;
+        // si l'événement est déjà complet, une position de liste d'attente est en plus calculée (RG-10)
         reg.setStatus(RegistrationStatus.WAITING);
 
         long confirmed = registrationRepo.countByEventAndStatus(event, RegistrationStatus.CONFIRMED);
@@ -71,13 +71,13 @@ public class RegistrationService {
         long confirmed = registrationRepo.countByEventAndStatus(reg.getEvent(), RegistrationStatus.CONFIRMED);
         eventService.checkAndMarkFull(reg.getEvent(), confirmed);
 
-        // Recalculer le niveau du bénévole après confirmation (RG-18)
+        // Recalculer le niveau du bénévole après confirmation (RG-19)
         long totalConfirmed = registrationRepo
                 .findByUser(reg.getUser()).stream()
                 .filter(r -> r.getStatus() == RegistrationStatus.CONFIRMED).count();
         userService.updateLevel(reg.getUser(), totalConfirmed);
 
-        // RG-11 — Email de confirmation au bénévole
+        // RG-12 — Email de confirmation au bénévole
         emailService.sendConfirmation(reg.getUser(), reg.getEvent());
 
         return saved;
@@ -88,19 +88,19 @@ public class RegistrationService {
         reg.setStatus(RegistrationStatus.REFUSED);
         reg.setValidatedBy(admin);
         Registration saved = registrationRepo.save(reg);
-        // RG-11 — Email de refus au bénévole
+        // RG-12 — Email de refus au bénévole
         emailService.sendRejection(reg.getUser(), reg.getEvent());
         return saved;
     }
 
-    // RG-13 — Désinscription libre du bénévole : la ligne est supprimée (et non marquée), pour permettre
-    // une éventuelle réinscription ultérieure sans violer la contrainte d'unicité bénévole/événement (RG-08)
+    // RG-14 — Désinscription libre du bénévole : la ligne est supprimée (et non marquée), pour permettre
+    // une éventuelle réinscription ultérieure sans violer la contrainte d'unicité bénévole/événement (RG-09)
     public void cancel(Long registrationId, AppUser user) {
         Registration reg = findById(registrationId);
         if (!reg.getUser().getId().equals(user.getId())) {
             throw new RuntimeException("Tu ne peux pas annuler l'inscription d'un autre bénévole.");
         }
-        // RG-13 — Désinscription libre uniquement tant que l'événement n'est pas commencé
+        // RG-14 — Désinscription libre uniquement tant que l'événement n'est pas commencé
         if (reg.getEvent().getEventDate().isBefore(java.time.LocalDateTime.now())) {
             throw new RuntimeException("Impossible de se désinscrire : cet événement a déjà commencé.");
         }
@@ -114,14 +114,14 @@ public class RegistrationService {
                 .findByEventAndStatusOrderByCreatedAtAsc(event, RegistrationStatus.WAITING)
                 .stream().filter(r -> r.getPosition() != null).toList();
 
-        // Recalcule les positions de la liste d'attente restante après ce départ (RG-09)
+        // Recalcule les positions de la liste d'attente restante après ce départ (RG-10)
         for (int i = 0; i < waitlist.size(); i++) {
             waitlist.get(i).setPosition(i + 1);
         }
         registrationRepo.saveAll(waitlist);
 
         if (freedConfirmedSeat) {
-            // RG-18 — Le niveau est "calculé automatiquement" : doit refléter le nombre CONFIRMED actuel,
+            // RG-19 — Le niveau est "calculé automatiquement" : doit refléter le nombre CONFIRMED actuel,
             // donc redescendre si une désinscription fait passer le bénévole sous un seuil (pas seulement monter)
             long remainingConfirmed = registrationRepo
                     .findByUser(user).stream()
@@ -129,7 +129,7 @@ public class RegistrationService {
             userService.updateLevel(user, remainingConfirmed);
 
             if (!waitlist.isEmpty()) {
-                // RG-12 — Promotion automatique et directe du premier de la liste d'attente (WAITING → CONFIRMED)
+                // RG-13 — Promotion automatique et directe du premier de la liste d'attente (WAITING → CONFIRMED)
                 Registration next = waitlist.get(0);
                 next.setStatus(RegistrationStatus.CONFIRMED);
                 next.setPosition(null);

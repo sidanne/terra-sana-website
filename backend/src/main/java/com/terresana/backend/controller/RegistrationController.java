@@ -87,7 +87,7 @@ public class RegistrationController {
         return registrationService.findAll();
     }
 
-    // RG-21 — Export PDF de la liste des inscrits à un événement (réservé à l'admin)
+    // RG-22 — Export PDF de la liste des inscrits à un événement (réservé à l'admin)
     @GetMapping("/event/{eventId}/export")
     public ResponseEntity<byte[]> exportRegistrations(@PathVariable Long eventId) {
         Event event = eventService.findById(eventId);
@@ -109,13 +109,13 @@ public class RegistrationController {
         return Map.of("message", "Email envoyé à " + count + " bénévole(s).", "count", count);
     }
 
-    // Confirmer une inscription (admin) → passe WAITING → CONFIRMED (RG-10)
+    // Confirmer une inscription (admin) → passe WAITING → CONFIRMED (RG-11)
     @PutMapping("/{id}/confirm")
     public Registration confirm(@PathVariable Long id, HttpServletRequest request) {
         return registrationService.confirm(id, getCurrentAdmin(request));
     }
 
-    // Refuser une inscription (admin) → passe WAITING → REFUSED (RG-10)
+    // Refuser une inscription (admin) → passe WAITING → REFUSED (RG-11)
     @PutMapping("/{id}/reject")
     public Registration reject(@PathVariable Long id, HttpServletRequest request) {
         return registrationService.reject(id, getCurrentAdmin(request));
@@ -131,7 +131,7 @@ public class RegistrationController {
         return userService.findByEmail(email);
     }
 
-    // Récupère l'admin connecté à partir de son token JWT (RG-10 : trace qui a validé/refusé)
+    // Récupère l'admin connecté à partir de son token JWT (RG-11 : trace qui a validé/refusé)
     private Admin getCurrentAdmin(HttpServletRequest request) {
         String header = request.getHeader("Authorization");
         if (header == null || !header.startsWith("Bearer ")) {

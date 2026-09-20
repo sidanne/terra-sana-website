@@ -64,8 +64,8 @@ public class AppUserService {
         return userRepo.save(user);
     }
 
-    // Recalcule et met à jour le niveau du bénévole selon ses participations (RG-18)
-    // Envoie un email si le niveau change (RG-19)
+    // Recalcule et met à jour le niveau du bénévole selon ses participations (RG-19)
+    // Envoie un email si le niveau change (RG-20)
     public void updateLevel(AppUser user, long confirmedCount) {
         Level oldLevel = user.getLevel();
         Level newLevel;
@@ -79,7 +79,7 @@ public class AppUserService {
         user.setLevel(newLevel);
         userRepo.save(user);
         // Envoyer l'email de félicitations uniquement si le niveau a réellement progressé (jamais sur une baisse,
-        // ex. après une désinscription qui repasse le bénévole sous un seuil — RG-18 recalcule aussi à la baisse)
+        // ex. après une désinscription qui repasse le bénévole sous un seuil — RG-19 recalcule aussi à la baisse)
         if (newLevel.ordinal() > oldLevel.ordinal()) {
             emailService.sendLevelChange(user, newLevel.name());
         }

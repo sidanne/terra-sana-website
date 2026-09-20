@@ -8,12 +8,14 @@ import java.util.List;
 
 @Entity
 @Data
+@Table(name = "admin",
+       uniqueConstraints = @UniqueConstraint(name = "uq_admin_username", columnNames = "username"))
 public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String username;
 
     // Ne jamais exposer le hash même via une réponse JSON (RG-02) — surtout maintenant qu'Admin

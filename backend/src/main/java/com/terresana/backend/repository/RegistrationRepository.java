@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface RegistrationRepository extends JpaRepository<Registration, Long> {
 
-    // Vérifier si un bénévole est déjà inscrit à un événement (RG-07)
+    // Vérifier si un bénévole est déjà inscrit à un événement (RG-09)
     Optional<Registration> findByUserAndEvent(AppUser user, Event event);
 
     // Toutes les inscriptions d'un événement (pour l'admin)

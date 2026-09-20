@@ -15,9 +15,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 /**
- * RG-23 — Les endpoints d'administration sont réservés au rôle ADMIN.
+ * RG-24 — Les endpoints d'administration sont réservés au rôle ADMIN.
  * Le reste (public + bénévole authentifié) reste ouvert : chaque contrôleur
- * gère lui-même l'identification du bénévole via son token JWT (RG-24).
+ * gère lui-même l'identification du bénévole via son token JWT (RG-25).
  */
 @Configuration
 public class SecurityConfig {
@@ -63,7 +63,7 @@ public class SecurityConfig {
                 // Compteur public pour les statistiques de la page d'accueil (aucune donnée personnelle)
                 .requestMatchers(HttpMethod.GET, "/api/volunteers/count").permitAll()
 
-                // ── Réservé à l'administrateur (RG-23) ──
+                // ── Réservé à l'administrateur (RG-24) ──
                 .requestMatchers(HttpMethod.POST, "/api/auth/register").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/auth/changePassword").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/auth/updateProfile").hasRole("ADMIN")

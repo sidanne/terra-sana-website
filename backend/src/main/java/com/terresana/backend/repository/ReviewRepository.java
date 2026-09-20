@@ -14,6 +14,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     // Tous les avis laissés par un bénévole (pour son historique)
     List<Review> findByUser(AppUser user);
 
-    // Vérifier qu'un bénévole n'a pas déjà laissé un avis sur cet événement (RG-16)
+    // Vérifier qu'un bénévole n'a pas déjà laissé un avis sur cet événement (RG-17)
     boolean existsByUserAndEvent(AppUser user, Event event);
 }

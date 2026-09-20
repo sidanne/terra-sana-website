@@ -15,7 +15,7 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * Service d'envoi d'emails automatiques via Gmail SMTP.
- * Utilisé pour les notifications bénévoles (RG-11, RG-12, RG-19).
+ * Utilisé pour les notifications bénévoles (RG-12, RG-13, RG-20).
  *
  * Toutes les méthodes sont @Async : le vrai aller-retour SMTP peut prendre 1 à 3 secondes,
  * et sans ça chaque action admin (confirmer, refuser...) restait bloquée à attendre l'email
@@ -34,7 +34,7 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
-    // RG-11 — Email envoyé quand l'admin confirme une inscription
+    // RG-12 — Email envoyé quand l'admin confirme une inscription
     @Async
     public void sendConfirmation(AppUser user, Event event) {
         String subject = "✅ Inscription confirmée — " + event.getTitle();
@@ -49,7 +49,7 @@ public class EmailService {
         send(user.getEmail(), subject, body);
     }
 
-    // RG-11 — Email envoyé quand l'admin refuse une inscription
+    // RG-12 — Email envoyé quand l'admin refuse une inscription
     @Async
     public void sendRejection(AppUser user, Event event) {
         String subject = "❌ Inscription non retenue — " + event.getTitle();
@@ -78,7 +78,7 @@ public class EmailService {
         send(user.getEmail(), subject, body);
     }
 
-    // RG-12 — Email envoyé quand une place se libère et le bénévole sort de la liste d'attente
+    // RG-13 — Email envoyé quand une place se libère et le bénévole sort de la liste d'attente
     @Async
     public void sendWaitlistPromotion(AppUser user, Event event) {
         String subject = "🎉 Une place s'est libérée — " + event.getTitle();
@@ -94,7 +94,7 @@ public class EmailService {
         send(user.getEmail(), subject, body);
     }
 
-    // RG-19 — Email envoyé quand le bénévole passe à un niveau supérieur
+    // RG-20 — Email envoyé quand le bénévole passe à un niveau supérieur
     @Async
     public void sendLevelChange(AppUser user, String newLevel) {
         String emoji = newLevel.equals("OR") ? "🥇" : "🥈";
@@ -162,7 +162,7 @@ public class EmailService {
             "<h3 style='color:" + GREEN + ";margin-top:0'>" + heading + "</h3>" +
             "<p style='color:#444;line-height:1.7'>" + content + "</p>" +
             "<hr style='border:none;border-top:1px solid #eee;margin:24px 0'>" +
-            "<p style='font-size:12px;color:#999'>Terra Sana ASBL — 19 avenue des Volontaires, Auderghem<br>" +
+            "<p style='font-size:12px;color:#999'>Terra Sana ASBL — 53/3, 1200 Woluwe-Saint-Lambert<br>" +
             "Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>" +
             "</div></div>";
     }

@@ -31,7 +31,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String header = request.getHeader("Authorization");
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
-            // Admin et bénévole utilisent des clés secrètes distinctes (RG-24) : on essaie les deux
+            // Admin et bénévole utilisent des clés secrètes distinctes (RG-25) : on essaie les deux
             if (jwtUtil.validateToken(token)) {
                 authenticate(jwtUtil.extractUsername(token), "ROLE_ADMIN");
             } else if (volunteerJwtUtil.validateToken(token)) {
