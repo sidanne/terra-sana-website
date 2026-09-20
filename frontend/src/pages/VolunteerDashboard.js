@@ -23,7 +23,7 @@ const T = {
         statusText: { WAITING: "En attente", CONFIRMED: "Confirmé", REFUSED: "Refusé" },
         eventCancelled: "Événement annulé",
         levelName: { BRONZE: "Bronze", ARGENT: "Argent", OR: "Or" },
-        levelRange: { BRONZE: "1 à 2 événements", ARGENT: "3 à 6 événements", OR: "7 événements et plus" },
+        levelRange: { BRONZE: "0 à 2 événements", ARGENT: "3 à 6 événements", OR: "7 événements et plus" },
         navMySpace: "Mon espace", navEvents: "Événements", navRegistrations: "Mes inscriptions", navAttestations: "Mes attestations", navReviews: "Mes avis",
         bellTitle: "Mes inscriptions en attente",
         msgProfileUpdated: "Profil mis à jour avec succès.", msgProfileError: "Impossible de mettre à jour le profil.",
@@ -32,7 +32,7 @@ const T = {
         msgChooseRating: "Veuillez choisir une note.", msgReviewSent: "Avis envoyé avec succès !", msgReviewError: "Impossible d'envoyer cet avis.",
         volunteerSince: "Bénévole depuis", level: "Niveau",
         statConfirmed: "particip. confirmées", statRegistrations: "inscriptions", statAvgRating: "note moy.",
-        loyaltyTitle: "NIVEAU DE FIDÉLITÉ", loyaltySub: "Calculé automatiquement selon le nombre de participations confirmées (RG-18)",
+        loyaltyTitle: "NIVEAU DE FIDÉLITÉ", loyaltySub: "Calculé automatiquement selon le nombre de participations confirmées (RG-19)",
         currentLevel: " — niveau actuel", logout: "Se déconnecter",
         personalInfo: "Informations personnelles", edit: "Modifier", save: "Sauvegarder", cancel: "Annuler",
         fields: { firstName: "Prénom", lastName: "Nom", phone: "Téléphone", city: "Ville", postalCode: "Code postal", skills: "Compétences", availability: "Disponibilités" },
@@ -45,7 +45,7 @@ const T = {
         thEvent: "ÉVÉNEMENT", thDate: "DATE", thRating: "ÉVALUATION", thAttestation: "ATTESTATION", thStatus: "STATUT",
         download: "Télécharger →", position: "Position",
         notRegisteredYet: "Vous n'êtes inscrit à aucun événement pour l'instant.",
-        myAttestations: "Mes attestations PDF", attestationsSub: "Disponible pour chaque événement terminé où votre participation a été confirmée (RG-20).",
+        myAttestations: "Mes attestations PDF", attestationsSub: "Disponible pour chaque événement terminé où votre participation a été confirmée (RG-21).",
         noAttestation: "Aucune attestation disponible pour l'instant — elle apparaîtra ici après un événement terminé.", finishedOn: "Terminé le",
         toReview: "Événements à évaluer", commentPh: "Votre commentaire (optionnel)", sendReview: "Envoyer mon avis",
         reviewsGiven: (n) => `Avis déjà laissés (${n})`, noReviews: "Vous n'avez pas encore laissé d'avis.",
@@ -56,7 +56,7 @@ const T = {
         statusText: { WAITING: "Waiting", CONFIRMED: "Confirmed", REFUSED: "Refused" },
         eventCancelled: "Event cancelled",
         levelName: { BRONZE: "Bronze", ARGENT: "Silver", OR: "Gold" },
-        levelRange: { BRONZE: "1 to 2 events", ARGENT: "3 to 6 events", OR: "7 events and more" },
+        levelRange: { BRONZE: "0 to 2 events", ARGENT: "3 to 6 events", OR: "7 events and more" },
         navMySpace: "My space", navEvents: "Events", navRegistrations: "My registrations", navAttestations: "My certificates", navReviews: "My reviews",
         bellTitle: "My pending registrations",
         msgProfileUpdated: "Profile updated successfully.", msgProfileError: "Could not update the profile.",
@@ -65,7 +65,7 @@ const T = {
         msgChooseRating: "Please choose a rating.", msgReviewSent: "Review sent successfully!", msgReviewError: "Could not send this review.",
         volunteerSince: "Volunteer since", level: "Level",
         statConfirmed: "confirmed particip.", statRegistrations: "registrations", statAvgRating: "avg. rating",
-        loyaltyTitle: "LOYALTY LEVEL", loyaltySub: "Automatically calculated from the number of confirmed participations (RG-18)",
+        loyaltyTitle: "LOYALTY LEVEL", loyaltySub: "Automatically calculated from the number of confirmed participations (RG-19)",
         currentLevel: " — current level", logout: "Log out",
         personalInfo: "Personal information", edit: "Edit", save: "Save", cancel: "Cancel",
         fields: { firstName: "First name", lastName: "Last name", phone: "Phone", city: "City", postalCode: "Postal code", skills: "Skills", availability: "Availability" },
@@ -78,7 +78,7 @@ const T = {
         thEvent: "EVENT", thDate: "DATE", thRating: "RATING", thAttestation: "CERTIFICATE", thStatus: "STATUS",
         download: "Download →", position: "Position",
         notRegisteredYet: "You are not registered for any event yet.",
-        myAttestations: "My PDF certificates", attestationsSub: "Available for each finished event where your participation was confirmed (RG-20).",
+        myAttestations: "My PDF certificates", attestationsSub: "Available for each finished event where your participation was confirmed (RG-21).",
         noAttestation: "No certificate available yet — it will appear here after a finished event.", finishedOn: "Finished on",
         toReview: "Events to rate", commentPh: "Your comment (optional)", sendReview: "Send my review",
         reviewsGiven: (n) => `Reviews already given (${n})`, noReviews: "You haven't left any reviews yet.",
@@ -89,7 +89,7 @@ const T = {
         statusText: { WAITING: "In wachtrij", CONFIRMED: "Bevestigd", REFUSED: "Geweigerd" },
         eventCancelled: "Evenement geannuleerd",
         levelName: { BRONZE: "Brons", ARGENT: "Zilver", OR: "Goud" },
-        levelRange: { BRONZE: "1 tot 2 evenementen", ARGENT: "3 tot 6 evenementen", OR: "7 evenementen en meer" },
+        levelRange: { BRONZE: "0 tot 2 evenementen", ARGENT: "3 tot 6 evenementen", OR: "7 evenementen en meer" },
         navMySpace: "Mijn ruimte", navEvents: "Evenementen", navRegistrations: "Mijn inschrijvingen", navAttestations: "Mijn attesten", navReviews: "Mijn beoordelingen",
         bellTitle: "Mijn wachtende inschrijvingen",
         msgProfileUpdated: "Profiel succesvol bijgewerkt.", msgProfileError: "Kan het profiel niet bijwerken.",
@@ -98,7 +98,7 @@ const T = {
         msgChooseRating: "Kies een score.", msgReviewSent: "Beoordeling succesvol verzonden!", msgReviewError: "Kan deze beoordeling niet versturen.",
         volunteerSince: "Vrijwilliger sinds", level: "Niveau",
         statConfirmed: "bevestigde deeln.", statRegistrations: "inschrijvingen", statAvgRating: "gem. score",
-        loyaltyTitle: "LOYALITEITSNIVEAU", loyaltySub: "Automatisch berekend op basis van het aantal bevestigde deelnames (RG-18)",
+        loyaltyTitle: "LOYALITEITSNIVEAU", loyaltySub: "Automatisch berekend op basis van het aantal bevestigde deelnames (RG-19)",
         currentLevel: " — huidig niveau", logout: "Uitloggen",
         personalInfo: "Persoonlijke gegevens", edit: "Bewerken", save: "Opslaan", cancel: "Annuleren",
         fields: { firstName: "Voornaam", lastName: "Naam", phone: "Telefoon", city: "Stad", postalCode: "Postcode", skills: "Vaardigheden", availability: "Beschikbaarheid" },
@@ -111,7 +111,7 @@ const T = {
         thEvent: "EVENEMENT", thDate: "DATUM", thRating: "BEOORDELING", thAttestation: "ATTEST", thStatus: "STATUS",
         download: "Downloaden →", position: "Positie",
         notRegisteredYet: "U bent nog voor geen enkel evenement ingeschreven.",
-        myAttestations: "Mijn PDF-attesten", attestationsSub: "Beschikbaar voor elk afgelopen evenement waarvoor uw deelname werd bevestigd (RG-20).",
+        myAttestations: "Mijn PDF-attesten", attestationsSub: "Beschikbaar voor elk afgelopen evenement waarvoor uw deelname werd bevestigd (RG-21).",
         noAttestation: "Nog geen attest beschikbaar — het verschijnt hier na een afgelopen evenement.", finishedOn: "Afgelopen op",
         toReview: "Te beoordelen evenementen", commentPh: "Uw opmerking (optioneel)", sendReview: "Beoordeling versturen",
         reviewsGiven: (n) => `Reeds gegeven beoordelingen (${n})`, noReviews: "U heeft nog geen beoordeling achtergelaten.",
@@ -167,7 +167,7 @@ function VolunteerDashboard({ lang }) {
         }
     };
 
-    // RG-20 — Téléchargement de l'attestation, disponible seulement si CONFIRMED + événement FINISHED
+    // RG-21 — Téléchargement de l'attestation, disponible seulement si CONFIRMED + événement FINISHED
     const handleDownloadAttestation = async (eventId, eventTitle) => {
         try {
             await downloadAttestation(eventId, eventTitle);
@@ -220,7 +220,7 @@ function VolunteerDashboard({ lang }) {
     const reviewByEventId = {};
     reviews.forEach(rv => { if (rv.event?.id) reviewByEventId[rv.event.id] = rv; });
 
-    // Résumé "Historique de participation" affiché sur "Mon espace" — événements confirmés et terminés, avec évaluation (RG-20)
+    // Résumé "Historique de participation" affiché sur "Mon espace" — événements confirmés et terminés, avec évaluation (RG-21)
     const renderCompletedHistory = () => {
         const completed = registrations.filter(r => r.status === "CONFIRMED" && r.event?.status === "FINISHED");
         return (

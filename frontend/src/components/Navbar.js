@@ -23,14 +23,16 @@ function Navbar({ lang, setLang }) {
     }, [token, location]);
 
     const navLinks = {
-        fr: ["A propos", "Nos applications", "Nos evenements", "Devenir benevole", "Contact"],
+        fr: ["À propos", "Nos applications", "Nos événements", "Devenir bénévole", "Contact"],
         en: ["About", "Our applications", "Our events", "Become a volunteer", "Contact"],
         nl: ["Over ons", "Onze applicaties", "Onze evenementen", "Vrijwilliger worden", "Contact"]
     };
-    const langNames = { fr: "Francais", en: "English", nl: "Nederlands" };
+    const langNames = { fr: "Français", en: "English", nl: "Nederlands" };
     const langFlags = { fr: "FR", en: "EN", nl: "NL" };
     const volunteerConnect = { fr: "Se connecter", en: "Log in", nl: "Inloggen" };
     const volunteerJoin = { fr: "Je m'inscris", en: "Sign up", nl: "Inschrijven" };
+    const adminSpace = { fr: "Espace administrateur", en: "Admin area", nl: "Beheerdersruimte" };
+    const mySpace = { fr: "Mon espace", en: "My space", nl: "Mijn ruimte" };
 
     const links = navLinks[lang] || navLinks.fr;
     const paths = ["/about", "/projects", "/evenements", "/volunteer/register", "/contact"];
@@ -92,10 +94,10 @@ function Navbar({ lang, setLang }) {
                         {unreadCount > 0 && <span style={styles.notifBadge}>{unreadCount}</span>}
                     </Link>
                 ) : isVolunteerLoggedIn ? (
-                    <Link to="/volunteer/dashboard" style={styles.joinBtn}>Mon espace</Link>
+                    <Link to="/volunteer/dashboard" style={styles.joinBtn}>{mySpace[lang] || mySpace.fr}</Link>
                 ) : (
                     <div style={styles.authBtns}>
-                        <Link to="/login" style={styles.adminTextLink}>Espace administrateur</Link>
+                        <Link to="/login" style={styles.adminTextLink}>{adminSpace[lang] || adminSpace.fr}</Link>
                         <Link to="/volunteer/login" style={styles.connectBtn}>{volunteerConnect[lang]}</Link>
                         <Link to="/volunteer/register" style={styles.joinBtn}>{volunteerJoin[lang]}</Link>
                     </div>

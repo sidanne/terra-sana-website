@@ -28,10 +28,10 @@ const T = {
         thVolunteer: "BÉNÉVOLE", confirm: "Confirmer", refuse: "Refuser",
         postEventFeedback: (n) => `Retours post-événement (${n})`, noReviewYet: "Aucun avis pour le moment.",
         eligibleVolunteers: "Bénévoles éligibles à une attestation",
-        eligibleSub: "Participation confirmée à un événement terminé (RG-20) — le bénévole télécharge lui-même son attestation depuis son espace personnel.",
+        eligibleSub: "Participation confirmée à un événement terminé (RG-21) — le bénévole télécharge lui-même son attestation depuis son espace personnel.",
         noAttestationYet: "Aucune attestation disponible pour le moment.",
         registrationsByMonth: "Inscriptions par mois", participationRateChart: (n) => `Taux de participation : ${n}%`,
-        confirmedLabel: "Confirmées", waitingLabel: "En attente", refusedLabel: "Refusées",
+        confirmedLabel: "Confirmées", waitingLabel: "En attente", refusedLabel: "Refusées", confirmedOne: "Confirmée", refusedOne: "Refusée",
         addProject: "Ajouter un projet", projectName: "Nom du projet", category: "Categorie", description: "Description",
         appLink: "Lien application (http://...)", imageUrlOptional: "URL image (optionnel)", preview: "Aperçu", activeProject: "Projet actif", addProjectBtn: "Ajouter le projet",
         editProject: "Modifier le projet", name: "Nom", save: "Sauvegarder", cancel: "Annuler",
@@ -101,10 +101,10 @@ const T = {
         thVolunteer: "VOLUNTEER", confirm: "Confirm", refuse: "Refuse",
         postEventFeedback: (n) => `Post-event feedback (${n})`, noReviewYet: "No reviews yet.",
         eligibleVolunteers: "Volunteers eligible for a certificate",
-        eligibleSub: "Confirmed participation in a finished event (RG-20) — the volunteer downloads their own certificate from their personal space.",
+        eligibleSub: "Confirmed participation in a finished event (RG-21) — the volunteer downloads their own certificate from their personal space.",
         noAttestationYet: "No certificate available yet.",
         registrationsByMonth: "Registrations by month", participationRateChart: (n) => `Participation rate: ${n}%`,
-        confirmedLabel: "Confirmed", waitingLabel: "Waiting", refusedLabel: "Refused",
+        confirmedLabel: "Confirmed", waitingLabel: "Waiting", refusedLabel: "Refused", confirmedOne: "Confirmed", refusedOne: "Refused",
         addProject: "Add a project", projectName: "Project name", category: "Category", description: "Description",
         appLink: "Application link (http://...)", imageUrlOptional: "Image URL (optional)", preview: "Preview", activeProject: "Active project", addProjectBtn: "Add project",
         editProject: "Edit project", name: "Name", save: "Save", cancel: "Cancel",
@@ -174,10 +174,10 @@ const T = {
         thVolunteer: "VRIJWILLIGER", confirm: "Bevestigen", refuse: "Weigeren",
         postEventFeedback: (n) => `Feedback na evenement (${n})`, noReviewYet: "Nog geen beoordelingen.",
         eligibleVolunteers: "Vrijwilligers die in aanmerking komen voor een attest",
-        eligibleSub: "Bevestigde deelname aan een afgelopen evenement (RG-20) — de vrijwilliger downloadt zelf zijn attest vanuit zijn persoonlijke ruimte.",
+        eligibleSub: "Bevestigde deelname aan een afgelopen evenement (RG-21) — de vrijwilliger downloadt zelf zijn attest vanuit zijn persoonlijke ruimte.",
         noAttestationYet: "Nog geen attest beschikbaar.",
         registrationsByMonth: "Inschrijvingen per maand", participationRateChart: (n) => `Deelnamegraad: ${n}%`,
-        confirmedLabel: "Bevestigd", waitingLabel: "Wachtend", refusedLabel: "Geweigerd",
+        confirmedLabel: "Bevestigd", waitingLabel: "Wachtend", refusedLabel: "Geweigerd", confirmedOne: "Bevestigd", refusedOne: "Geweigerd",
         addProject: "Project toevoegen", projectName: "Projectnaam", category: "Categorie", description: "Beschrijving",
         appLink: "Applicatielink (http://...)", imageUrlOptional: "Afbeelding-URL (optioneel)", preview: "Voorbeeld", activeProject: "Actief project", addProjectBtn: "Project toevoegen",
         editProject: "Project bewerken", name: "Naam", save: "Opslaan", cancel: "Annuleren",
@@ -332,7 +332,7 @@ function Admin({ lang }) {
         ? Math.round((statusCounts.CONFIRMED / allRegistrations.length) * 100) : 0;
     // Libellé traduit d'un statut d'inscription (le badge affichait jusqu'ici la valeur brute WAITING/CONFIRMED/REFUSED,
     // jamais traduite, contrairement au reste de l'interface autour de lui)
-    const statusLabel = { WAITING: t.waitingLabel, CONFIRMED: t.confirmedLabel, REFUSED: t.refusedLabel };
+    const statusLabel = { WAITING: t.waitingLabel, CONFIRMED: t.confirmedOne, REFUSED: t.refusedOne };
 
     // Liste des bénévoles filtrée par compétence / disponibilité / langue (recherche insensible à la casse)
     const filteredVolunteers = volunteers.filter(v => {
@@ -562,7 +562,7 @@ function Admin({ lang }) {
         setCurrentEventId(eventId);
     };
 
-    // RG-21 — Export PDF de la liste des inscrits (réservé à l'admin)
+    // RG-22 — Export PDF de la liste des inscrits (réservé à l'admin)
     const exportRegistrationsPdf = async () => {
         const res = await fetch(`http://localhost:8080/api/registrations/event/${currentEventId}/export`, {
             headers: { Authorization: `Bearer ${token}` }
@@ -1465,7 +1465,7 @@ function Admin({ lang }) {
 
             {confirmDelete && (() => {
                 // Avertissement supplémentaire si l'événement a des participations confirmées avec
-                // attestation potentiellement déjà téléchargeable (RG-20) — la suppression les emporte aussi.
+                // attestation potentiellement déjà téléchargeable (RG-21) — la suppression les emporte aussi.
                 const attestationsAtRisk = confirmDelete.type === "event"
                     ? allRegistrations.filter(r => r.event?.id === confirmDelete.id && r.status === "CONFIRMED").length
                     : 0;

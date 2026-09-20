@@ -103,7 +103,7 @@ function Events({ lang }) {
         }
         try {
             const res = await registerToEvent(eventId);
-            // Afficher un message de retour selon qu'une position de liste d'attente a été attribuée (RG-09)
+            // Afficher un message de retour selon qu'une position de liste d'attente a été attribuée (RG-10)
             const msg = res.position ? t.waitlistMsg : t.registeredMsg;
             setFeedback(prev => ({ ...prev, [eventId]: { ok: true, msg } }));
             setMyRegByEvent(prev => ({ ...prev, [eventId]: res }));

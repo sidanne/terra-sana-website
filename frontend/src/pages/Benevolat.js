@@ -7,10 +7,10 @@ function Benevolat({ lang }) {
     const [error, setError] = useState("");
 
     const t = {
-        fr: { title: "Benevol et Stage", sub: "Rejoignez notre equipe et contribuez a notre mission", typeLabel: "Type de candidature", benevole: "Benevole", stagiaire: "Stagiaire", nom: "Nom complet", email: "Email", tel: "Telephone", motivation: "Lettre de motivation", motivationPh: "Expliquez votre motivation a rejoindre Terra Sana...", dispo: "Disponibilites", dispoPh: "Quand etes-vous disponible ? (jours, heures...)", send: "Envoyer ma candidature", sending: "Envoi en cours...", success: "Votre candidature a ete envoyee avec succes ! Nous vous contacterons bientot.", why: "Pourquoi nous rejoindre ?", r1: "Contribuer a une mission solidaire et durable", r2: "Developper vos competences professionnelles", r3: "Integrer une equipe dynamique et bienveillante", r4: "Participer a des projets concrets et innovants" },
+        fr: { title: "Bénévolat et stage", sub: "Rejoignez notre équipe et contribuez à notre mission", typeLabel: "Type de candidature", benevole: "Bénévole", stagiaire: "Stagiaire", nom: "Nom complet", email: "Email", tel: "Téléphone", motivation: "Lettre de motivation", motivationPh: "Expliquez votre motivation à rejoindre Terra Sana...", dispo: "Disponibilités", dispoPh: "Quand êtes-vous disponible ? (jours, heures...)", send: "Envoyer ma candidature", sending: "Envoi en cours...", success: "Votre candidature a été envoyée avec succès ! Nous vous contacterons bientôt.", why: "Pourquoi nous rejoindre ?", r1: "Contribuer à une mission solidaire et durable", r2: "Développer vos compétences professionnelles", r3: "Intégrer une équipe dynamique et bienveillante", r4: "Participer à des projets concrets et innovants" },
         en: { title: "Volunteer and Internship", sub: "Join our team and contribute to our mission", typeLabel: "Application type", benevole: "Volunteer", stagiaire: "Intern", nom: "Full name", email: "Email", tel: "Phone", motivation: "Cover letter", motivationPh: "Explain your motivation to join Terra Sana...", dispo: "Availability", dispoPh: "When are you available? (days, hours...)", send: "Send my application", sending: "Sending...", success: "Your application has been sent! We will contact you soon.", why: "Why join us?", r1: "Contribute to a solidarity and sustainable mission", r2: "Develop your professional skills", r3: "Join a dynamic and caring team", r4: "Participate in concrete and innovative projects" },
         nl: { title: "Vrijwillig en Stage", sub: "Sluit u aan bij ons team en draag bij aan onze missie", typeLabel: "Type aanvraag", benevole: "Vrijwilliger", stagiaire: "Stagiair", nom: "Volledige naam", email: "E-mail", tel: "Telefoon", motivation: "Motivatiebrief", motivationPh: "Leg uw motivatie uit om Terra Sana te vervoegen...", dispo: "Beschikbaarheid", dispoPh: "Wanneer bent u beschikbaar?", send: "Mijn aanvraag verzenden", sending: "Verzenden...", success: "Uw aanvraag is verzonden! We nemen spoedig contact met u op.", why: "Waarom ons vervoegen?", r1: "Bijdragen aan een solidaire en duurzame missie", r2: "Uw professionele vaardigheden ontwikkelen", r3: "Deel uitmaken van een dynamisch team", r4: "Deelnemen aan concrete projecten" }
-    }[lang] || { title: "Benevol et Stage", sub: "Rejoignez notre equipe", typeLabel: "Type", benevole: "Benevole", stagiaire: "Stagiaire", nom: "Nom", email: "Email", tel: "Telephone", motivation: "Motivation", motivationPh: "Votre motivation...", dispo: "Disponibilites", dispoPh: "Vos disponibilites...", send: "Envoyer", sending: "Envoi...", success: "Candidature envoyee !", why: "Pourquoi nous rejoindre ?", r1: "Mission solidaire", r2: "Competences", r3: "Equipe dynamique", r4: "Projets innovants" };
+    }[lang] || { title: "Bénévolat et stage", sub: "Rejoignez notre équipe", typeLabel: "Type", benevole: "Bénévole", stagiaire: "Stagiaire", nom: "Nom", email: "Email", tel: "Téléphone", motivation: "Motivation", motivationPh: "Votre motivation...", dispo: "Disponibilités", dispoPh: "Vos disponibilités...", send: "Envoyer", sending: "Envoi...", success: "Candidature envoyée !", why: "Pourquoi nous rejoindre ?", r1: "Mission solidaire", r2: "Compétences", r3: "Équipe dynamique", r4: "Projets innovants" };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -23,7 +23,7 @@ function Benevolat({ lang }) {
                 body: JSON.stringify({
                     name: form.nom,
                     email: form.email,
-                    message: `[${form.type.toUpperCase()}] Tel: ${form.telephone}\nMotivation: ${form.motivation}\nDisponibilites: ${form.disponibilite}`
+                    message: `[${form.type.toUpperCase()}] Tel: ${form.telephone}\nMotivation: ${form.motivation}\nDisponibilités: ${form.disponibilite}`
                 })
             });
             if (!res.ok) throw new Error();
@@ -56,9 +56,9 @@ function Benevolat({ lang }) {
                         ))}
                     </div>
                     <div style={styles.contactBox}>
-                        <div style={styles.contactItem}>ADR � 53/3, 1200 Woluwe-Saint-Lambert</div>
-                        <div style={styles.contactItem}>EML � Terrasana@outlook.be</div>
-                        <div style={styles.contactItem}>HOR � Lun - Ven : 8h00 - 16h00</div>
+                        <div style={styles.contactItem}>ADR • 53/3, 1200 Woluwe-Saint-Lambert</div>
+                        <div style={styles.contactItem}>EML • Terrasana@outlook.be</div>
+                        <div style={styles.contactItem}>HOR • Lun - Ven : 8h00 - 16h00</div>
                     </div>
                 </div>
 

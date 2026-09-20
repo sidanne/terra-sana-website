@@ -10,7 +10,7 @@ const authHeaders = () => ({
 });
 
 // fetch() ne rejette JAMAIS sur un statut HTTP d'erreur (400, 403...), seulement sur une panne réseau —
-// donc un refus métier (ex: RG-08 "déjà inscrit") arrivait jusqu'ici comme un objet "réponse" normal,
+// donc un refus métier (ex: RG-09 "déjà inscrit") arrivait jusqu'ici comme un objet "réponse" normal,
 // et le code appelant le traitait par erreur comme un succès. Ce helper force le rejet dans ce cas,
 // avec le message renvoyé par le backend, pour que les blocs catch() des pages fonctionnent vraiment.
 const parseOrThrow = async (res) => {
@@ -70,7 +70,7 @@ export const getEventReviews = (eventId) =>
     fetch(`${API}/reviews/event/${eventId}`).then(r => r.json());
 
 // ── Documents PDF ────────────────────────────────────────────────────────────
-// Télécharge l'attestation de participation (RG-20) et déclenche le téléchargement dans le navigateur
+// Télécharge l'attestation de participation (RG-21) et déclenche le téléchargement dans le navigateur
 export const downloadAttestation = async (eventId, eventTitle) => {
     const res = await fetch(`${API}/volunteers/me/attestation/${eventId}`, { headers: authHeaders() });
     if (!res.ok) throw new Error("Impossible de générer l'attestation.");
@@ -83,7 +83,7 @@ export const downloadAttestation = async (eventId, eventTitle) => {
     window.URL.revokeObjectURL(url);
 };
 
-// Télécharge l'export PDF complet de l'historique de participation (RG-20)
+// Télécharge l'export PDF complet de l'historique de participation (RG-21)
 export const exportParticipationHistory = async () => {
     const res = await fetch(`${API}/volunteers/me/participation-history`, { headers: authHeaders() });
     if (!res.ok) throw new Error("Impossible de générer l'historique.");
